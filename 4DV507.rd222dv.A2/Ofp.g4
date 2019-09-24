@@ -3,35 +3,34 @@ grammar Ofp;
 start : method* main method*;
 	  
 
-method :  'void' ID '(' parameter? ')' '{' stmt+ '}' | type ID '(' parameter? ')' '{' stmt+ returnStmt? '}' ;
-main: 'void' 'main' '(' ')' '{' stmt+ '}';
+method :  'void' ID '(' parameter? ')' block | type ('['']')? ID '(' parameter? ')' block ;
+main: 'void' 'main' '(' ')' block ;
 
 stmt : expr ';'
      | asgnStmt
      | declaration
      | whileStmt
      | ifStmt
-     | ifStmtOne
      | print ';'
      | returnStmt
      ; 
 
-expr : 	'(' expr ')'
+expr : 	| ID? '(' expr ')'
         | expr (MULT | DIV) expr
         | expr (PLUS | MINUS) expr
         | expr (SMALL | BIGGER) expr
         | expr EQ expr
         | varType
-        | arrExpr | arrType | inArray
-        | expr expr
-        
+        | arrExpr | arrType | inArray        
      ;
+
+block: '{' stmt* '}' ;
 
 returnStmt: 'return' expr ';' ;
 
 parameter: type ID (',' type ID)* ;
 
-varType : (ID|INT|FLOAT|IDmax|STR|CHAR);
+varType : (ID|MINUS? INT|MINUS? FLOAT|IDmax|STR|CHAR);
 
 asgnStmt : ID arrType? ('=' expr)? ';' ;
 
@@ -50,19 +49,14 @@ array : '{' inArray+  '}' ;
 
 inArray : varType (',' varType)* ;
 
-arrType : ID? '[' expr? ']' ;
+arrType : ID? '[' expr ']' ;
 
 whileStmt : 'while' '(' condition ')' '{' stmt+ '}';
 
-ifStmt : 'if' '(' condition ')' '{' stmt+ ('}''else''{'  stmt+)? '}';
-
-ifStmtOne : 'if' '(' condition ')'  stmt ('else' stmt)? ;
-
-// ifStmt : 'if' '(' condition ')' '{' stmt+ '}';
+ifStmt : 'if' '(' condition ')' (stmt|block) ('else' (stmt|block))?;
 
 condition : (expr COP expr) | expr ;
 
-// ASSIGN : '=' ;
 PLUS : '+' ;
 MINUS : '-' ;
 MULT : '*' ;
@@ -72,11 +66,9 @@ BIGGER: '>';
 EQ: '==' ;
 COP: SMALL|BIGGER|EQ ;
 
-INT : '0' | ('-'?('1'..'9')+ ('0'..'9')*) ;
+INT : ('0'..'9')+ ;
 
-FLOAT : (('0'..'9')+'.'('0'..'9')+) 
-		| ('-') ('0'..'9')+'.'(('1'..'9')+ | ('0'..'9')+ ('1'..'9')+)  
-		| '-' ('1'..'9')+ '.' ('0'..'9')+;
+FLOAT : ('0'..'9')+'.'('0'..'9')+;
 
 ID  :	('a'..'z'|'A'..'Z')('a'..'z'|'A'..'Z')* ;
 IDmax: ID'.length';

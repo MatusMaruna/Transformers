@@ -158,16 +158,6 @@ public interface OfpListener extends ParseTreeListener {
 	 */
 	void exitParameter(@NotNull OfpParser.ParameterContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link OfpParser#ifStmtOne}.
-	 * @param ctx the parse tree
-	 */
-	void enterIfStmtOne(@NotNull OfpParser.IfStmtOneContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link OfpParser#ifStmtOne}.
-	 * @param ctx the parse tree
-	 */
-	void exitIfStmtOne(@NotNull OfpParser.IfStmtOneContext ctx);
-	/**
 	 * Enter a parse tree produced by {@link OfpParser#inArray}.
 	 * @param ctx the parse tree
 	 */
@@ -187,6 +177,16 @@ public interface OfpListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitExpr(@NotNull OfpParser.ExprContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link OfpParser#block}.
+	 * @param ctx the parse tree
+	 */
+	void enterBlock(@NotNull OfpParser.BlockContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link OfpParser#block}.
+	 * @param ctx the parse tree
+	 */
+	void exitBlock(@NotNull OfpParser.BlockContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link OfpParser#arrExpr}.
 	 * @param ctx the parse tree
