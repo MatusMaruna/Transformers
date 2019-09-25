@@ -158,25 +158,25 @@ public interface OfpListener extends ParseTreeListener {
 	 */
 	void exitParameter(@NotNull OfpParser.ParameterContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link OfpParser#inArray}.
+	 * Enter a parse tree produced by {@link OfpParser#localDecl}.
 	 * @param ctx the parse tree
 	 */
-	void enterInArray(@NotNull OfpParser.InArrayContext ctx);
+	void enterLocalDecl(@NotNull OfpParser.LocalDeclContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link OfpParser#inArray}.
+	 * Exit a parse tree produced by {@link OfpParser#localDecl}.
 	 * @param ctx the parse tree
 	 */
-	void exitInArray(@NotNull OfpParser.InArrayContext ctx);
+	void exitLocalDecl(@NotNull OfpParser.LocalDeclContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link OfpParser#expr}.
+	 * Enter a parse tree produced by {@link OfpParser#parameterList}.
 	 * @param ctx the parse tree
 	 */
-	void enterExpr(@NotNull OfpParser.ExprContext ctx);
+	void enterParameterList(@NotNull OfpParser.ParameterListContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link OfpParser#expr}.
+	 * Exit a parse tree produced by {@link OfpParser#parameterList}.
 	 * @param ctx the parse tree
 	 */
-	void exitExpr(@NotNull OfpParser.ExprContext ctx);
+	void exitParameterList(@NotNull OfpParser.ParameterListContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link OfpParser#block}.
 	 * @param ctx the parse tree
@@ -188,15 +188,25 @@ public interface OfpListener extends ParseTreeListener {
 	 */
 	void exitBlock(@NotNull OfpParser.BlockContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link OfpParser#arrExpr}.
+	 * Enter a parse tree produced by {@link OfpParser#expr}.
 	 * @param ctx the parse tree
 	 */
-	void enterArrExpr(@NotNull OfpParser.ArrExprContext ctx);
+	void enterExpr(@NotNull OfpParser.ExprContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link OfpParser#arrExpr}.
+	 * Exit a parse tree produced by {@link OfpParser#expr}.
 	 * @param ctx the parse tree
 	 */
-	void exitArrExpr(@NotNull OfpParser.ArrExprContext ctx);
+	void exitExpr(@NotNull OfpParser.ExprContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link OfpParser#arrayList}.
+	 * @param ctx the parse tree
+	 */
+	void enterArrayList(@NotNull OfpParser.ArrayListContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link OfpParser#arrayList}.
+	 * @param ctx the parse tree
+	 */
+	void exitArrayList(@NotNull OfpParser.ArrayListContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link OfpParser#stmt}.
 	 * @param ctx the parse tree
@@ -207,4 +217,14 @@ public interface OfpListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitStmt(@NotNull OfpParser.StmtContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link OfpParser#methodCall}.
+	 * @param ctx the parse tree
+	 */
+	void enterMethodCall(@NotNull OfpParser.MethodCallContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link OfpParser#methodCall}.
+	 * @param ctx the parse tree
+	 */
+	void exitMethodCall(@NotNull OfpParser.MethodCallContext ctx);
 }

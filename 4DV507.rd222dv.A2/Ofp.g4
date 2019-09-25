@@ -2,52 +2,67 @@ grammar Ofp;
 
 start : method* main method*;
 	  
-
-method :  'void' ID '(' parameter? ')' block | type ('['']')? ID '(' parameter? ')' block ;
 main: 'void' 'main' '(' ')' block ;
 
-stmt : expr ';'
-     | asgnStmt
-     | declaration
-     | whileStmt
-     | ifStmt
-     | print ';'
-     | returnStmt
-     ; 
+method :  'void' ID '(' parameterList? ')' block | type ('['']')? ID '(' parameterList? ')' block ;
 
-expr : 	| ID? '(' expr ')'
-        | expr (MULT | DIV) expr
-        | expr (PLUS | MINUS) expr
-        | expr (SMALL | BIGGER) expr
-        | expr EQ expr
-        | varType
-        | arrExpr | arrType | inArray        
-     ;
+parameter: type ID ;
 
-block: '{' stmt* '}' ;
+parameterList: parameter (',' parameter)* ;
 
-returnStmt: 'return' expr ';' ;
+block: '{' localDecl* stmt* '}' ;
 
-parameter: type ID (',' type ID)* ;
+returnStmt: 'return' expr SC ;
 
-varType : (ID|MINUS? INT|MINUS? FLOAT|IDmax|STR|CHAR);
-
-asgnStmt : ID arrType? ('=' expr)? ';' ;
-
-declaration : type arrType? ID ('=' (expr | arrType | array))? ';' ;
-
-type : 'int' arrType?
+type :    'int' arrType?
 		| 'float' arrType?
 		| 'string' arrType?
 		| 'char' arrType?
 		| 'bool'
 		;
+		
+varType : 	 ID
+			|MINUS? INT
+			|MINUS? FLOAT
+			|STR
+			|CHAR
+			;
 
-arrExpr : 'new' type ;
+stmt : asgnStmt
+     | declaration
+     | whileStmt
+     | ifStmt
+     | print
+     | returnStmt
+     | methodCall
+     ; 
 
-array : '{' inArray+  '}' ;
+expr : 	| ID? '(' expr ')'
+        | expr MULT expr
+        | expr DIV expr
+        | expr PLUS expr
+        | expr MINUS expr
+        | expr SMALL expr
+        | expr BIGGER expr
+        | expr EQ expr
+        | 'new' type
+        | ID '.length'
+        | varType
+        | arrayList
+        | arrType        
+     ;
+			
+localDecl: type arrType? ID SC ;
 
-inArray : varType (',' varType)* ;
+declaration : type arrType? ID '=' (expr | arrType | array) SC ;
+
+asgnStmt : ID arrType? '=' expr SC ;
+
+methodCall : ID '(' varType* ')' SC ;
+
+arrayList : varType (',' varType)* ;
+
+array : '{' arrayList+  '}' ;
 
 arrType : ID? '[' expr ']' ;
 
@@ -57,28 +72,29 @@ ifStmt : 'if' '(' condition ')' (stmt|block) ('else' (stmt|block))?;
 
 condition : (expr COP expr) | expr ;
 
+print : ('println'|'print') '(' (ID arrType?| STR) ')' SC ;
+
 PLUS : '+' ;
 MINUS : '-' ;
 MULT : '*' ;
 DIV : '/' ;
+
 SMALL: '<' ;
 BIGGER: '>';
 EQ: '==' ;
+
 COP: SMALL|BIGGER|EQ ;
 
 INT : ('0'..'9')+ ;
-
 FLOAT : ('0'..'9')+'.'('0'..'9')+;
-
 ID  :	('a'..'z'|'A'..'Z')('a'..'z'|'A'..'Z')* ;
-IDmax: ID'.length';
-SYM: ('0'..'9'|'_'|'!'|'.'|','|'?'|'='|':'|'('|')') ;
 STR: '"' (((SYM|ID)(SYM|ID)*) | ' ')* '"';
 CHAR: '\'' (((SYM|ID)(SYM|ID)*) | ' ')* '\'';
 
+SYM: ('0'..'9'|'_'|'!'|'.'|','|'?'|'='|':'|'('|')') ;
+
 COMMENT :  '#' ~[\r\n]* -> skip ;
   									
-	
-print : ('println'|'print') '(' (ID arrType?| STR) ')' ;
+SC: ';' ;
 
 WS : [ \t\r\n]+ -> skip ;
