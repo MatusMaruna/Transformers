@@ -26,8 +26,8 @@ public class OfpMain {
 		//parser.addErrorListener(errorListener);
 		OfpParser.StartContext root = parser.start();
 		// Display tree
-		Trees.inspect(root, parser);
-		
+		//Trees.inspect(root, parser);
+		System.out.println("");
 		ParseTreeWalker walker = new ParseTreeWalker(); 
 		Mylistener listener = new Mylistener();
 		listener.loadParser(parser);
