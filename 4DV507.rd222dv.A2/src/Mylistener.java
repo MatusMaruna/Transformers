@@ -5,13 +5,12 @@ import org.antlr.v4.runtime.tree.TerminalNode;
 
 public class Mylistener implements ParseTreeListener {
         @Override public void enterEveryRule(ParserRuleContext ctx) {  
-            System.out.println("rule entered: " + ctx.getText());    
+            System.out.println("rule entered: " + ruleNames[ctx.getRuleIndex()]);    
         }
 
 		@Override
 		public void exitEveryRule(ParserRuleContext arg0) {
 			System.out.println("rule exited: " +  arg0.getText());
-			
 		}
 
 		@Override
@@ -24,6 +23,11 @@ public class Mylistener implements ParseTreeListener {
 		public void visitTerminal(TerminalNode arg0) {
 			System.out.println("Terminal: " + arg0.getText());
 			
+		}
+		
+		String[] ruleNames;
+		public void loadParser(OfpParser parser) {  
+		    ruleNames = parser.getRuleNames(); 
 		}
     }
 

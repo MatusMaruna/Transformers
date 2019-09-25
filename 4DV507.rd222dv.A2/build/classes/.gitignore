@@ -30,3 +30,6 @@
 /OfpParser$WhileStmtContext.class
 /OfpParser.class
 /OfpParser$NewRuleContext.class
+/OfpType.class
+/Symbol.class
+/Scope.class

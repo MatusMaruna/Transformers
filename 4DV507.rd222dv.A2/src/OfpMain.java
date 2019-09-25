@@ -30,7 +30,7 @@ public class OfpMain {
 		
 		ParseTreeWalker walker = new ParseTreeWalker(); 
 		Mylistener listener = new Mylistener();
-
+		listener.loadParser(parser);
 	    walker.walk(listener,root);
 		System.out.println("Done!");
 	}
