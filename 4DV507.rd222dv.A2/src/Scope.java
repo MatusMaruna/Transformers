@@ -2,11 +2,11 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class Scope {
-	private int id; 
+	private String name; 
 	private Scope encolsingScope; 
 	private Map<String, Symbol> symbols = new LinkedHashMap<String, Symbol>();
-	public Scope (Scope enclosingScope, int id) {
-		this.id = id; 
+	public Scope (Scope enclosingScope, String name) {
+		this.name = name; 
 		this.encolsingScope = enclosingScope; 
 	}
 	
@@ -22,12 +22,22 @@ public class Scope {
 		return null;
 		
 	}
+	
+	
+	public void setName(String name) {
+		this.name = name; 
+	}
+	
+	public String getName() {
+		return name; 
+	}
+	
 	@Override 
 	
 	public String toString() {
 		if(encolsingScope != null)
-		return "Scope id : " + id +  " Enclosing Scope id : " +  Integer.toString(encolsingScope.id);
+		return "Scope name : " + name +  " Enclosing Scope id : " +  encolsingScope.name;
 		else
-		return "Scope id : " + id;
+		return "Scope name : " + name;
 	}
 }

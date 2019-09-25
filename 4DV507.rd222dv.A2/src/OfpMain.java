@@ -31,6 +31,8 @@ public class OfpMain {
 		ParseTreeWalker walker = new ParseTreeWalker(); 
 		Mylistener listener = new Mylistener();
 		listener.loadParser(parser);
+		listener.globalScope = new Scope(null, "global");
+		listener.currentScope = listener.globalScope;
 	    walker.walk(listener,root);
 		System.out.println("Done!");
 		System.out.println(listener.scopeList.toString());
