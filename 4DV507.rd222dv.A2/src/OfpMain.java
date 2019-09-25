@@ -33,6 +33,7 @@ public class OfpMain {
 		listener.loadParser(parser);
 	    walker.walk(listener,root);
 		System.out.println("Done!");
+		System.out.println(listener.scopeList.toString());
 	}
 
 }
