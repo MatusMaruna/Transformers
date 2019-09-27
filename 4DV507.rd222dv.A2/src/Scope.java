@@ -2,32 +2,36 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class Scope {
-	private int id; 
-	private Scope encolsingScope; 
+	private String name;
+	private Scope enclosingScope;
 	private Map<String, Symbol> symbols = new LinkedHashMap<String, Symbol>();
-	public Scope (Scope enclosingScope, int id) {
-		this.id = id; 
-		this.encolsingScope = enclosingScope; 
+
+	public Scope(Scope enclosingScope, String name) {
+		this.name = name;
+		this.enclosingScope = enclosingScope;
 	}
-	
+
+	public Scope() {
+	}
+
 	public Scope getEnclosingScope() {
-		return null; 
+		return null;
 	}
-	
+
 	public void define(Symbol sym) {
 		symbols.put(sym.getName(), sym);
 	}
-	
+
 	public Symbol resolve(String name) {
 		return null;
-		
+
 	}
-	@Override 
-	
+
+	@Override
 	public String toString() {
-		if(encolsingScope != null)
-		return "Scope id : " + id +  " Enclosing Scope id : " +  Integer.toString(encolsingScope.id);
+		if (enclosingScope != null)
+			return "Scope name : " + name + " Enclosing Scope id : " + enclosingScope.name;
 		else
-		return "Scope id : " + id;
+			return "Scope name : " + name;
 	}
 }

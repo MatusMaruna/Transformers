@@ -1,19 +1,20 @@
 
 public class Symbol {
-	
+
 	private final String name;
 	private final OfpType type;
-	
-	public Symbol(String name, OfpType type) { 
-		this.name=name;
-		this.type=type;
+
+	public Symbol(String name, OfpType type) {
+		this.name = name;
+		this.type = type;
 	}
-	public String getName() { 
+
+	public String getName() {
 		return name;
 	}
-	public OfpType getType() { 
+
+	public OfpType getType() {
 		return type;
 	}
-	
 
 }

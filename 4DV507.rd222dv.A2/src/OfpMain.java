@@ -1,39 +1,62 @@
+import java.io.IOException;
 
-
-import org.antlr.v4.gui.Trees;
 import org.antlr.v4.runtime.BufferedTokenStream;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
-import org.antlr.v4.runtime.ConsoleErrorListener;
-import org.antlr.v4.runtime.tree.ParseTreeListener;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
-
-
 
 public class OfpMain {
 
 	public static void main(String[] args) throws Exception {
 		// Read test program path from args
-		// For example: /Users/jlnmsi/Documents/Software/antlr4/Expressions-Main/test-programs/expr_input.txt
-		String testProgram = args[0];
-		System.out.println("Reading test program from: "+testProgram);
-		
+
+		String testDir = args[0];
+		String testProgram = "tester.ofp";
+
+		if (!testProgram.endsWith(".ofp")) {
+			System.out.println("\nPrograms most end with suffix .ofp! Found " + testProgram);
+			System.exit(-1);
+		}
+
+		System.out.println("Reading test program from: " + testDir + testProgram);
+		String progName = testProgram.substring(0, testProgram.length() - 4);
+		System.out.println("Program name: " + progName);
+
 		// Parse input program
-		CharStream cs = CharStreams.fromFileName(testProgram);
-		OfpLexer lexer = new OfpLexer(cs);
-		OfpParser parser = new OfpParser(new BufferedTokenStream(lexer));	
-		//ParseTreeListener errorListener = new ParseTreeListener();
-		//parser.addErrorListener(errorListener);
-		OfpParser.StartContext root = parser.start();
+		System.out.println("\nParsing started");
+		OfpParser parser = null;
+		OfpParser.StartContext root = null;
+		ErrorListener errorListener = new ErrorListener();
+		try {
+			CharStream inputStream = CharStreams.fromFileName(testDir + testProgram);
+			OfpLexer lexer = new OfpLexer(inputStream);
+			parser = new OfpParser(new BufferedTokenStream(lexer));
+			parser.addErrorListener(errorListener);
+			root = parser.start();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		int errors = errorListener.getErrorCount();
+		System.out.println("Error count: " + errors);
+		if (errors > 0) {
+			System.out.println("\nErrors discovered during parsing - Exit!");
+			System.exit(-1);
+		}
+
 		// Display tree
-		//Trees.inspect(root, parser);
+		// Trees.inspect(root, parser);
+
 		System.out.println("");
-		ParseTreeWalker walker = new ParseTreeWalker(); 
+		ParseTreeWalker walker = new ParseTreeWalker();
 		Mylistener listener = new Mylistener();
 		listener.loadParser(parser);
-	    walker.walk(listener,root);
+		listener.globalScope = new Scope(null, "global");
+		listener.currentScope = listener.globalScope;
+		walker.walk(listener, root);
 		System.out.println("Done!");
 		System.out.println(listener.scopeList.toString());
+
 	}
 
 }
