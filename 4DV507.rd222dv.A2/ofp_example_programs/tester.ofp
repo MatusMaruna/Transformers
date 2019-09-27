@@ -1,0 +1,12 @@
+# tester.ofp
+
+void main() {
+	int p;
+	p = p*q+3;
+}
+int[] reverse(int[] arr) {
+	 if (a > b)
+   	  return a;
+   else
+      return b;
+}
