@@ -4,3 +4,14 @@
 /OfpLexer.tokens
 /OfpListener.java
 /OfpParser.java
+/OfpBaseVisitor.java
+/OfpVisitor.java
+/OfpParser$ArrTypeContext.class
+/OfpParser$ArrayListContext.class
+/OfpParser$MethodCallContext.class
+/OfpParser$ParameterContext.class
+/OfpParser$ParameterListContext.class
+/OfpParser$StmtContext.class
+/OfpParser$TypeContext.class
+/OfpParser$WhileStmtContext.class
+/OfpVisitor.class

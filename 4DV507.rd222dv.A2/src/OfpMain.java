@@ -10,7 +10,7 @@ public class OfpMain {
 	public static void main(String[] args) throws Exception {
 		// Read test program path from args
 
-		String testDir = args[0];
+		String testDir = "./ofp_example_programs/";
 		String testProgram = "tester.ofp";
 
 		if (!testProgram.endsWith(".ofp")) {
