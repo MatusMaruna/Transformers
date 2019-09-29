@@ -16,7 +16,7 @@ public class Mylistener implements ParseTreeListener {
 
 	@Override
 	public void enterEveryRule(ParserRuleContext ctx) {
-		// System.out.println("rule entered: " + resolveName(ctx));
+		 System.out.println("rule entered: " + resolveName(ctx));
 		if (scopeRules.contains(resolveName(ctx))) {
 			System.out.println("Entered new Scope : " + resolveName(ctx));
 			String name = ctx.getChild(1).getText();
@@ -27,6 +27,23 @@ public class Mylistener implements ParseTreeListener {
 			scopeList.add(s);
 			currentScope = s;
 		}
+		
+		if(resolveName(ctx).equals("declaration")) {
+			System.out.println("New decleration: " + ctx.getText());
+			System.out.print(" Type: " + ctx.getChild(0).getText());
+			System.out.print(" Name: " + ctx.getChild(1).getText());
+			System.out.print(" Value:" + ctx.getChild(3).getText());
+			System.out.println("");
+			//currentScope.define(new Symbol(ctx.getChild(1).getText(), new OfpType(ctx.getChild(0).getText())));
+		}
+		
+		if(resolveName(ctx).equals("asgnStmt")) {
+			System.out.println("New assignment: " + ctx.getText());
+			System.out.print(" Name: " + ctx.getChild(0).getText());
+			System.out.print(" Value:" + ctx.getChild(2).getText());
+			System.out.println("");
+		}
+		
 	}
 
 	@Override
