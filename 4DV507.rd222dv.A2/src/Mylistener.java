@@ -37,7 +37,7 @@ public class Mylistener implements ParseTreeListener {
 			String name = ctx.getChild(1).getText(); 
 			String value = ctx.getChild(3).getText();
 			OfpType type = getType(ctx.getChild(0).getText());
-			//currentScope.define(new Symbol(name, type), value);
+			currentScope.define(new Symbol(name, type));
 			
 			
 		}
@@ -50,8 +50,7 @@ public class Mylistener implements ParseTreeListener {
 			String name = ctx.getChild(0).getText(); 
 			OfpType type = currentScope.resolve(name).getType();
 			String value = ctx.getChild(2).getText();
-			System.out.println(type.name());
-			//currentScope.define(new Symbol(name, type), value);
+			currentScope.define(new Symbol(name, type));
 		}
 		
 		if(resolveName(ctx).equals("localDecl")) {
@@ -61,8 +60,7 @@ public class Mylistener implements ParseTreeListener {
 			System.out.println("");
 			String name = ctx.getChild(1).getText(); 
 			OfpType type = getType(ctx.getChild(0).getText());
-			System.out.println(type.name());
-			//currentScope.define(new Symbol(name, type), "null");
+			currentScope.define(new Symbol(name, type));
 		}
 		
 	}
