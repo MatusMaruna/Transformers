@@ -48,7 +48,7 @@ public class OfpMain {
 		// Display tree
 		 Trees.inspect(root, parser);
 
-		System.out.println("");
+	/*	System.out.println("");
 		ParseTreeWalker walker = new ParseTreeWalker();
 		Mylistener listener = new Mylistener();
 		listener.loadParser(parser);
@@ -56,8 +56,15 @@ public class OfpMain {
 		listener.currentScope = listener.globalScope;
 		walker.walk(listener, root);
 		System.out.println("Done!");
-		System.out.println(listener.scopeList.toString());
+		System.out.println(listener.scopeList.toString()); */
 
+		// Indented tree print using a listener
+			SymbolTable symbolTable = new SymbolTable();
+			ParseTreeWalker walker = new ParseTreeWalker();
+			SymbolTableListener listener = new SymbolTableListener(symbolTable);
+			walker.walk(listener, root);
+			symbolTable.printSymbolTable();
+			System.out.println("Done!"); 
 	}
 
 }
