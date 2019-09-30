@@ -80,4 +80,10 @@ public class Scope {
 		for (int i=0;i < scopeChildren.size();i++)
 		((Scope)scopeChildren.get(i)).resetScope();
 	}
+	
+	
+	@Override
+	public String toString() {
+		return this.symbols.toString();
+	}
 }

@@ -12,7 +12,7 @@ public class OfpMain {
 		// Read test program path from args
 
 		String testDir = "./ofp_example_programs/";
-		String testProgram = "test.ofp";
+		String testProgram = "arrays.ofp";
 
 		if (!testProgram.endsWith(".ofp")) {
 			System.out.println("\nPrograms most end with suffix .ofp! Found " + testProgram);
@@ -56,7 +56,11 @@ public class OfpMain {
 		listener.currentScope = listener.globalScope;
 		walker.walk(listener, root);
 		System.out.println("Done!");
-		System.out.println(listener.scopeList.toString()); 
+		//System.out.println(listener.scopeList.toString()); 
+		
+		for(Scope s : listener.scopeList) {
+			s.printScope();
+		}
 
 	/*	// Indented tree print using a listener
 			SymbolTable symbolTable = new SymbolTable();

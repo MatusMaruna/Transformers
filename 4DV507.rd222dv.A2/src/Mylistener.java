@@ -62,6 +62,15 @@ public class Mylistener implements ParseTreeListener {
 			OfpType type = getType(ctx.getChild(0).getText());
 			currentScope.define(new Symbol(name, type));
 		}
+		if(resolveName(ctx).equals("parameter")) {
+			System.out.println("New Parameter: " + ctx.getText()); 
+			System.out.print(" Type: " + ctx.getChild(0).getText());
+			System.out.print(" Name:" + ctx.getChild(1).getText());
+			System.out.println("");
+			String name = ctx.getChild(1).getText(); 
+			OfpType type = getType(ctx.getChild(0).getText());
+			currentScope.define(new Symbol(name, type));
+		}
 		
 	}
 
