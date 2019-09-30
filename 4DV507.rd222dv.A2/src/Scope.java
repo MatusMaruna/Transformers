@@ -1,37 +1,82 @@
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class Scope {
 	private String name;
+	private String type;
+	private int next = 0; // visit next child
 	private Scope enclosingScope;
 	private Map<String, Symbol> symbols = new LinkedHashMap<String, Symbol>();
+	private ArrayList<Scope> scopeChildren = new ArrayList<>();
 
-	public Scope(Scope enclosingScope, String name) {
-		this.name = name;
+	public Scope(Scope enclosingScope) {
 		this.enclosingScope = enclosingScope;
 	}
 
-	public Scope() {
+	public String getScopeType() {
+		return type;
 	}
 
+	public void setScopeType(String type) {
+		this.type = type;
+	}
+	
+	public String getScopeName() {
+		return name;
+	}
+
+	public void setScopeName(String name) {
+		this.name = name;
+	}
+	
+	public Scope nextChild() { // creates new children
+		Scope nextChild;
+		if (next >= scopeChildren.size()) { // child does not exist
+		nextChild = new Scope(this); // create new Scope
+		scopeChildren.add(nextChild);
+		} else { //Child exists
+		nextChild = (Scope) scopeChildren.get(next); // visit child
+		}
+		next++;
+		return nextChild;
+	}
+	
+	public Symbol resolve(String name) {
+		if(symbols.containsKey(name)) // if in current scope
+			return (Symbol) symbols.get(name);
+		else { // move to enclosing scope
+			if (enclosingScope == null) {
+				return null; // not in table
+			}
+			else
+				return enclosingScope.resolve(name);
+		}
+
+	}
+	
 	public Scope getEnclosingScope() {
-		return null;
+		return this.enclosingScope;
 	}
 
 	public void define(Symbol sym) {
-		symbols.put(sym.getName(), sym);
+		symbols.put(sym.getId(), sym);
+	}
+	
+	public void printScope(){
+		symbols.forEach((id, symbol)->{
+			System.out.printf("%10s%25s%25s%n", id, symbol.getType(), name + "(" + type +")");
+		});
+		
+		scopeChildren.forEach((scope)->{
+			scope.printScope();
+		});
+		
 	}
 
-	public Symbol resolve(String name) {
-		return null;
-
-	}
-
-	@Override
-	public String toString() {
-		if (enclosingScope != null)
-			return "Scope name : " + name + " Enclosing Scope id : " + enclosingScope.name;
-		else
-			return "Scope name : " + name;
+	public void resetScope() { // called after each traversal
+		next = 0;
+		for (int i=0;i < scopeChildren.size();i++)
+		((Scope)scopeChildren.get(i)).resetScope();
 	}
 }

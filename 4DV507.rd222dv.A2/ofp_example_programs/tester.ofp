@@ -3,6 +3,7 @@
 void main() {
 	int p;
 	p = p*q+3;
+	float ab = 1 + 2 + 3;
 }
 int[] reverse(int[] arr) {
 	 if (a > b)
