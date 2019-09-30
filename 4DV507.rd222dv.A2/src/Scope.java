@@ -10,8 +10,9 @@ public class Scope {
 	private Map<String, Symbol> symbols = new LinkedHashMap<String, Symbol>();
 	private ArrayList<Scope> scopeChildren = new ArrayList<>();
 
-	public Scope(Scope enclosingScope) {
+	public Scope(Scope enclosingScope, String name) {
 		this.enclosingScope = enclosingScope;
+		this.name = name; 
 	}
 
 	public String getScopeType() {
@@ -30,7 +31,7 @@ public class Scope {
 		this.name = name;
 	}
 	
-	public Scope nextChild() { // creates new children
+/*	public Scope nextChild() { // creates new children
 		Scope nextChild;
 		if (next >= scopeChildren.size()) { // child does not exist
 		nextChild = new Scope(this); // create new Scope
@@ -40,7 +41,7 @@ public class Scope {
 		}
 		next++;
 		return nextChild;
-	}
+	} */
 	
 	public Symbol resolve(String name) {
 		if(symbols.containsKey(name)) // if in current scope

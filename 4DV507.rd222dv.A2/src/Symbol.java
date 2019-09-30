@@ -1,7 +1,7 @@
 
 public class Symbol {
 	private String id;
-	private String type;
+	private OfpType type; 
 	
     /*private final OfpType type;
 
@@ -14,11 +14,11 @@ public class Symbol {
 		return type;
 	} */
 	
-	public Symbol() {
+	/*public Symbol() {
 		super();
-	}
+	}*/
 	
-	public Symbol(String id, String type) {
+	public Symbol(String id, OfpType type) {
 		super();
 		this.id = id;
 		this.type = type;
@@ -28,7 +28,7 @@ public class Symbol {
 		return id;
 	}
 	
-	public String getType() {
+	public OfpType getType() {
 		return type;
 	}
 	
