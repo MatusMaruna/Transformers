@@ -6,3 +6,5 @@
 /OfpParser.java
 /OfpBaseVisitor.java
 /OfpVisitor.java
+/SymbolTable/
+/SymbolTable.class

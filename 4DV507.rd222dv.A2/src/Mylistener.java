@@ -22,8 +22,7 @@ public class Mylistener implements ParseTreeListener {
 			String name = ctx.getChild(1).getText();
 			String type = ctx.getChild(0).getText();
 			if (resolveName(ctx) == "ifStmt") {
-				name = "ifstmt" + id++;
-				type = "if";
+				name = "ifStmt " + id++;
 				currentScope.define(new Symbol(name, type));
 			}
 			System.out.println(
@@ -34,8 +33,8 @@ public class Mylistener implements ParseTreeListener {
 		}
 
 		if (resolveName(ctx).equals("whileStmt")) {
-			String name = ctx.getChild(0).getText();
-			String type = "while";
+			String name = "whileStmt";
+			String type = ctx.getChild(0).getText();
 			System.out.println("New while: " + ctx.getText());
 			System.out.print(" Type: " + ctx.getChild(0).getText());
 			System.out.print(" Name: " + ctx.getChild(1).getText());
@@ -95,7 +94,8 @@ public class Mylistener implements ParseTreeListener {
 
 		if (scopeRules.contains(resolveName(ctx))) {
 			System.out.println("Left Scope : " + resolveName(ctx));
-			currentScope = currentScope.getEnclosingScope();
+			currentScope.setScopeType(resolveName(ctx));
+			currentScope = currentScope.setEnclosingScope();
 		}
 	}
 

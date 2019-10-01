@@ -51,7 +51,7 @@ public class Scope {
 
 	}
 
-	public Scope getEnclosingScope() {
+	public Scope setEnclosingScope() {
 		return this.enclosingScope;
 	}
 
