@@ -12,7 +12,7 @@ public class Scope {
 
 	public Scope(Scope enclosingScope, String name) {
 		this.enclosingScope = enclosingScope;
-		this.name = name; 
+		this.name = name;
 	}
 
 	public String getScopeType() {
@@ -22,7 +22,7 @@ public class Scope {
 	public void setScopeType(String type) {
 		this.type = type;
 	}
-	
+
 	public String getScopeName() {
 		return name;
 	}
@@ -30,32 +30,27 @@ public class Scope {
 	public void setScopeName(String name) {
 		this.name = name;
 	}
-	
-/*	public Scope nextChild() { // creates new children
-		Scope nextChild;
-		if (next >= scopeChildren.size()) { // child does not exist
-		nextChild = new Scope(this); // create new Scope
-		scopeChildren.add(nextChild);
-		} else { //Child exists
-		nextChild = (Scope) scopeChildren.get(next); // visit child
-		}
-		next++;
-		return nextChild;
-	} */
-	
+
+	/*
+	 * public Scope nextChild() { // creates new children Scope nextChild; if (next
+	 * >= scopeChildren.size()) { // child does not exist nextChild = new
+	 * Scope(this); // create new Scope scopeChildren.add(nextChild); } else {
+	 * //Child exists nextChild = (Scope) scopeChildren.get(next); // visit child }
+	 * next++; return nextChild; }
+	 */
+
 	public Symbol resolve(String name) {
-		if(symbols.containsKey(name)) // if in current scope
-			return (Symbol) symbols.get(name);
+		if (symbols.containsKey(name)) // if in current scope
+			return symbols.get(name);
 		else { // move to enclosing scope
 			if (enclosingScope == null) {
 				return null; // not in table
-			}
-			else
+			} else
 				return enclosingScope.resolve(name);
 		}
 
 	}
-	
+
 	public Scope getEnclosingScope() {
 		return this.enclosingScope;
 	}
@@ -63,25 +58,29 @@ public class Scope {
 	public void define(Symbol sym) {
 		symbols.put(sym.getId(), sym);
 	}
-	
-	public void printScope(){
-		symbols.forEach((id, symbol)->{
-			System.out.printf("%10s%25s%25s%n", id, symbol.getType(), name + "(" + type +")");
+
+	public void printScope() {
+		symbols.forEach((id, symbol) -> {
+
+			if (symbol.getType() == null) {
+				System.out.printf("%10s%25s%25s%n", id, symbol.getStringType(), name + "(" + type + ")");
+			} else {
+				System.out.printf("%10s%25s%25s%n", id, symbol.getType(), name + "(" + type + ")");
+			}
 		});
-		
-		scopeChildren.forEach((scope)->{
+
+		scopeChildren.forEach((scope) -> {
 			scope.printScope();
 		});
-		
+
 	}
 
 	public void resetScope() { // called after each traversal
 		next = 0;
-		for (int i=0;i < scopeChildren.size();i++)
-		((Scope)scopeChildren.get(i)).resetScope();
+		for (int i = 0; i < scopeChildren.size(); i++)
+			scopeChildren.get(i).resetScope();
 	}
-	
-	
+
 	@Override
 	public String toString() {
 		return this.symbols.toString();

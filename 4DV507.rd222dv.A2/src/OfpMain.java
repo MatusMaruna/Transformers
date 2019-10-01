@@ -1,6 +1,5 @@
 import java.io.IOException;
 
-import org.antlr.v4.gui.Trees;
 import org.antlr.v4.runtime.BufferedTokenStream;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
@@ -12,7 +11,7 @@ public class OfpMain {
 		// Read test program path from args
 
 		String testDir = "./ofp_example_programs/";
-		String testProgram = "arrays.ofp";
+		String testProgram = "tester.ofp";
 
 		if (!testProgram.endsWith(".ofp")) {
 			System.out.println("\nPrograms most end with suffix .ofp! Found " + testProgram);
@@ -55,20 +54,10 @@ public class OfpMain {
 		listener.globalScope = new Scope(null, "global");
 		listener.currentScope = listener.globalScope;
 		walker.walk(listener, root);
+		listener.printSymbolTable();
 		System.out.println("Done!");
-		//System.out.println(listener.scopeList.toString()); 
-		
-		for(Scope s : listener.scopeList) {
-			s.printScope();
-		}
+		// System.out.println(listener.scopeList.toString());
 
-	/*	// Indented tree print using a listener
-			SymbolTable symbolTable = new SymbolTable();
-			ParseTreeWalker walker = new ParseTreeWalker();
-			SymbolTableListener listener = new SymbolTableListener(symbolTable);
-			walker.walk(listener, root);
-			symbolTable.printSymbolTable();
-			System.out.println("Done!");  */
 	}
 
 }
