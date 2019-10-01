@@ -25,6 +25,10 @@ public class Mylistener implements ParseTreeListener {
 				name = "ifStmt " + id++;
 				currentScope.define(new Symbol(name, type));
 			}
+			if (resolveName(ctx) == "whileStmt") {
+				name = "whileStmt";
+				currentScope.define(new Symbol(name, type));
+			}
 			System.out.println(
 					"\n New tester: Type: " + type + " Id: " + name + " inside Scope : " + resolveName(ctx) + "\n");
 			Scope s = new Scope(currentScope, name);
@@ -32,16 +36,14 @@ public class Mylistener implements ParseTreeListener {
 			currentScope = s;
 		}
 
-		if (resolveName(ctx).equals("whileStmt")) {
-			String name = "whileStmt";
-			String type = ctx.getChild(0).getText();
-			System.out.println("New while: " + ctx.getText());
-			System.out.print(" Type: " + ctx.getChild(0).getText());
-			System.out.print(" Name: " + ctx.getChild(1).getText());
-			System.out.print(" Value:" + ctx.getChild(3).getText());
-			System.out.println("");
-			currentScope.define(new Symbol(name, type));
-		}
+		/*
+		 * if (resolveName(ctx).equals("whileStmt")) { String name = "whileStmt"; String
+		 * type = ctx.getChild(0).getText(); System.out.println("New while: " +
+		 * ctx.getText()); System.out.print(" Type: " + ctx.getChild(0).getText());
+		 * System.out.print(" Name: " + ctx.getChild(1).getText());
+		 * System.out.print(" Value:" + ctx.getChild(3).getText());
+		 * System.out.println(""); currentScope.define(new Symbol(name, type)); }
+		 */
 
 		if (resolveName(ctx).equals("declaration")) {
 			System.out.println("New decleration: " + ctx.getText());
@@ -145,6 +147,7 @@ public class Mylistener implements ParseTreeListener {
 		scopeRules.add("main");
 		scopeRules.add("method");
 		scopeRules.add("ifStmt");
+		scopeRules.add("whileStmt");
 	}
 
 	public String resolveName(ParserRuleContext ctx) {
