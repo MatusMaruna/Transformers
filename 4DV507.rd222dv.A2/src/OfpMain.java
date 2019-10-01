@@ -54,7 +54,16 @@ public class OfpMain {
 		listener.globalScope = new Scope(null, "global");
 		listener.currentScope = listener.globalScope;
 		walker.walk(listener, root);
-		listener.printSymbolTable();
+
+		System.out.println("\n Symbol Table: ");
+		System.out.println("----------------------------------------------------------------------");
+		System.out.printf("%10s%25s%25s%n", "Id", "Type", "Scope Name(Type)");
+		System.out.println("----------------------------------------------------------------------");
+		for (Scope s : listener.scopeList) {
+			s.printScope();
+		}
+		System.out.println("----------------------------------------------------------------------");
+
 		System.out.println("Done!");
 		// System.out.println(listener.scopeList.toString());
 
