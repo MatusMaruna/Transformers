@@ -36,15 +36,6 @@ public class Mylistener implements ParseTreeListener {
 			currentScope = s;
 		}
 
-		/*
-		 * if (resolveName(ctx).equals("whileStmt")) { String name = "whileStmt"; String
-		 * type = ctx.getChild(0).getText(); System.out.println("New while: " +
-		 * ctx.getText()); System.out.print(" Type: " + ctx.getChild(0).getText());
-		 * System.out.print(" Name: " + ctx.getChild(1).getText());
-		 * System.out.print(" Value:" + ctx.getChild(3).getText());
-		 * System.out.println(""); currentScope.define(new Symbol(name, type)); }
-		 */
-
 		if (resolveName(ctx).equals("declaration")) {
 			System.out.println("New decleration: " + ctx.getText());
 			System.out.print(" Type: " + ctx.getChild(0).getText());
