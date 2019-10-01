@@ -80,7 +80,7 @@ public class Mylistener implements ParseTreeListener {
 
 		if (scopeRules.contains(resolveName(ctx))) {
 			System.out.println("Left Scope : " + resolveName(ctx));
-			currentScope = globalScope;
+			currentScope = currentScope.getEnclosingScope();
 		}
 	}
 
