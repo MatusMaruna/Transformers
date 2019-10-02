@@ -1,5 +1,9 @@
 grammar Ofp;
 
+@header {
+    package antlr4;
+}
+
 start : method* main method*;
 	  
 main: 'void' 'main' '(' ')' block ;
@@ -98,3 +102,4 @@ COMMENT :  '#' ~[\r\n]* -> skip ;
 SC: ';' ;
 
 WS : [ \t\r\n]+ -> skip ;
+

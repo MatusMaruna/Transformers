@@ -1,4 +1,7 @@
 // Generated from Ofp.g4 by ANTLR 4.4
+
+    package antlr4;
+
 import org.antlr.v4.runtime.atn.*;
 import org.antlr.v4.runtime.dfa.DFA;
 import org.antlr.v4.runtime.*;
@@ -83,6 +86,11 @@ public class OfpParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof OfpListener ) ((OfpListener)listener).exitStart(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof OfpVisitor ) return ((OfpVisitor<? extends T>)visitor).visitStart(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final StartContext start() throws RecognitionException {
@@ -151,6 +159,11 @@ public class OfpParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof OfpListener ) ((OfpListener)listener).exitMain(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof OfpVisitor ) return ((OfpVisitor<? extends T>)visitor).visitMain(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final MainContext main() throws RecognitionException {
@@ -199,6 +212,11 @@ public class OfpParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof OfpListener ) ((OfpListener)listener).exitMethod(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof OfpVisitor ) return ((OfpVisitor<? extends T>)visitor).visitMethod(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -290,6 +308,11 @@ public class OfpParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof OfpListener ) ((OfpListener)listener).exitParameter(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof OfpVisitor ) return ((OfpVisitor<? extends T>)visitor).visitParameter(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final ParameterContext parameter() throws RecognitionException {
@@ -331,6 +354,11 @@ public class OfpParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof OfpListener ) ((OfpListener)listener).exitParameterList(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof OfpVisitor ) return ((OfpVisitor<? extends T>)visitor).visitParameterList(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -393,6 +421,11 @@ public class OfpParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof OfpListener ) ((OfpListener)listener).exitBlock(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof OfpVisitor ) return ((OfpVisitor<? extends T>)visitor).visitBlock(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -464,6 +497,11 @@ public class OfpParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof OfpListener ) ((OfpListener)listener).exitReturnStmt(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof OfpVisitor ) return ((OfpVisitor<? extends T>)visitor).visitReturnStmt(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final ReturnStmtContext returnStmt() throws RecognitionException {
@@ -503,6 +541,11 @@ public class OfpParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof OfpListener ) ((OfpListener)listener).exitType(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof OfpVisitor ) return ((OfpVisitor<? extends T>)visitor).visitType(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -608,6 +651,11 @@ public class OfpParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof OfpListener ) ((OfpListener)listener).exitVarType(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof OfpVisitor ) return ((OfpVisitor<? extends T>)visitor).visitVarType(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final VarTypeContext varType() throws RecognitionException {
@@ -710,6 +758,11 @@ public class OfpParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof OfpListener ) ((OfpListener)listener).exitStmt(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof OfpVisitor ) return ((OfpVisitor<? extends T>)visitor).visitStmt(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final StmtContext stmt() throws RecognitionException {
@@ -811,6 +864,11 @@ public class OfpParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof OfpListener ) ((OfpListener)listener).exitExpr(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof OfpVisitor ) return ((OfpVisitor<? extends T>)visitor).visitExpr(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -1001,6 +1059,11 @@ public class OfpParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof OfpListener ) ((OfpListener)listener).exitLocalDecl(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof OfpVisitor ) return ((OfpVisitor<? extends T>)visitor).visitLocalDecl(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final LocalDeclContext localDecl() throws RecognitionException {
@@ -1062,6 +1125,11 @@ public class OfpParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof OfpListener ) ((OfpListener)listener).exitDeclaration(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof OfpVisitor ) return ((OfpVisitor<? extends T>)visitor).visitDeclaration(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -1135,6 +1203,11 @@ public class OfpParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof OfpListener ) ((OfpListener)listener).exitAsgnStmt(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof OfpVisitor ) return ((OfpVisitor<? extends T>)visitor).visitAsgnStmt(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final AsgnStmtContext asgnStmt() throws RecognitionException {
@@ -1189,6 +1262,11 @@ public class OfpParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof OfpListener ) ((OfpListener)listener).exitMethodCall(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof OfpVisitor ) return ((OfpVisitor<? extends T>)visitor).visitMethodCall(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -1248,6 +1326,11 @@ public class OfpParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof OfpListener ) ((OfpListener)listener).exitArrayList(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof OfpVisitor ) return ((OfpVisitor<? extends T>)visitor).visitArrayList(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final ArrayListContext arrayList() throws RecognitionException {
@@ -1306,6 +1389,11 @@ public class OfpParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof OfpListener ) ((OfpListener)listener).exitArray(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof OfpVisitor ) return ((OfpVisitor<? extends T>)visitor).visitArray(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final ArrayContext array() throws RecognitionException {
@@ -1359,6 +1447,11 @@ public class OfpParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof OfpListener ) ((OfpListener)listener).exitArrType(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof OfpVisitor ) return ((OfpVisitor<? extends T>)visitor).visitArrType(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -1414,6 +1507,11 @@ public class OfpParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof OfpListener ) ((OfpListener)listener).exitWhileStmt(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof OfpVisitor ) return ((OfpVisitor<? extends T>)visitor).visitWhileStmt(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -1483,6 +1581,11 @@ public class OfpParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof OfpListener ) ((OfpListener)listener).exitIfStmt(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof OfpVisitor ) return ((OfpVisitor<? extends T>)visitor).visitIfStmt(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -1587,6 +1690,11 @@ public class OfpParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof OfpListener ) ((OfpListener)listener).exitCondition(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof OfpVisitor ) return ((OfpVisitor<? extends T>)visitor).visitCondition(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final ConditionContext condition() throws RecognitionException {
@@ -1642,6 +1750,11 @@ public class OfpParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof OfpListener ) ((OfpListener)listener).exitPrint(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof OfpVisitor ) return ((OfpVisitor<? extends T>)visitor).visitPrint(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 

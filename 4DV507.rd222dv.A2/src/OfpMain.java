@@ -4,7 +4,6 @@ import org.antlr.v4.runtime.BufferedTokenStream;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
-
 public class OfpMain {
 
 	public static void main(String[] args) throws Exception {

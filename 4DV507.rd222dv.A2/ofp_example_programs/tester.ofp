@@ -19,4 +19,10 @@ int sumUpTo(int n) {
 		i = i + 1;
 	}
 	return sum;
+	
+	
+	if (a > b)
+   	  int a = 1; 
+   else
+      int b = 1; 
 }
