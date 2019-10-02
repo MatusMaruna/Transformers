@@ -77,9 +77,16 @@ public class Mylistener implements ParseTreeListener {
 			System.out.print(" Value:" + ctx.getChild(2).getText());
 			System.out.println("");
 			String name = ctx.getChild(0).getText();
-			OfpType type = currentScope.resolve(name).getType();
+			OfpType type; 
+			try {
+			type = currentScope.resolve(name).getType();
+			}catch(Exception e) {
+				System.err.println("Variable " + ctx.getChild(0).getText() + " is not defined!");
+				System.out.println("");
+				type = OfpType.Undef;
+			}
 			String value = ctx.getChild(2).getText();
-			currentScope.define(new Symbol(name, type));
+			currentScope.define(new Symbol(name,type ));
 		}
 
 		if (resolveName(ctx).equals("localDecl")) {
