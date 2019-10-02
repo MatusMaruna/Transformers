@@ -26,6 +26,14 @@ public class Mylistener implements ParseTreeListener {
 			System.out.println("Entered new Scope : " + resolveName(ctx));
 			String name = ctx.getChild(1).getText();
 			String type = ctx.getChild(0).getText();
+
+			if (resolveName(ctx) == "main") {
+				type = ctx.getChild(0).getText();
+				currentScope.define(new Symbol(name, type));
+			}
+			if (resolveName(ctx) == "method") {
+				currentScope.define(new Symbol(name, type));
+			}
 			if (resolveName(ctx) == "ifStmt") {
 				name = "ifStmt " + id++;
 				currentScope.define(new Symbol(name, type));

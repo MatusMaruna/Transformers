@@ -5,10 +5,9 @@ void main() {
 	float a = 2.0 + 1.0 + 0.2345;
 }
 int[] reverse(int[] arr) {
-	 if (a > b)
-   	  return a;
-   else
-      return b;
+	 if (a > b){
+	 	int test;
+   }	  
 }
 
 int sumUpTo(int n) {
