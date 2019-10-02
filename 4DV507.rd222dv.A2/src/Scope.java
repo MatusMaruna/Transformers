@@ -63,9 +63,9 @@ public class Scope {
 		symbols.forEach((id, symbol) -> {
 
 			if (symbol.getType() == null) {
-				System.out.printf("%10s%25s%25s%n", id, symbol.getStringType(), name + "(" + type + ")");
+				System.out.printf("%10s%25s%25s%n", id, symbol.getStringType(), " N: " + name + " T: (" + type + ")");
 			} else {
-				System.out.printf("%10s%25s%25s%n", id, symbol.getType(), name + "(" + type + ")");
+				System.out.printf("%10s%25s%25s%n", id, symbol.getType(), " N: " + name + " T: (" + type + ")");
 			}
 		});
 

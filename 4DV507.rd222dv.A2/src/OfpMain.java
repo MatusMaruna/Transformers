@@ -1,5 +1,6 @@
 import java.io.IOException;
 
+import org.antlr.v4.gui.Trees;
 import org.antlr.v4.runtime.BufferedTokenStream;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
@@ -11,7 +12,7 @@ public class OfpMain {
 		// Read test program path from args
 
 		String testDir = "./ofp_example_programs/";
-		String testProgram = "strings.ofp";
+		String testProgram = "tester.ofp";
 
 		if (!testProgram.endsWith(".ofp")) {
 			System.out.println("\nPrograms most end with suffix .ofp! Found " + testProgram);
@@ -45,7 +46,7 @@ public class OfpMain {
 		}
 
 		// Display tree
-		// Trees.inspect(root, parser);
+		Trees.inspect(root, parser);
 
 		System.out.println("");
 		ParseTreeWalker walker = new ParseTreeWalker();
