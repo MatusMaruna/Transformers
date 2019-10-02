@@ -1,7 +1,7 @@
 
 public enum OfpType {
 	Int("int"), String("string"), IntArray("int[]"), Char("char"), Float("float"), Bool("bool"), FloatArray("float[]"),
-	CharArray("char[]"), StringArray("string[]");
+	CharArray("char[]"), StringArray("string[]"), Undef("undef");
 
 	private String value;
 
