@@ -81,8 +81,11 @@ public class Scope {
 			scopeChildren.get(i).resetScope();
 	}
 
-	@Override
 	public String toString() {
-		return this.symbols.toString();
+		if(enclosingScope != null)
+		return "Scope name : " + name +  " Enclosing Scope id : " +  enclosingScope.name;
+		else
+		return "Scope name : " + name;
 	}
+	
 }

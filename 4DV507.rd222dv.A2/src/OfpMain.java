@@ -5,6 +5,9 @@ import org.antlr.v4.runtime.BufferedTokenStream;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
+
+import antlr4.OfpLexer;
+import antlr4.OfpParser;
 public class OfpMain {
 
 	public static void main(String[] args) throws Exception {
@@ -51,8 +54,6 @@ public class OfpMain {
 		ParseTreeWalker walker = new ParseTreeWalker();
 		Mylistener listener = new Mylistener();
 		listener.loadParser(parser);
-		listener.globalScope = new Scope(null, "global");
-		listener.currentScope = listener.globalScope;
 		walker.walk(listener, root);
 
 		System.out.println("\n Symbol Table: ");
@@ -62,6 +63,11 @@ public class OfpMain {
 		for (Scope s : listener.scopeList) {
 			s.printScope();
 		}
+		
+		for(Scope s : listener.scopeList) {
+			System.out.println(s.toString());
+		}
+		
 		System.out.println("----------------------------------------------------------------------");
 
 		System.out.println("Done!");

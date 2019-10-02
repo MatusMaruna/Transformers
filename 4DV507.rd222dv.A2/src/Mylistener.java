@@ -7,13 +7,15 @@ import org.antlr.v4.runtime.tree.ParseTreeListener;
 import org.antlr.v4.runtime.tree.ParseTreeProperty;
 import org.antlr.v4.runtime.tree.TerminalNode;
 
+import antlr4.OfpParser;
+
 public class Mylistener implements ParseTreeListener {
 	ArrayList<String> scopeRules = new ArrayList<String>();
 	ArrayList<Scope> scopeList = new ArrayList<Scope>();
 	ParseTreeProperty<Scope> scopes; // idk
 	Scope currentScope;
 	ParseTree node; 
-	
+	Scope s; 
 	Scope globalScope;
 	int id = 0;
 
@@ -21,12 +23,12 @@ public class Mylistener implements ParseTreeListener {
 	public void enterEveryRule(ParserRuleContext ctx) {
 		// System.out.println("rule entered: " + resolveName(ctx));
 		if (scopeRules.contains(resolveName(ctx))) {
-			scopes.put(node, currentScope);
-			node.setParent(ctx);
+			//scopes.put(node, currentScope);
+			//node.setParent(ctx);
 			System.out.println("Entered new Scope : " + resolveName(ctx));
 			String name = ctx.getChild(1).getText();
 			String type = ctx.getChild(0).getText();
-
+			
 			if (resolveName(ctx) == "main") {
 				type = ctx.getChild(0).getText();
 				currentScope.define(new Symbol(name, type));
@@ -42,11 +44,18 @@ public class Mylistener implements ParseTreeListener {
 				name = "whileStmt";
 				currentScope.define(new Symbol(name, type));
 			}
-			System.out.println(
-					"\n New tester: Type: " + type + " Id: " + name + " inside Scope : " + resolveName(ctx) + "\n");
-			Scope s = new Scope(currentScope, name);
+			/*System.out.println(
+					"\n New tester: Type: " + type + " Id: " + name + " inside Scope : " + resolveName(ctx) + "\n");*/
+			
+			if (resolveName(ctx) == "start") {
+				name = resolveName(ctx);
+				s = new Scope(null, name);
+				}else{
+				s = new Scope(currentScope, name);
+				}
 			scopeList.add(s);
 			currentScope = s;
+			
 		}
 
 		if (resolveName(ctx).equals("declaration")) {
