@@ -1,13 +1,12 @@
-/Ofp.tokens
 /OfpBaseListener.java
+/OfpBaseVisitor.java
 /OfpLexer.java
-/OfpLexer.tokens
 /OfpListener.java
 /OfpParser.java
-/OfpBaseVisitor.java
 /OfpVisitor.java
-/antlr4/
-/src/
+/Ofp.tokens
+/OfpLexer.tokens
+/.gitignore
 /OfpBaseListener.class
 /OfpBaseVisitor.class
 /OfpLexer.class
@@ -37,3 +36,4 @@
 /OfpParser.class
 /OfpVisitor.class
 /antl4/
+/antlr4/

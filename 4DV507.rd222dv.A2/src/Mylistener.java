@@ -14,8 +14,8 @@ public class Mylistener implements ParseTreeListener {
 	ArrayList<Scope> scopeList = new ArrayList<Scope>();
 	ParseTreeProperty<Scope> scopes; // idk
 	Scope currentScope;
-	ParseTree node; 
-	Scope s; 
+	ParseTree node;
+	Scope s;
 	Scope globalScope;
 	int id = 0;
 
@@ -23,12 +23,12 @@ public class Mylistener implements ParseTreeListener {
 	public void enterEveryRule(ParserRuleContext ctx) {
 		// System.out.println("rule entered: " + resolveName(ctx));
 		if (scopeRules.contains(resolveName(ctx))) {
-			//scopes.put(node, currentScope);
-			//node.setParent(ctx);
+			// scopes.put(node, currentScope);
+			// node.setParent(ctx);
 			System.out.println("Entered new Scope : " + resolveName(ctx));
 			String name = ctx.getChild(1).getText();
 			String type = ctx.getChild(0).getText();
-			
+
 			if (resolveName(ctx) == "main") {
 				type = ctx.getChild(0).getText();
 				currentScope.define(new Symbol(name, type));
@@ -44,18 +44,20 @@ public class Mylistener implements ParseTreeListener {
 				name = "whileStmt";
 				currentScope.define(new Symbol(name, type));
 			}
-			/*System.out.println(
-					"\n New tester: Type: " + type + " Id: " + name + " inside Scope : " + resolveName(ctx) + "\n");*/
-			
+			/*
+			 * System.out.println( "\n New tester: Type: " + type + " Id: " + name +
+			 * " inside Scope : " + resolveName(ctx) + "\n");
+			 */
+
 			if (resolveName(ctx) == "start") {
 				name = resolveName(ctx);
 				s = new Scope(null, name);
-				}else{
+			} else {
 				s = new Scope(currentScope, name);
-				}
+			}
 			scopeList.add(s);
 			currentScope = s;
-			
+
 		}
 
 		if (resolveName(ctx).equals("declaration")) {
@@ -66,7 +68,7 @@ public class Mylistener implements ParseTreeListener {
 			System.out.println("");
 			String name = ctx.getChild(1).getText();
 			String value = ctx.getChild(3).getText();
-			OfpType type = getType(ctx.getChild(0).getText());
+			OfpType type = OfpType.getType(ctx.getChild(0).getText());
 			currentScope.define(new Symbol(name, type));
 
 		}
@@ -88,7 +90,7 @@ public class Mylistener implements ParseTreeListener {
 			System.out.print(" Name:" + ctx.getChild(1).getText());
 			System.out.println("");
 			String name = ctx.getChild(1).getText();
-			OfpType type = getType(ctx.getChild(0).getText());
+			OfpType type = OfpType.getType(ctx.getChild(0).getText());
 			currentScope.define(new Symbol(name, type));
 		}
 		if (resolveName(ctx).equals("parameter")) {
@@ -97,7 +99,7 @@ public class Mylistener implements ParseTreeListener {
 			System.out.print(" Name:" + ctx.getChild(1).getText());
 			System.out.println("");
 			String name = ctx.getChild(1).getText();
-			OfpType type = getType(ctx.getChild(0).getText());
+			OfpType type = OfpType.getType(ctx.getChild(0).getText());
 			currentScope.define(new Symbol(name, type));
 		}
 
@@ -124,32 +126,6 @@ public class Mylistener implements ParseTreeListener {
 	public void visitTerminal(TerminalNode ctx) {
 		// System.out.println(resolveName(ctx));
 
-	}
-
-	public OfpType getType(String type) {
-
-		switch (type) {
-		case "int":
-			return OfpType.Int;
-		case "int[]":
-			return OfpType.IntArray;
-		case "string":
-			return OfpType.String;
-		case "float":
-			return OfpType.Float;
-		case "float[]":
-			return OfpType.FloatArray;
-		case "char":
-			return OfpType.Char;
-		case "char[]":
-			return OfpType.CharArray;
-		case "string[]":
-			return OfpType.StringArray;
-		case "bool":
-			return OfpType.Bool;
-		default:
-			return null;
-		}
 	}
 
 	String[] ruleNames;

@@ -63,9 +63,9 @@ public class Scope {
 		symbols.forEach((id, symbol) -> {
 
 			if (symbol.getType() == null) {
-				System.out.printf("%10s%25s%25s%n", id, symbol.getStringType(), " N: " + name + " T: (" + type + ")");
+				System.out.printf("%10s%25s%25s%n", id, symbol.getStringType(), name + "(" + type + ")");
 			} else {
-				System.out.printf("%10s%25s%25s%n", id, symbol.getType(), " N: " + name + " T: (" + type + ")");
+				System.out.printf("%10s%25s%25s%n", id, symbol.getType(), name + "(" + type + ")");
 			}
 		});
 
@@ -81,11 +81,12 @@ public class Scope {
 			scopeChildren.get(i).resetScope();
 	}
 
+	@Override
 	public String toString() {
-		if(enclosingScope != null)
-		return "Scope name : " + name +  " Enclosing Scope id : " +  enclosingScope.name;
+		if (enclosingScope != null)
+			return "Scope name : " + name + " Enclosing Scope id : " + enclosingScope.name;
 		else
-		return "Scope name : " + name;
+			return "Scope name : " + name;
 	}
-	
+
 }

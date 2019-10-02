@@ -1,6 +1,5 @@
 import java.io.IOException;
 
-import org.antlr.v4.gui.Trees;
 import org.antlr.v4.runtime.BufferedTokenStream;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
@@ -8,6 +7,7 @@ import org.antlr.v4.runtime.tree.ParseTreeWalker;
 
 import antlr4.OfpLexer;
 import antlr4.OfpParser;
+
 public class OfpMain {
 
 	public static void main(String[] args) throws Exception {
@@ -48,7 +48,7 @@ public class OfpMain {
 		}
 
 		// Display tree
-		Trees.inspect(root, parser);
+		// Trees.inspect(root, parser);
 
 		System.out.println("");
 		ParseTreeWalker walker = new ParseTreeWalker();
@@ -63,11 +63,11 @@ public class OfpMain {
 		for (Scope s : listener.scopeList) {
 			s.printScope();
 		}
-		
-		for(Scope s : listener.scopeList) {
+
+		for (Scope s : listener.scopeList) {
 			System.out.println(s.toString());
 		}
-		
+
 		System.out.println("----------------------------------------------------------------------");
 
 		System.out.println("Done!");
