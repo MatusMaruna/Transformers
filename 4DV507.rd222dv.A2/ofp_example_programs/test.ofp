@@ -2,11 +2,8 @@ void main(){
 int a; 
 a = 1; 
 int b = 1; 
-
-
 }
 
-void test(string a){
-int c = 1; 
-
+void method(){
+int b;
 }

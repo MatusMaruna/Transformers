@@ -23,6 +23,7 @@ public class Mylistener implements ParseTreeListener {
 		// System.out.println("rule entered: " + resolveName(ctx));
 		if (scopeRules.contains(resolveName(ctx))) {
 			System.out.println("Entered new Scope : " + resolveName(ctx));
+			
 			String name = ctx.getChild(1).getText();
 			String type = ctx.getChild(0).getText();
 			if (resolveName(ctx) == "main") {
@@ -45,17 +46,26 @@ public class Mylistener implements ParseTreeListener {
 			 * " inside Scope : " + resolveName(ctx) + "\n");
 			 */
 
-			if (resolveName(ctx) == "start") {
-				name = resolveName(ctx);
-				s = new Scope(null, name);
-			} else {
-				s = new Scope(currentScope, name);
-			}
+			
+			s = new Scope(currentScope, name);
 			scopeList.add(s);
 			currentScope = s;
 			scopes.put(ctx, currentScope);
 
 		}
+		
+		
+		if (resolveName(ctx) == "start") {
+			String name = resolveName(ctx);
+			s = new Scope(null, name);
+			scopeList.add(s);
+			currentScope = s;
+			scopes.put(ctx, currentScope);
+
+			
+		} 
+		
+		
 
 		if (resolveName(ctx).equals("declaration")) {
 			System.out.println("New decleration: " + ctx.getText());
@@ -136,7 +146,7 @@ public class Mylistener implements ParseTreeListener {
 
 	public void loadParser(OfpParser parser) {
 		ruleNames = parser.getRuleNames();
-		scopeRules.add("start");
+		//scopeRules.add("start");
 		scopeRules.add("main");
 		scopeRules.add("method");
 		scopeRules.add("ifStmt");
