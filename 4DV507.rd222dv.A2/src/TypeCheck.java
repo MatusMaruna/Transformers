@@ -120,7 +120,7 @@ public class TypeCheck extends OfpBaseVisitor<Symbol> {
 	@Override
 	public Symbol visitDeclaration(DeclarationContext ctx) {
 		System.out.println("Test Decl " + ctx.getText());
-		visitChildren(ctx);
+		//visitChildren(ctx);
 		return null;
 	}
 

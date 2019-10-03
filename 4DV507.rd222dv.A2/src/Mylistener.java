@@ -23,7 +23,6 @@ public class Mylistener implements ParseTreeListener {
 		// System.out.println("rule entered: " + resolveName(ctx));
 		if (scopeRules.contains(resolveName(ctx))) {
 			System.out.println("Entered new Scope : " + resolveName(ctx));
-			
 			String name = ctx.getChild(1).getText();
 			String type = ctx.getChild(0).getText();
 			if (resolveName(ctx) == "main") {
