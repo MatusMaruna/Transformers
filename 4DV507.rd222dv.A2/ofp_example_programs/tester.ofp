@@ -6,20 +6,23 @@ void main() {
 	x = 1;
 }
 int[] reverse(int[] arr) {
-if (a > b)
-		 int a = 1;
- else
-		int b = 1;
+	 if (a > b){
+	 	int test;
+   }	  
 }
 
 int sumUpTo(int n) {
-	string s;
 	int i = 1;
 	int sum = 0;
 	while (i < n+1) {
 		sum = sum + i;
 		i = i + 1;
 	}
-	return s;
-
+	return sum;
+	
+	
+	if (a > b)
+   	  int a = 1; 
+   else
+      int b = 1; 
 }
