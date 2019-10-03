@@ -43,163 +43,196 @@ public class TypeCheck extends OfpBaseVisitor<Symbol> {
 	
 	
 	
-	
+	/*
 	@Override
 	public Symbol visit(ParseTree arg0) {
 		//System.out.println(arg0.getText());
+		System.out.println(scopes.get(arg0));
 		System.out.println(arg0.getChildCount());
 		System.out.println(arg0.getChild(0).getText());
+		//visit(arg0.getChild(0));
 		return null;
-	}
+	} */
 
-	@Override
+/*	@Override
 	public Symbol visitChildren(RuleNode arg0) {
-		// TODO Auto-generated method stub
+		System.out.println("Test Child");
+		visitAllChildren(ctx);
 		return null;
-	}
+	} */
 
 	@Override
 	public Symbol visitErrorNode(ErrorNode arg0) {
-		// TODO Auto-generated method stub
+		System.out.println("Test ErrorNode");
 		return null;
 	}
 
 	@Override
 	public Symbol visitTerminal(TerminalNode arg0) {
-		// TODO Auto-generated method stub
+		System.out.println("Test Terminal");
 		return null;
 	}
 
 	@Override
 	public Symbol visitWhileStmt(WhileStmtContext ctx) {
-		// TODO Auto-generated method stub
+		System.out.println("Test While");
+		visitChildren(ctx);
 		return null;
 	}
 
 	@Override
 	public Symbol visitMethod(MethodContext ctx) {
-		// TODO Auto-generated method stub
+		System.out.println("Test Method");
+		visitChildren(ctx);
 		return null;
 	}
 
 	@Override
 	public Symbol visitStart(StartContext ctx) {
-		// TODO Auto-generated method stub
+		System.out.println("Test Start");
+		//visitAllChildren(ctx);
+		visitChildren(ctx);
 		return null;
 	}
 
 	@Override
 	public Symbol visitArrType(ArrTypeContext ctx) {
-		// TODO Auto-generated method stub
+		System.out.println("Test ArrType");
 		return null;
 	}
 
 	@Override
 	public Symbol visitMain(MainContext ctx) {
-		// TODO Auto-generated method stub
+		System.out.println("Test Main");
+		visitChildren(ctx);
 		return null;
 	}
 
 	@Override
 	public Symbol visitReturnStmt(ReturnStmtContext ctx) {
-		// TODO Auto-generated method stub
+		System.out.println("Test Return");
+		visitChildren(ctx);
 		return null;
 	}
 
 	@Override
 	public Symbol visitType(TypeContext ctx) {
-		// TODO Auto-generated method stub
+		System.out.println("Test Type");
+		visitChildren(ctx);
 		return null;
 	}
 
 	@Override
 	public Symbol visitDeclaration(DeclarationContext ctx) {
-		// TODO Auto-generated method stub
+		System.out.println("Test Decl");
+		visitChildren(ctx);
 		return null;
 	}
 
 	@Override
 	public Symbol visitVarType(VarTypeContext ctx) {
-		// TODO Auto-generated method stub
+		System.out.println("Test VarType");
+		visitChildren(ctx);
 		return null;
 	}
 
 	@Override
 	public Symbol visitCondition(ConditionContext ctx) {
-		// TODO Auto-generated method stub
+		System.out.println("Test Condition");
+		visitChildren(ctx);
 		return null;
 	}
 
 	@Override
 	public Symbol visitPrint(PrintContext ctx) {
-		// TODO Auto-generated method stub
+		System.out.println("Test Print");
+		visitChildren(ctx);
 		return null;
 	}
 
 	@Override
 	public Symbol visitIfStmt(IfStmtContext ctx) {
-		// TODO Auto-generated method stub
+		System.out.println("Test ifstmt");
+		visitChildren(ctx);
 		return null;
 	}
 
 	@Override
 	public Symbol visitArray(ArrayContext ctx) {
-		// TODO Auto-generated method stub
+		System.out.println("Test array");
+		visitChildren(ctx);
 		return null;
 	}
 
 	@Override
 	public Symbol visitAsgnStmt(AsgnStmtContext ctx) {
-		// TODO Auto-generated method stub
+		System.out.println("Test AsgnStmt");
+		visitChildren(ctx);
 		return null;
 	}
 
 	@Override
 	public Symbol visitParameter(ParameterContext ctx) {
-		// TODO Auto-generated method stub
+		System.out.println("Test Parameter");
+		visitChildren(ctx);
 		return null;
 	}
 
 	@Override
 	public Symbol visitLocalDecl(LocalDeclContext ctx) {
-		// TODO Auto-generated method stub
+		System.out.println("Test LocalDecl");
+		visitChildren(ctx);
 		return null;
 	}
 
 	@Override
 	public Symbol visitParameterList(ParameterListContext ctx) {
-		// TODO Auto-generated method stub
+		System.out.println("Test ParamList");
+		visitChildren(ctx);
 		return null;
 	}
 
 	@Override
 	public Symbol visitBlock(BlockContext ctx) {
-		// TODO Auto-generated method stub
+		System.out.println("Test Block");
+		visitChildren(ctx);
 		return null;
 	}
 
 	@Override
 	public Symbol visitExpr(ExprContext ctx) {
-		// TODO Auto-generated method stub
+		System.out.println("Test Expr");
+		visitChildren(ctx);
 		return null;
 	}
 
 	@Override
 	public Symbol visitArrayList(ArrayListContext ctx) {
-		// TODO Auto-generated method stub
+		System.out.println("Test ArrayList");
+		visitChildren(ctx);
 		return null;
 	}
 
 	@Override
 	public Symbol visitStmt(StmtContext ctx) {
-		// TODO Auto-generated method stub
+		System.out.println("Test Stmt");
+		visitChildren(ctx);
 		return null;
 	}
 
 	@Override
 	public Symbol visitMethodCall(MethodCallContext ctx) {
-		// TODO Auto-generated method stub
+		System.out.println("Test MethodCall");
+		visitChildren(ctx);
 		return null;
 	}
+	
+	/*public void visitAllChildren(ParseTree ctx) 
+	{
+		for(int i = 0; i < ctx.getChildCount(); i++) {
+			visit(ctx.getChild(i));
+		}
+	} */
+	
 	
 }
