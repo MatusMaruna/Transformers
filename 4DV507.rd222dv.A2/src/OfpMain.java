@@ -3,6 +3,7 @@ import java.io.IOException;
 import org.antlr.v4.runtime.BufferedTokenStream;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
+import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
 
 import antlr4.OfpLexer;
@@ -71,6 +72,11 @@ public class OfpMain {
 		System.out.println("----------------------------------------------------------------------");
 
 		System.out.println("Done!");
+		
+		TypeCheck typeChecking = new TypeCheck(listener.scopes); 
+		typeChecking.visit(root);
+		
+		
 		// System.out.println(listener.scopeList.toString());
 
 	}
