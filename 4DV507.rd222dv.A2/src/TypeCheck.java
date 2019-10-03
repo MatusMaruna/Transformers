@@ -1,6 +1,5 @@
 import org.antlr.v4.runtime.tree.ErrorNode;
 import org.antlr.v4.runtime.tree.ParseTree;
-import org.antlr.v4.runtime.tree.ParseTreeProperty;
 import org.antlr.v4.runtime.tree.RuleNode;
 import org.antlr.v4.runtime.tree.TerminalNode;
 
@@ -33,22 +32,10 @@ import antlr4.OfpParser.WhileStmtContext;
 
 
 public class TypeCheck extends OfpBaseVisitor<Symbol> {
-	ParseTreeProperty<Scope> scopes;
-	
-	
-	public TypeCheck(ParseTreeProperty<Scope> scopes) {
-		this.scopes = scopes; 
-		scopes.toString();
-	}
-	
-	
-	
-	
+
 	@Override
 	public Symbol visit(ParseTree arg0) {
-		//System.out.println(arg0.getText());
-		System.out.println(arg0.getChildCount());
-		System.out.println(arg0.getChild(0).getText());
+		// TODO Auto-generated method stub
 		return null;
 	}
 

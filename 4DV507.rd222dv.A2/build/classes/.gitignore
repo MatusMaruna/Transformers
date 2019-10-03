@@ -1,10 +1,8 @@
-/Ofp.tokens
 /OfpBaseListener.java
+/OfpBaseVisitor.java
 /OfpLexer.java
-/OfpLexer.tokens
 /OfpListener.java
 /OfpParser.java
-/OfpBaseVisitor.java
 /OfpVisitor.java
 /Ofp.tokens
 /OfpLexer.tokens
