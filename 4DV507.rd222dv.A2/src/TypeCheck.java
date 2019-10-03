@@ -1,8 +1,5 @@
-import org.antlr.v4.runtime.tree.ErrorNode;
-import org.antlr.v4.runtime.tree.ParseTree;
+import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ParseTreeProperty;
-import org.antlr.v4.runtime.tree.RuleNode;
-import org.antlr.v4.runtime.tree.TerminalNode;
 
 import antlr4.OfpBaseVisitor;
 import antlr4.OfpParser.ArrTypeContext;
@@ -28,47 +25,29 @@ import antlr4.OfpParser.TypeContext;
 import antlr4.OfpParser.VarTypeContext;
 import antlr4.OfpParser.WhileStmtContext;
 
-
-
-
-
 public class TypeCheck extends OfpBaseVisitor<Symbol> {
+	Scope currentScope;
 	ParseTreeProperty<Scope> scopes;
-	
-	
+
 	public TypeCheck(ParseTreeProperty<Scope> scopes) {
-		this.scopes = scopes; 
+		this.scopes = scopes;
 		scopes.toString();
 	}
-	
-	
-	
-	
-	@Override
-	public Symbol visit(ParseTree arg0) {
-		//System.out.println(arg0.getText());
-		System.out.println(arg0.getChildCount());
-		System.out.println(arg0.getChild(0).getText());
-		return null;
-	}
 
-	@Override
-	public Symbol visitChildren(RuleNode arg0) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Symbol visitErrorNode(ErrorNode arg0) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Symbol visitTerminal(TerminalNode arg0) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	/*
+	 * @Override public Symbol visit(ParseTree arg0) { //
+	 * System.out.println(arg0.getText()); System.out.println(arg0.getChildCount());
+	 * System.out.println(arg0.getChild(0).getText()); return null; }
+	 * 
+	 * @Override public Symbol visitChildren(RuleNode arg0) { // TODO Auto-generated
+	 * method stub return null; }
+	 * 
+	 * @Override public Symbol visitErrorNode(ErrorNode arg0) { // TODO
+	 * Auto-generated method stub return null; }
+	 * 
+	 * @Override public Symbol visitTerminal(TerminalNode arg0) { // TODO
+	 * Auto-generated method stub return null; }
+	 */
 
 	@Override
 	public Symbol visitWhileStmt(WhileStmtContext ctx) {
@@ -78,13 +57,14 @@ public class TypeCheck extends OfpBaseVisitor<Symbol> {
 
 	@Override
 	public Symbol visitMethod(MethodContext ctx) {
-		// TODO Auto-generated method stub
+		System.out.println("Test Method");
 		return null;
 	}
 
 	@Override
 	public Symbol visitStart(StartContext ctx) {
-		// TODO Auto-generated method stub
+		System.out.println("Test Start");
+		visit(ctx.getChild(0));
 		return null;
 	}
 
@@ -96,7 +76,7 @@ public class TypeCheck extends OfpBaseVisitor<Symbol> {
 
 	@Override
 	public Symbol visitMain(MainContext ctx) {
-		// TODO Auto-generated method stub
+		System.out.println("Test Main");
 		return null;
 	}
 
@@ -201,5 +181,8 @@ public class TypeCheck extends OfpBaseVisitor<Symbol> {
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
+
+	private Symbol scopeCheck(ParserRuleContext ctx) {
+
+	}
 }
