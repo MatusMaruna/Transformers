@@ -12,9 +12,8 @@ import antlr4.OfpParser;
 public class Mylistener implements ParseTreeListener {
 	ArrayList<String> scopeRules = new ArrayList<String>();
 	ArrayList<Scope> scopeList = new ArrayList<Scope>();
-	ParseTreeProperty<Scope> scopes; // idk
+	ParseTreeProperty<Scope> scopes = new ParseTreeProperty<Scope>(); // idk
 	Scope currentScope;
-	ParseTree node;
 	Scope s;
 	Scope globalScope;
 	int id = 0;
@@ -23,12 +22,9 @@ public class Mylistener implements ParseTreeListener {
 	public void enterEveryRule(ParserRuleContext ctx) {
 		// System.out.println("rule entered: " + resolveName(ctx));
 		if (scopeRules.contains(resolveName(ctx))) {
-			// scopes.put(node, currentScope);
-			// node.setParent(ctx);
 			System.out.println("Entered new Scope : " + resolveName(ctx));
 			String name = ctx.getChild(1).getText();
 			String type = ctx.getChild(0).getText();
-
 			if (resolveName(ctx) == "main") {
 				type = ctx.getChild(0).getText();
 				currentScope.define(new Symbol(name, type));
@@ -57,6 +53,7 @@ public class Mylistener implements ParseTreeListener {
 			}
 			scopeList.add(s);
 			currentScope = s;
+			scopes.put(ctx, currentScope);
 
 		}
 
