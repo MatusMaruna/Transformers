@@ -80,6 +80,7 @@ public class Mylistener implements ParseTreeListener {
 		
 
 		if (resolveName(ctx).equals("declaration")) {
+			checkSymbol(ctx);
 			/*System.out.println("New decleration: " + ctx.getText());
 			System.out.print(" Type: " + ctx.getChild(0).getText());
 			System.out.print(" Name: " + ctx.getChild(1).getText());
@@ -133,6 +134,12 @@ public class Mylistener implements ParseTreeListener {
 			currentScope.define(new Symbol(name, type));
 			scopes.put(ctx, currentScope);
 		}
+		
+		if(resolveName(ctx).equals("condition")) {
+			System.out.println(ctx.getChild(0).getChild(0).getText());
+			System.out.println(ctx.getChild(0).getChild(2).getText());
+			//System.out.println(ctx.getChild(2).getText());
+		}
 
 	}
 
@@ -176,6 +183,15 @@ public class Mylistener implements ParseTreeListener {
 
 	public String resolveName(ParserRuleContext ctx) {
 		return ruleNames[ctx.getRuleIndex()];
+	}
+	
+	
+	public void checkSymbol(ParserRuleContext ctx) {
+		if(currentScope.resolve(ctx.getChild(1).getText()) != null)
+			errorListener.reportError(ErrorType.MultipleDeclerationError, ctx.getStart().getLine(),
+					"conflicting declared variables " + ctx.getChild(1).getText());
+		
+		
 	}
 	
 

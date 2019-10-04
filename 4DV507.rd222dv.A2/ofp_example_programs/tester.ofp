@@ -2,5 +2,8 @@
 
 void main() {
 int p = 3;
-int p = 1; 
+string p = 3; 
+if(p>i){
+int c = 1; 
+}
 }

@@ -59,6 +59,6 @@ public class ErrorListener extends BaseErrorListener {
  
  
  enum ErrorType {
-	 SemanticError, TypeMismatch , ParsingError
+	 SemanticError, TypeMismatch , ParsingError, MultipleDeclerationError,
  }
  
