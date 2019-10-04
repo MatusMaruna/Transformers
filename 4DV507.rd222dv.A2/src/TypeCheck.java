@@ -30,10 +30,10 @@ import antlr4.OfpParser.WhileStmtContext;
 public class TypeCheck extends OfpBaseVisitor<Symbol> {
 	Scope currentScope;
 	ParseTreeProperty<Scope> scopes;
+	ErrorListener errorListener; 
 
-	public TypeCheck(ParseTreeProperty<Scope> scopes) {
+	public TypeCheck(ParseTreeProperty<Scope> scopes, ErrorListener errorListener) {
 		this.scopes = scopes;
-		scopes.toString();
 	}
 
 
@@ -120,7 +120,14 @@ public class TypeCheck extends OfpBaseVisitor<Symbol> {
 	@Override
 	public Symbol visitDeclaration(DeclarationContext ctx) {
 		System.out.println("Test Decl " + ctx.getText());
-		//visitChildren(ctx);
+		
+		System.out.println(ctx.getChild(0).getText()); // Type
+		System.out.println(ctx.getChild(1).getText()); // Name
+		System.out.println(ctx.getChild(3).getText()); // Value
+		
+	 // System.out.println(scopes.get(ctx).resolve(ctx.getChild(1).getText()).getType());
+		
+		visitChildren(ctx);
 		return null;
 	}
 

@@ -1,9 +1,11 @@
 import java.io.IOException;
 
 import org.antlr.v4.gui.Trees;
+import org.antlr.v4.runtime.ANTLRErrorListener;
 import org.antlr.v4.runtime.BufferedTokenStream;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
+import org.antlr.v4.runtime.Recognizer;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
 
@@ -16,7 +18,7 @@ public class OfpMain {
 		// Read test program path from args
 
 		String testDir = "./ofp_example_programs/";
-		String testProgram = "test.ofp";
+		String testProgram = "tester.ofp";
 
 		if (!testProgram.endsWith(".ofp")) {
 			System.out.println("\nPrograms most end with suffix .ofp! Found " + testProgram);
@@ -41,20 +43,19 @@ public class OfpMain {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
 		int errors = errorListener.getErrorCount();
-		System.out.println("Error count: " + errors);
 		if (errors > 0) {
+			errorListener.printErrors();
 			System.out.println("\nErrors discovered during parsing - Exit!");
 			System.exit(-1);
 		}
 
 		// Display tree
-		 Trees.inspect(root, parser);
+		// Trees.inspect(root, parser);
 
 		System.out.println("");
 		ParseTreeWalker walker = new ParseTreeWalker();
-		Mylistener listener = new Mylistener();
+		Mylistener listener = new Mylistener(errorListener);
 		listener.loadParser(parser);
 		walker.walk(listener, root);
 
@@ -72,13 +73,12 @@ public class OfpMain {
 
 		System.out.println("----------------------------------------------------------------------");
 
-		System.out.println("Done!");
-		
-		TypeCheck typeChecking = new TypeCheck(listener.scopes); 
+		TypeCheck typeChecking = new TypeCheck(listener.scopes, errorListener); 
 		typeChecking.visit(root);
 		
+		errorListener.printErrors();
 		
-		// System.out.println(listener.scopeList.toString());
+		//System.out.println(listener.scopeList.toString());
 
 	}
 

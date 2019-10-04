@@ -72,7 +72,9 @@ arrType : ID? '[' expr ']' ;
 
 whileStmt : 'while' '(' condition ')' '{' stmt+ '}';
 
-ifStmt : 'if' '(' condition ')' (stmt|block) ('else' (stmt|block))?;
+ifStmt : 'if' '(' condition ')' (stmt|block) elseStmt?;
+
+elseStmt : ('else' (stmt|block)) ;
 
 condition : (expr COP expr) | expr ;
 

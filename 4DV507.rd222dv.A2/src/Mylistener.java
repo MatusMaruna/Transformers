@@ -1,6 +1,7 @@
 import java.util.ArrayList;
 
 import org.antlr.v4.runtime.ParserRuleContext;
+import org.antlr.v4.runtime.Recognizer;
 import org.antlr.v4.runtime.tree.ErrorNode;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.ParseTreeListener;
@@ -16,13 +17,21 @@ public class Mylistener implements ParseTreeListener {
 	Scope currentScope;
 	Scope s;
 	Scope globalScope;
-	int id = 0;
+	int countIf = 0;
+	int countWhile = 0; 
+	int countElse = 0; 
+	ErrorListener errorListener; 
+	
+
+	public Mylistener(ErrorListener errorListener) {
+		this.errorListener = errorListener; 
+	}
 
 	@Override
 	public void enterEveryRule(ParserRuleContext ctx) {
 		// System.out.println("rule entered: " + resolveName(ctx));
 		if (scopeRules.contains(resolveName(ctx))) {
-			System.out.println("Entered new Scope : " + resolveName(ctx));
+			//System.out.println("Entered new Scope : " + resolveName(ctx));
 			String name = ctx.getChild(1).getText();
 			String type = ctx.getChild(0).getText();
 			if (resolveName(ctx) == "main") {
@@ -33,11 +42,15 @@ public class Mylistener implements ParseTreeListener {
 				currentScope.define(new Symbol(name, type));
 			}
 			if (resolveName(ctx) == "ifStmt") {
-				name = "ifStmt " + id++;
+				name = "ifStmt " + countIf++;
 				currentScope.define(new Symbol(name, type));
 			}
 			if (resolveName(ctx) == "whileStmt") {
-				name = "whileStmt";
+				name = "whileStmt " + countWhile++;
+				currentScope.define(new Symbol(name, type));
+			}
+			if(resolveName(ctx) == "elseStmt") {
+				name = "elseStmt " + countElse++;;
 				currentScope.define(new Symbol(name, type));
 			}
 			/*
@@ -67,53 +80,58 @@ public class Mylistener implements ParseTreeListener {
 		
 
 		if (resolveName(ctx).equals("declaration")) {
-			System.out.println("New decleration: " + ctx.getText());
+			/*System.out.println("New decleration: " + ctx.getText());
 			System.out.print(" Type: " + ctx.getChild(0).getText());
 			System.out.print(" Name: " + ctx.getChild(1).getText());
 			System.out.print(" Value:" + ctx.getChild(3).getText());
-			System.out.println("");
+			System.out.println("");*/
 			String name = ctx.getChild(1).getText();
 			String value = ctx.getChild(3).getText();
 			OfpType type = OfpType.getType(ctx.getChild(0).getText());
 			currentScope.define(new Symbol(name, type));
+			scopes.put(ctx, currentScope);
 
 		}
 
 		if (resolveName(ctx).equals("asgnStmt")) {
-			System.out.println("New assignment: " + ctx.getText());
+			/*System.out.println("New assignment: " + ctx.getText());
 			System.out.print(" Name: " + ctx.getChild(0).getText());
 			System.out.print(" Value:" + ctx.getChild(2).getText());
-			System.out.println("");
+			System.out.println("");*/
 			String name = ctx.getChild(0).getText();
 			OfpType type; 
 			try {
 			type = currentScope.resolve(name).getType();
-			}catch(Exception e) {
-				System.err.println("Variable " + ctx.getChild(0).getText() + " is not defined!");
-				System.out.println("");
-				type = OfpType.Undef;
-			}
 			String value = ctx.getChild(2).getText();
-			currentScope.define(new Symbol(name,type ));
+			currentScope.define(new Symbol(name,type));
+			scopes.put(ctx, currentScope);
+			}catch(Exception e) {
+				errorListener.reportError(ErrorType.SemanticError, ctx.getStart().getLine(),
+						"Variable "+ ctx.getChild(0).getText() + " is not defined!");
+				
+			}
+			
 		}
 
 		if (resolveName(ctx).equals("localDecl")) {
-			System.out.println("New local decl: " + ctx.getText());
+			/*System.out.println("New local decl: " + ctx.getText());
 			System.out.print(" Type: " + ctx.getChild(0).getText());
 			System.out.print(" Name:" + ctx.getChild(1).getText());
-			System.out.println("");
+			System.out.println("");*/
 			String name = ctx.getChild(1).getText();
 			OfpType type = OfpType.getType(ctx.getChild(0).getText());
 			currentScope.define(new Symbol(name, type));
+			scopes.put(ctx, currentScope);
 		}
 		if (resolveName(ctx).equals("parameter")) {
-			System.out.println("New Parameter: " + ctx.getText());
+			/*System.out.println("New Parameter: " + ctx.getText());
 			System.out.print(" Type: " + ctx.getChild(0).getText());
 			System.out.print(" Name:" + ctx.getChild(1).getText());
-			System.out.println("");
+			System.out.println("");*/
 			String name = ctx.getChild(1).getText();
 			OfpType type = OfpType.getType(ctx.getChild(0).getText());
 			currentScope.define(new Symbol(name, type));
+			scopes.put(ctx, currentScope);
 		}
 
 	}
@@ -123,7 +141,7 @@ public class Mylistener implements ParseTreeListener {
 		// System.out.println("rule exited: " + resolveName(ctx));
 
 		if (scopeRules.contains(resolveName(ctx))) {
-			System.out.println("Left Scope : " + resolveName(ctx));
+			//System.out.println("Left Scope : " + resolveName(ctx));
 			currentScope.setScopeType(resolveName(ctx));
 			currentScope = currentScope.setEnclosingScope();
 		}
@@ -131,10 +149,13 @@ public class Mylistener implements ParseTreeListener {
 
 	@Override
 	public void visitErrorNode(ErrorNode ctx) {
-		// System.err.println("Visit Error: " + arg0.getText());
+		/* errorListener.reportError(ErrorType.SemanticError, ctx.getSymbol().getLine(),
+					"Could not parse:  "+ ctx.getText() + " , invalid value");
+		 errorListener.printErrors();
+		 System.exit(-1); */
 
 	}
-
+ 
 	@Override
 	public void visitTerminal(TerminalNode ctx) {
 		// System.out.println(resolveName(ctx));
@@ -150,11 +171,13 @@ public class Mylistener implements ParseTreeListener {
 		scopeRules.add("method");
 		scopeRules.add("ifStmt");
 		scopeRules.add("whileStmt");
+		scopeRules.add("elseStmt");
 	}
 
 	public String resolveName(ParserRuleContext ctx) {
 		return ruleNames[ctx.getRuleIndex()];
 	}
+	
 
 	public String resolveName(TerminalNode ctx) {
 		return ctx.toString();

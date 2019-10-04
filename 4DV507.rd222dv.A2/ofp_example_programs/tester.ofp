@@ -1,28 +1,6 @@
 # tester.ofp
 
 void main() {
-	int p; int c; int d;
-	float a = 2.0 + 1.0 + 0.2345;
-	x = 1;
-}
-int[] reverse(int[] arr) {
-	 if (a > b){
-	 	int test;
-   }	  
-}
-
-int sumUpTo(int n) {
-	int i = 1;
-	int sum = 0;
-	while (i < n+1) {
-		sum = sum + i;
-		i = i + 1;
-	}
-	return sum;
-	
-	
-	if (a > b)
-   	  int a = 1; 
-   else
-      int b = 1; 
+int p = 3;
+int p = 1; 
 }
