@@ -136,9 +136,15 @@ public class Mylistener implements ParseTreeListener {
 		}
 		
 		if(resolveName(ctx).equals("condition")) {
-			System.out.println(ctx.getChild(0).getChild(0).getText());
-			System.out.println(ctx.getChild(0).getChild(2).getText());
-			//System.out.println(ctx.getChild(2).getText());
+			System.out.println(ctx.getChild(0).getChildCount());
+			System.out.println(currentScope.getEnclosingScope().getScopeName());
+			for(int i = 0; i < ctx.getChild(0).getChildCount(); i+=2) {
+				String varName = ctx.getChild(0).getChild(i).getText();
+				if(currentScope.getEnclosingScope().resolve(varName) == null) {
+					errorListener.reportError(ErrorType.SemanticError, ctx.getStart().getLine(),
+							"Parameter " + varName + " is undefined!");
+				}
+			}
 		}
 
 	}
@@ -184,6 +190,7 @@ public class Mylistener implements ParseTreeListener {
 	public String resolveName(ParserRuleContext ctx) {
 		return ruleNames[ctx.getRuleIndex()];
 	}
+	
 	
 	
 	public void checkSymbol(ParserRuleContext ctx) {

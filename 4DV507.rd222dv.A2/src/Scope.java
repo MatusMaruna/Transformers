@@ -18,6 +18,10 @@ public class Scope {
 	public String getScopeType() {
 		return type;
 	}
+	
+	public Scope getEnclosingScope() {
+		return enclosingScope; 
+	}
 
 	public void setScopeType(String type) {
 		this.type = type;
