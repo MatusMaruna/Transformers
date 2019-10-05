@@ -3,12 +3,12 @@
 void main() {
 int p = 3;
 string p = 3;  
-if(p>i){
+if(test()>i){
 int c = 1; 
 }
 }
 
-void test(int t, int c, int p){
+int test(int t, int c, int p){
 
 
 }

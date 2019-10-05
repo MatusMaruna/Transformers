@@ -140,10 +140,10 @@ public class Mylistener implements ParseTreeListener {
 			System.out.println(currentScope.getEnclosingScope().getScopeName());
 			for(int i = 0; i < ctx.getChild(0).getChildCount(); i+=2) {
 				String varName = ctx.getChild(0).getChild(i).getText();
-				if(currentScope.getEnclosingScope().resolve(varName) == null) {
+				if(search(varName) == false) {
 					errorListener.reportError(ErrorType.SemanticError, ctx.getStart().getLine(),
 							"Parameter " + varName + " is undefined!");
-				}
+				};
 			}
 		}
 
@@ -205,5 +205,20 @@ public class Mylistener implements ParseTreeListener {
 	public String resolveName(TerminalNode ctx) {
 		return ctx.toString();
 	}
-
+	
+	public Boolean search(String varName) {
+		
+		if(currentScope.getEnclosingScope().resolve(varName) == null) {
+		
+		Scope s = currentScope.getEnclosingScope();
+		while(s.getEnclosingScope() != null) {
+			s = s.getEnclosingScope();
+			if(s.resolve(varName) != null) {
+				return true;
+			}
+		}
+		return false; 
+	}
+		return true;
+	}
 }
