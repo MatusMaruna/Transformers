@@ -1,9 +1,12 @@
-import org.antlr.v4.runtime.ParserRuleContext;
+
 import org.antlr.v4.runtime.tree.ErrorNode;
+import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.ParseTreeProperty;
+import org.antlr.v4.runtime.tree.RuleNode;
 import org.antlr.v4.runtime.tree.TerminalNode;
 
 import antlr4.OfpBaseVisitor;
+import antlr4.OfpParser;
 import antlr4.OfpParser.ArrTypeContext;
 import antlr4.OfpParser.ArrayContext;
 import antlr4.OfpParser.ArrayListContext;
@@ -27,13 +30,15 @@ import antlr4.OfpParser.TypeContext;
 import antlr4.OfpParser.VarTypeContext;
 import antlr4.OfpParser.WhileStmtContext;
 
-public class TypeCheck extends OfpBaseVisitor<Symbol> {
+public class TypeCheck extends OfpBaseVisitor<OfpType> {
 	Scope currentScope;
 	ParseTreeProperty<Scope> scopes;
 	ErrorListener errorListener; 
+	String[] ruleNames;
 
 	public TypeCheck(ParseTreeProperty<Scope> scopes, ErrorListener errorListener) {
 		this.scopes = scopes;
+		this.errorListener = errorListener; 
 	}
 
 
@@ -55,179 +60,217 @@ public class TypeCheck extends OfpBaseVisitor<Symbol> {
 		visitAllChildren(ctx);
 		return null;
 	} */
+	
 
 	@Override
-	public Symbol visitErrorNode(ErrorNode arg0) {
-		System.out.println("Test ErrorNode " + arg0.getText());
+	public OfpType visitErrorNode(ErrorNode arg0) {
+		//System.out.println("Test ErrorNode " + arg0.getText());
 		return null;
 	}
 
 	@Override
-	public Symbol visitTerminal(TerminalNode arg0) {
-		System.out.println("Test Terminal: " + arg0.getText());
+	public OfpType visitTerminal(TerminalNode arg0) {
+		//System.out.println("Test Terminal: " + arg0.getText());
+		//System.out.println(ruleNames[arg0.getSymbol().getType()]);
+		
+		switch(ruleNames[arg0.getSymbol().getType()]) {
+			
+			case "STR":
+				return OfpType.String;
+			case "INT": 
+				return OfpType.Int;
+			case "CHAR": 
+				return OfpType.Char;
+			case "FLOAT":
+				return OfpType.Float;
+				
+			
+		}
 		return null;
-	}
+	} 
 
 	@Override
-	public Symbol visitWhileStmt(WhileStmtContext ctx) {
-		System.out.println("Test While " + ctx.getText());
+	public OfpType visitWhileStmt(WhileStmtContext ctx) {
+		//System.out.println("Test While " + ctx.getText());
 		visitChildren(ctx);
 		return null;
 	}
 
 	@Override
-	public Symbol visitMethod(MethodContext ctx) {
-		System.out.println("Test Method " + ctx.getText());
+	public OfpType visitMethod(MethodContext ctx) {
+		//System.out.println("Test Method " + ctx.getText());
 		visitChildren(ctx);
 		return null;
 	}
 
 	@Override
-	public Symbol visitStart(StartContext ctx) {
-		System.out.println("Test Start " + ctx.getText());
+	public OfpType visitStart(StartContext ctx) {
+		//System.out.println("Test Start " + ctx.getText());
 		//visitAllChildren(ctx);
 		visitChildren(ctx);
 		return null;
 	}
 
 	@Override
-	public Symbol visitArrType(ArrTypeContext ctx) {
-		System.out.println("Test ArrType " + ctx.getText());
+	public OfpType visitArrType(ArrTypeContext ctx) {
+		//System.out.println("Test ArrType " + ctx.getText());
 		return null;
 	}
 
 	@Override
-	public Symbol visitMain(MainContext ctx) {
-		System.out.println("Test Main " + ctx.getText());
+	public OfpType visitMain(MainContext ctx) {
+		//System.out.println("Test Main " + ctx.getText());
 		visitChildren(ctx);
 		return null;
 	}
 
 	@Override
-	public Symbol visitReturnStmt(ReturnStmtContext ctx) {
-		System.out.println("Test Return " + ctx.getText());
+	public OfpType visitReturnStmt(ReturnStmtContext ctx) {
+		//System.out.println("Test Return " + ctx.getText());
 		visitChildren(ctx);
 		return null;
 	}
 
 	@Override
-	public Symbol visitType(TypeContext ctx) {
-		System.out.println("Test Type " + ctx.getText());
+	public OfpType visitType(TypeContext ctx) {
+		//System.out.println("Test Type " + ctx.getText());
 		visitChildren(ctx);
 		return null;
 	}
 
 	@Override
-	public Symbol visitDeclaration(DeclarationContext ctx) {
-		System.out.println("Test Decl " + ctx.getText());
+	public OfpType visitDeclaration(DeclarationContext ctx) {
+	//	System.out.println("Test Decl " + ctx.getText());
 		
-		System.out.println(ctx.getChild(0).getText()); // Type
-		System.out.println(ctx.getChild(1).getText()); // Name
-		System.out.println(ctx.getChild(3).getText()); // Value
+		String type = ctx.getChild(0).getText(); // Type
+		String name = ctx.getChild(1).getText(); // Name
+		String value = ctx.getChild(3).getText(); // Value
+		OfpType exprType = visit(ctx.getChild(3));
+		OfpType idType = scopes.get(ctx).resolve(name).getType();
 		
+		if(exprType != idType) {
+			errorListener.reportError(ErrorType.TypeMismatch, ctx.getStart().getLine(),
+					"Type mismatch on variable " + name + " [" + idType.name() + "," + exprType.name()+"]");
+		}
 	 // System.out.println(scopes.get(ctx).resolve(ctx.getChild(1).getText()).getType());
-		
 		visitChildren(ctx);
 		return null;
 	}
 
 	@Override
-	public Symbol visitVarType(VarTypeContext ctx) {
-		System.out.println("Test VarType " + ctx.getText());
+	public OfpType visitVarType(VarTypeContext ctx) {
+		//System.out.println("Test VarType " + ctx.getText());
+		OfpType type = visitChildren(ctx);
+		return type;
+	}
+
+	@Override
+	public OfpType visitCondition(ConditionContext ctx) {
+		//System.out.println("Test Condition " + ctx.getText());
+		for(int i = 0; i < ctx.getChild(0).getChildCount(); i+=2) {
+			String varName = ctx.getChild(0).getChild(i).getText();
+			//System.out.println(varName);
+		}
 		visitChildren(ctx);
 		return null;
 	}
 
 	@Override
-	public Symbol visitCondition(ConditionContext ctx) {
-		System.out.println("Test Condition " + ctx.getText());
+	public OfpType visitPrint(PrintContext ctx) {
+		//System.out.println("Test Print " + ctx.getText());
 		visitChildren(ctx);
 		return null;
 	}
 
 	@Override
-	public Symbol visitPrint(PrintContext ctx) {
-		System.out.println("Test Print " + ctx.getText());
+	public OfpType visitIfStmt(IfStmtContext ctx) {
+		//System.out.println("Test ifstmt " + ctx.getText());
 		visitChildren(ctx);
 		return null;
 	}
 
 	@Override
-	public Symbol visitIfStmt(IfStmtContext ctx) {
-		System.out.println("Test ifstmt " + ctx.getText());
+	public OfpType visitArray(ArrayContext ctx) {
+		//System.out.println("Test array " + ctx.getText());
 		visitChildren(ctx);
 		return null;
 	}
 
 	@Override
-	public Symbol visitArray(ArrayContext ctx) {
-		System.out.println("Test array " + ctx.getText());
+	public OfpType visitAsgnStmt(AsgnStmtContext ctx) {
+		//System.out.println("Test AsgnStmt " + ctx.getText());
 		visitChildren(ctx);
 		return null;
 	}
 
 	@Override
-	public Symbol visitAsgnStmt(AsgnStmtContext ctx) {
-		System.out.println("Test AsgnStmt " + ctx.getText());
+	public OfpType visitParameter(ParameterContext ctx) {
+		//System.out.println("Test Parameter " + ctx.getText());
 		visitChildren(ctx);
 		return null;
 	}
 
 	@Override
-	public Symbol visitParameter(ParameterContext ctx) {
-		System.out.println("Test Parameter " + ctx.getText());
+	public OfpType visitLocalDecl(LocalDeclContext ctx) {
+		//System.out.println("Test LocalDecl " + ctx.getText());
 		visitChildren(ctx);
 		return null;
 	}
 
 	@Override
-	public Symbol visitLocalDecl(LocalDeclContext ctx) {
-		System.out.println("Test LocalDecl " + ctx.getText());
+	public OfpType visitParameterList(ParameterListContext ctx) {
+		//System.out.println("Test ParamList " + ctx.getText());
 		visitChildren(ctx);
 		return null;
 	}
 
 	@Override
-	public Symbol visitParameterList(ParameterListContext ctx) {
-		System.out.println("Test ParamList " + ctx.getText());
+	public OfpType visitBlock(BlockContext ctx) {
+		//System.out.println("Test Block " + ctx.getText());
 		visitChildren(ctx);
 		return null;
 	}
 
 	@Override
-	public Symbol visitBlock(BlockContext ctx) {
-		System.out.println("Test Block " + ctx.getText());
+	public OfpType visitExpr(ExprContext ctx) {
+		//System.out.println("Test Expr " + ctx.getText());
+		OfpType type = visitChildren(ctx);
+		return type;
+	}
+
+	@Override
+	public OfpType visitArrayList(ArrayListContext ctx) {
+		//System.out.println("Test ArrayList " + ctx.getText());
 		visitChildren(ctx);
 		return null;
 	}
 
 	@Override
-	public Symbol visitExpr(ExprContext ctx) {
-		System.out.println("Test Expr " + ctx.getText());
+	public OfpType visitStmt(StmtContext ctx) {
+		//System.out.println("Test Stmt " + ctx.getText());
 		visitChildren(ctx);
 		return null;
 	}
 
 	@Override
-	public Symbol visitArrayList(ArrayListContext ctx) {
-		System.out.println("Test ArrayList " + ctx.getText());
+	public OfpType visitMethodCall(MethodCallContext ctx) {
+		//System.out.println("Test MethodCall " + ctx.getText());
 		visitChildren(ctx);
 		return null;
 	}
-
-	@Override
-	public Symbol visitStmt(StmtContext ctx) {
-		System.out.println("Test Stmt " + ctx.getText());
-		visitChildren(ctx);
-		return null;
+	
+	public void loadParser(OfpParser parser) {
+		ruleNames = parser.getTokenNames();
+		//System.out.println(parser.getTokenNames());
+		/*for(String s : ruleNames) {
+			System.out.println(s);
+		}*/
 	}
-
-	@Override
-	public Symbol visitMethodCall(MethodCallContext ctx) {
-		System.out.println("Test MethodCall " + ctx.getText());
-		visitChildren(ctx);
-		return null;
-	}
+	
+	
+	/*public String resolveName(ParseTree ctx) {
+		return ruleNames[ctx.getRuleIndex()];
+	}*/
 
 	/*public void visitAllChildren(ParseTree ctx)
 	{

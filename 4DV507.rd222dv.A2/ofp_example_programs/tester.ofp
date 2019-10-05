@@ -5,6 +5,9 @@ int p = 3;
 string p = 3;  
 if(test()>i){
 int c = 1; 
+if(p>c){
+int d = 2; 
+}
 }
 }
 
