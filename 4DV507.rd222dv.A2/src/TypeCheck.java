@@ -70,8 +70,8 @@ public class TypeCheck extends OfpBaseVisitor<OfpType> {
 
 	@Override
 	public OfpType visitTerminal(TerminalNode arg0) {
-		//System.out.println("Test Terminal: " + arg0.getText());
-		//System.out.println(ruleNames[arg0.getSymbol().getType()]);
+		System.out.println("Test Terminal: " + arg0.getText());
+		System.out.println(ruleNames[arg0.getSymbol().getType()]);
 		
 		switch(ruleNames[arg0.getSymbol().getType()]) {
 			
@@ -83,10 +83,12 @@ public class TypeCheck extends OfpBaseVisitor<OfpType> {
 				return OfpType.Char;
 			case "FLOAT":
 				return OfpType.Float;
+			default: 
+				return OfpType.Undef;
 				
 			
 		}
-		return null;
+		
 	} 
 
 	@Override
@@ -199,6 +201,27 @@ public class TypeCheck extends OfpBaseVisitor<OfpType> {
 	@Override
 	public OfpType visitAsgnStmt(AsgnStmtContext ctx) {
 		//System.out.println("Test AsgnStmt " + ctx.getText());
+		String name = ctx.getChild(0).getText(); // Name
+		OfpType idType = scopes.get(ctx).resolve(name).getType();
+		OfpType exprType = visit(ctx.getChild(2));
+		
+		
+		System.out.println("ID TYPE: " + idType.name());
+		System.out.println("EXPR TYPE: " + idType.name());
+		
+		if(exprType != idType) {
+			errorListener.reportError(ErrorType.TypeMismatch, ctx.getStart().getLine(),
+					"Type mismatch on variable " + name + " [" + idType.name() + "," + exprType.name()+"]");
+		}
+	 // System.out.println(scopes.get(ctx).resolve(ctx.getChild(1).getText()).getType());
+		visitChildren(ctx);
+		
+		
+		
+		
+		
+		
+		
 		visitChildren(ctx);
 		return null;
 	}
