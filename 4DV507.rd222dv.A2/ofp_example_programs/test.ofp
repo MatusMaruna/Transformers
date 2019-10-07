@@ -1,17 +1,14 @@
-void main(){
-int[] arr = {1,2,3,4,5,6,1.2,"Stra"};
-int x = o[1];
-int y = 3.3; 
-int z = giveFloat();
-y = 4.4; 
-int res = maxOfTwo(p,q);
+# max.ofp
+
+void main() {
+	int p = 3;
+	int q = 7;
+	int res = maxOfTwo(p,q);
+	println(res);        # 7
+	res = maxOfThree(p,q,9);
+	println(res);      # 9
+	
 }
-
-float giveFloat(){
-
-
-}
-
 
 
 int maxOfTwo(int a, int b) {
@@ -21,3 +18,10 @@ int maxOfTwo(int a, int b) {
       return b;
 }
 
+
+int maxOfThree(int a, int b, int c) {
+
+
+
+
+}

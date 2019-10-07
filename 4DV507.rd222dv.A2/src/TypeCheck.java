@@ -47,19 +47,6 @@ public class TypeCheck extends OfpBaseVisitor<OfpType> {
 		this.errorListener = errorListener;
 	}
 
-	/*
-	 * @Override public Symbol visit(ParseTree arg0) {
-	 * //System.out.println(arg0.getText()); System.out.println(scopes.get(arg0));
-	 * System.out.println(arg0.getChildCount());
-	 * System.out.println(arg0.getChild(0).getText()); //visit(arg0.getChild(0));
-	 * return null; }
-	 */
-
-	/*
-	 * @Override public Symbol visitChildren(RuleNode arg0) {
-	 * System.out.println("Test Child"); visitAllChildren(ctx); return null; }
-	 */
-
 	@Override
 	public OfpType visitErrorNode(ErrorNode arg0) {
 		// System.out.println("Test ErrorNode " + arg0.getText());
@@ -107,6 +94,10 @@ public class TypeCheck extends OfpBaseVisitor<OfpType> {
 		if(scopes.get(ctx) != null) {
 			currentScope = scopes.get(ctx);
 		}
+		System.out.println("ENTERING NEW METHOD " + ctx.getText());
+		System.out.println(currentScope.getScopeName());
+		temp = visit(ctx.getChild(0));
+		currentScope.printScope();
 		visitChildren(ctx);
 		return null;
 	}
@@ -288,7 +279,14 @@ public class TypeCheck extends OfpBaseVisitor<OfpType> {
 			currentScope = scopes.get(ctx);
 		}
 		OfpType type = visitChildren(ctx);
-		//System.out.println(type.name());
+		if(temp == OfpType.Undef) {
+			name = ctx.getText();
+			System.out.println(ctx.getText() + " " + ctx.getStart().getLine());
+			if(search(ctx.getText())) {
+				System.out.println("Taken");
+				type = getType(ctx.getText());
+			}
+		}
 		typeEqual(temp, type, ctx, name, ctx.getStart().getLine());
 		
 		
@@ -346,12 +344,7 @@ public class TypeCheck extends OfpBaseVisitor<OfpType> {
 		if (exprType != idType) {
 			if (arrayValueMap.get(idType) != exprType) {
 				
-				if(idType == null) {
-					
-					System.out.println("Somethings null");
-				}else if(exprType == null) {
-					System.out.println("Somethings null");
-				}else {
+				if(idType != null && exprType != null) {
 				errorListener.reportError(ErrorType.TypeMismatch, line,
 						"Type mismatch on variable " + name + " [" + idType.name() + "," + exprType.name() + "]");
 				}
