@@ -1,4 +1,3 @@
-
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -69,9 +68,6 @@ public class TypeCheck extends OfpBaseVisitor<OfpType> {
 
 	@Override
 	public OfpType visitTerminal(TerminalNode arg0) {
-		System.out.println("Test Terminal: " + arg0.getText());
-		System.out.println(ruleNames[arg0.getSymbol().getType()]);
-
 		switch (ruleNames[arg0.getSymbol().getType()]) {
 
 		case "STR":
@@ -84,12 +80,9 @@ public class TypeCheck extends OfpBaseVisitor<OfpType> {
 			return OfpType.Float;
 		default:
 			if (currentScope != null) {
-				System.out.println("Not null");
 				if (currentScope.resolve(arg0.getText()) != null) {
-					System.out.println("Is in current scope" + arg0.getText() + currentScope.getScopeName());
 					return currentScope.resolve(arg0.getText()).getType();
 				} else if (search(arg0.getText())) {
-					System.out.println("Searching");
 					return getType(arg0.getText());
 				}
 
@@ -102,14 +95,18 @@ public class TypeCheck extends OfpBaseVisitor<OfpType> {
 
 	@Override
 	public OfpType visitWhileStmt(WhileStmtContext ctx) {
-		// System.out.println("Test While " + ctx.getText());
+		if(scopes.get(ctx) != null) {
+			currentScope = scopes.get(ctx);
+		}
 		visitChildren(ctx);
 		return null;
 	}
 
 	@Override
 	public OfpType visitMethod(MethodContext ctx) {
-		// System.out.println("Test Method " + ctx.getText());
+		if(scopes.get(ctx) != null) {
+			currentScope = scopes.get(ctx);
+		}
 		visitChildren(ctx);
 		return null;
 	}
@@ -118,7 +115,6 @@ public class TypeCheck extends OfpBaseVisitor<OfpType> {
 	public OfpType visitStart(StartContext ctx) {
 		// System.out.println("Test Start " + ctx.getText());
 		// visitAllChildren(ctx);	
-		
 		
 		if(scopes.get(ctx) != null) {
 			currentScope = scopes.get(ctx);
@@ -129,9 +125,7 @@ public class TypeCheck extends OfpBaseVisitor<OfpType> {
 
 	@Override
 	public OfpType visitArrType(ArrTypeContext ctx) {
-		System.out.println("THIS IS AN ACCESSOR");
 		OfpType exprType = visit(ctx.getChild(0));
-		System.out.println("3COMPARISON: " + exprType + " " + temp);
 		typeEqual(temp, exprType, ctx, name, ctx.getStart().getLine());
 		
 		return null;
@@ -139,7 +133,9 @@ public class TypeCheck extends OfpBaseVisitor<OfpType> {
 
 	@Override
 	public OfpType visitMain(MainContext ctx) {
-		// System.out.println("Test Main " + ctx.getText());
+		if(scopes.get(ctx) != null) {
+			currentScope = scopes.get(ctx);
+		}
 		visitChildren(ctx);
 		return null;
 	}
@@ -160,31 +156,16 @@ public class TypeCheck extends OfpBaseVisitor<OfpType> {
 
 	@Override
 	public OfpType visitDeclaration(DeclarationContext ctx) {
-		// System.out.println("Test Decl " + ctx.getText());
+		if(scopes.get(ctx) != null) {
+			currentScope = scopes.get(ctx);
+		}
 
 		String type = ctx.getChild(0).getText(); // Type
 		name = ctx.getChild(1).getText(); // Name
 		String value = ctx.getChild(3).getText(); // Value
-		if(scopes.get(ctx) != null) {
-			currentScope = scopes.get(ctx);
-		}
-		
-		// System.out.println("DECL:" + currentScope.getScopeName());
+	
 		temp = scopes.get(ctx).resolve(name).getType();
 
-		System.out.println(" RESULT CHILD COUNT: " + ctx.getChild(3).getChildCount());
-
-		//visit(ctx.getChild(3));
-		//typeEqual(idType, exprType, ctx, name);
-		
-		
-
-		/*
-		 * if(exprType != idType) { errorListener.reportError(ErrorType.TypeMismatch,
-		 * ctx.getStart().getLine(), "Type mismatch on variable " + name + " [" +
-		 * idType.name() + "," + exprType.name()+"]"); }
-		 */
-		// System.out.println(scopes.get(ctx).resolve(ctx.getChild(1).getText()).getType());
 		visitChildren(ctx);
 		return null;
 	}
@@ -197,7 +178,9 @@ public class TypeCheck extends OfpBaseVisitor<OfpType> {
 
 	@Override
 	public OfpType visitCondition(ConditionContext ctx) {
-		// System.out.println("Test Condition " + ctx.getText());
+		if(scopes.get(ctx) != null) {
+			currentScope = scopes.get(ctx);
+		}
 		for (int i = 0; i < ctx.getChild(0).getChildCount(); i += 2) {
 			String varName = ctx.getChild(0).getChild(i).getText();
 			// System.out.println(varName);
@@ -215,6 +198,9 @@ public class TypeCheck extends OfpBaseVisitor<OfpType> {
 
 	@Override
 	public OfpType visitIfStmt(IfStmtContext ctx) {
+		if(scopes.get(ctx) != null) {
+			currentScope = scopes.get(ctx);
+		}
 		// System.out.println("Test ifstmt " + ctx.getText());
 		visitChildren(ctx);
 		return null;
@@ -232,20 +218,22 @@ public class TypeCheck extends OfpBaseVisitor<OfpType> {
 
 	@Override
 	public OfpType visitAsgnStmt(AsgnStmtContext ctx) {
+		if(scopes.get(ctx) != null) {
+			currentScope = scopes.get(ctx);
+		}
 		// System.out.println("Test AsgnStmt " + ctx.getText());
 		String name = ctx.getChild(0).getText(); // Name
 		//currentScope = scopes.get(ctx);
 		if(currentScope.resolve(name) != null || search(name) == true) {
 			
-		System.out.println("IM HERE" + name + search(name));
+		if(currentScope.resolve(name) == null) {
 		checkExist(name,ctx, ctx.getStart().getLine());
+		}
 		OfpType idType = getType(name);
 		OfpType exprType = visit(ctx.getChild(2));
 		temp = getType(name);
-		System.out.println("ID TYPE: " + idType.name());
-		System.out.println("EXPR TYPE: " + idType.name());
-
 		if (exprType != idType) {
+			System.err.println("ERROR REPORTED HERE");
 			errorListener.reportError(ErrorType.TypeMismatch, ctx.getStart().getLine(),
 					"Type mismatch on variable " + name + " [" + idType.name() + "," + exprType.name() + "]");
 		}
@@ -258,34 +246,45 @@ public class TypeCheck extends OfpBaseVisitor<OfpType> {
 
 	@Override
 	public OfpType visitParameter(ParameterContext ctx) {
-		// System.out.println("Test Parameter " + ctx.getText());
+		if(scopes.get(ctx) != null) {
+			currentScope = scopes.get(ctx);
+		}
 		visitChildren(ctx);
 		return null;
 	}
 
 	@Override
 	public OfpType visitLocalDecl(LocalDeclContext ctx) {
-		// System.out.println("Test LocalDecl " + ctx.getText());
+		if(scopes.get(ctx) != null) {
+			currentScope = scopes.get(ctx);
+		}
 		visitChildren(ctx);
 		return null;
 	}
 
 	@Override
 	public OfpType visitParameterList(ParameterListContext ctx) {
-		// System.out.println("Test ParamList " + ctx.getText());
+		if(scopes.get(ctx) != null) {
+			currentScope = scopes.get(ctx);
+		}
 		visitChildren(ctx);
 		return null;
 	}
 
 	@Override
 	public OfpType visitBlock(BlockContext ctx) {
-		// System.out.println("Test Block " + ctx.getText());
+		if(scopes.get(ctx) != null) {
+			currentScope = scopes.get(ctx);
+		}
 		visitChildren(ctx);
 		return null;
 	}
 
 	@Override
 	public OfpType visitExpr(ExprContext ctx) {
+		if(scopes.get(ctx) != null) {
+			currentScope = scopes.get(ctx);
+		}
 		OfpType type = visitChildren(ctx);
 		
 		typeEqual(temp, type, ctx, name, ctx.getStart().getLine());
@@ -314,14 +313,18 @@ public class TypeCheck extends OfpBaseVisitor<OfpType> {
 
 	@Override
 	public OfpType visitStmt(StmtContext ctx) {
-		// System.out.println("Test Stmt " + ctx.getText());
+		if(scopes.get(ctx) != null) {
+			currentScope = scopes.get(ctx);
+		}
 		visitChildren(ctx);
 		return null;
 	}
 
 	@Override
 	public OfpType visitMethodCall(MethodCallContext ctx) {
-		// System.out.println("Test MethodCall " + ctx.getText());
+		if(scopes.get(ctx) != null) {
+			currentScope = scopes.get(ctx);
+		}
 		visitChildren(ctx);
 		return null;
 	}
@@ -356,9 +359,7 @@ public class TypeCheck extends OfpBaseVisitor<OfpType> {
 
 	public boolean search(String varName) {
 		if(currentScope.getEnclosingScope()!= null) {
-			System.out.println("Hi");
 		if (currentScope.getEnclosingScope().resolve(varName) == null) {
-			
 			Scope s = currentScope.getEnclosingScope();
 			while (s.getEnclosingScope() != null) {
 				s = s.getEnclosingScope();
