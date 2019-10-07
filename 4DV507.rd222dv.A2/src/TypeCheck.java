@@ -222,13 +222,12 @@ public class TypeCheck extends OfpBaseVisitor<OfpType> {
 		OfpType idType;
 		if(currentScope.resolve(name) != null) {
 			 idType = currentScope.resolve(name).getType();
+			 temp = idType; 
 		}else {
 			 idType = getType(name);
+			 temp = getType(name);
 		}
-		
-		
 		OfpType exprType = visit(ctx.getChild(2));
-		temp = getType(name);
 		typeEqual(idType, exprType, ctx, name, ctx.getStart().getLine());
 		// System.out.println(scopes.get(ctx).resolve(ctx.getChild(1).getText()).getType());
 
@@ -280,8 +279,9 @@ public class TypeCheck extends OfpBaseVisitor<OfpType> {
 		}
 		OfpType type = visitChildren(ctx);
 		if(temp == OfpType.Undef) {
+			//temp = visit(ctx.getParent().getChild(0));
 			name = ctx.getText();
-			System.out.println(ctx.getText() + " " + ctx.getStart().getLine());
+			System.out.println(ctx.getText() + " " + ctx.getStart().getLine() + " " + currentScope.getScopeName());
 			if(search(ctx.getText())) {
 				System.out.println("Taken");
 				type = getType(ctx.getText());
