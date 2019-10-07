@@ -18,10 +18,14 @@ block: '{' stmt* '}' ;
 
 returnStmt: 'return' expr SC ;
 
-type :    'int' arrType?
-		| 'float' arrType?
-		| 'string' arrType?
-		| 'char' arrType?
+type :    'int'
+		| 'float'
+		| 'string'
+		| 'char'
+		| 'char[]'
+		| 'string[]'
+		| 'float[]'
+		| 'int[]'
 		| 'bool'
 		;
 		
@@ -42,7 +46,7 @@ stmt : asgnStmt
      | localDecl
      ; 
 
-expr : 	| ID? '(' expr ')'
+expr : 	| methodAccess
         | expr MULT expr
         | expr DIV expr
         | expr PLUS expr
@@ -56,12 +60,14 @@ expr : 	| ID? '(' expr ')'
         | arrayList
         | arrType        
      ;
+     
+methodAccess : ID? '(' expr ')';
 			
-localDecl: type arrType? ID SC ;
+localDecl: type ID SC ;
 
-declaration : type arrType? ID '=' (expr | arrType | array) SC ;
+declaration : type ID '=' (expr | arrType | array) SC ;
 
-asgnStmt : ID arrType? '=' expr SC ;
+asgnStmt : (arrType | ID) '=' expr SC ;
 
 methodCall : ID '(' varType* ')' SC ;
 
@@ -69,7 +75,7 @@ arrayList : varType (',' varType)* ;
 
 array : '{' arrayList+  '}' ;
 
-arrType : ID? '[' expr ']' ;
+arrType : ID '[' expr ']' ;
 
 whileStmt : 'while' '(' condition ')' '{' stmt+ '}';
 

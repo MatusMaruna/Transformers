@@ -1,5 +1,9 @@
 void main(){
-int i = 4; 
-int x = 1+i; 
+int[] arr = {1,2,3,4,5,6,1.2,"Stra"};
+int x = o[1];
+int y = 3.3; 
+int z = giveFloat();
+y = 7; 
+int res = maxOfTwo(p,q);
 }
 

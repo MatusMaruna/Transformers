@@ -1,4 +1,7 @@
 
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 import org.antlr.v4.runtime.tree.ErrorNode;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.ParseTreeProperty;
@@ -18,6 +21,7 @@ import antlr4.OfpParser.ExprContext;
 import antlr4.OfpParser.IfStmtContext;
 import antlr4.OfpParser.LocalDeclContext;
 import antlr4.OfpParser.MainContext;
+import antlr4.OfpParser.MethodAccessContext;
 import antlr4.OfpParser.MethodCallContext;
 import antlr4.OfpParser.MethodContext;
 import antlr4.OfpParser.ParameterContext;
@@ -33,38 +37,33 @@ import antlr4.OfpParser.WhileStmtContext;
 public class TypeCheck extends OfpBaseVisitor<OfpType> {
 	Scope currentScope;
 	ParseTreeProperty<Scope> scopes;
-	ErrorListener errorListener; 
+	ErrorListener errorListener;
 	String[] ruleNames;
+	OfpType temp; 
+	String name; 
+	private Map<OfpType, OfpType> arrayValueMap = new LinkedHashMap<OfpType, OfpType>();
 
 	public TypeCheck(ParseTreeProperty<Scope> scopes, ErrorListener errorListener) {
 		this.scopes = scopes;
-		this.errorListener = errorListener; 
+		this.errorListener = errorListener;
 	}
 
-
+	/*
+	 * @Override public Symbol visit(ParseTree arg0) {
+	 * //System.out.println(arg0.getText()); System.out.println(scopes.get(arg0));
+	 * System.out.println(arg0.getChildCount());
+	 * System.out.println(arg0.getChild(0).getText()); //visit(arg0.getChild(0));
+	 * return null; }
+	 */
 
 	/*
-	@Override
-	public Symbol visit(ParseTree arg0) {
-		//System.out.println(arg0.getText());
-		System.out.println(scopes.get(arg0));
-		System.out.println(arg0.getChildCount());
-		System.out.println(arg0.getChild(0).getText());
-		//visit(arg0.getChild(0));
-		return null;
-	} */
-
-/*	@Override
-	public Symbol visitChildren(RuleNode arg0) {
-		System.out.println("Test Child");
-		visitAllChildren(ctx);
-		return null;
-	} */
-	
+	 * @Override public Symbol visitChildren(RuleNode arg0) {
+	 * System.out.println("Test Child"); visitAllChildren(ctx); return null; }
+	 */
 
 	@Override
 	public OfpType visitErrorNode(ErrorNode arg0) {
-		//System.out.println("Test ErrorNode " + arg0.getText());
+		// System.out.println("Test ErrorNode " + arg0.getText());
 		return null;
 	}
 
@@ -72,125 +71,136 @@ public class TypeCheck extends OfpBaseVisitor<OfpType> {
 	public OfpType visitTerminal(TerminalNode arg0) {
 		System.out.println("Test Terminal: " + arg0.getText());
 		System.out.println(ruleNames[arg0.getSymbol().getType()]);
-		
-		switch(ruleNames[arg0.getSymbol().getType()]) {
-			
-			case "STR":
-				return OfpType.String;
-			case "INT": 
-				return OfpType.Int;
-			case "CHAR": 
-				return OfpType.Char;
-			case "FLOAT":
-				return OfpType.Float;
-			default: 
-				if(currentScope != null) {
-				if(currentScope.resolve(arg0.getText())!= null) {
-					return currentScope.resolve(arg0.getText()).getType(); 
+
+		switch (ruleNames[arg0.getSymbol().getType()]) {
+
+		case "STR":
+			return OfpType.String;
+		case "INT":
+			return OfpType.Int;
+		case "CHAR":
+			return OfpType.Char;
+		case "FLOAT":
+			return OfpType.Float;
+		default:
+			if (currentScope != null) {
+				System.out.println("Not null");
+				if (currentScope.resolve(arg0.getText()) != null) {
+					System.out.println("Is in current scope" + arg0.getText() + currentScope.getScopeName());
+					return currentScope.resolve(arg0.getText()).getType();
+				} else if (search(arg0.getText())) {
+					System.out.println("Searching");
+					return getType(arg0.getText());
 				}
-				}
-				return OfpType.Undef;
-				
-			
+
+			}
+			return OfpType.Undef;
+
 		}
-		
-	} 
+
+	}
 
 	@Override
 	public OfpType visitWhileStmt(WhileStmtContext ctx) {
-		//System.out.println("Test While " + ctx.getText());
+		// System.out.println("Test While " + ctx.getText());
 		visitChildren(ctx);
 		return null;
 	}
 
 	@Override
 	public OfpType visitMethod(MethodContext ctx) {
-		//System.out.println("Test Method " + ctx.getText());
+		// System.out.println("Test Method " + ctx.getText());
 		visitChildren(ctx);
 		return null;
 	}
 
 	@Override
 	public OfpType visitStart(StartContext ctx) {
-		//System.out.println("Test Start " + ctx.getText());
-		//visitAllChildren(ctx);
+		// System.out.println("Test Start " + ctx.getText());
+		// visitAllChildren(ctx);	
+		
+		
+		if(scopes.get(ctx) != null) {
+			currentScope = scopes.get(ctx);
+		}
 		visitChildren(ctx);
 		return null;
 	}
 
 	@Override
 	public OfpType visitArrType(ArrTypeContext ctx) {
-		//System.out.println("Test ArrType " + ctx.getText());
+		System.out.println("THIS IS AN ACCESSOR");
+		OfpType exprType = visit(ctx.getChild(0));
+		System.out.println("3COMPARISON: " + exprType + " " + temp);
+		typeEqual(temp, exprType, ctx, name, ctx.getStart().getLine());
+		
 		return null;
 	}
 
 	@Override
 	public OfpType visitMain(MainContext ctx) {
-		//System.out.println("Test Main " + ctx.getText());
+		// System.out.println("Test Main " + ctx.getText());
 		visitChildren(ctx);
 		return null;
 	}
 
 	@Override
 	public OfpType visitReturnStmt(ReturnStmtContext ctx) {
-		//System.out.println("Test Return " + ctx.getText());
+		// System.out.println("Test Return " + ctx.getText());
 		visitChildren(ctx);
 		return null;
 	}
 
 	@Override
 	public OfpType visitType(TypeContext ctx) {
-		//System.out.println("Test Type " + ctx.getText());
+		// System.out.println("Test Type " + ctx.getText());
 		visitChildren(ctx);
 		return null;
 	}
 
 	@Override
 	public OfpType visitDeclaration(DeclarationContext ctx) {
-	//	System.out.println("Test Decl " + ctx.getText());
-		
+		// System.out.println("Test Decl " + ctx.getText());
+
 		String type = ctx.getChild(0).getText(); // Type
-		String name = ctx.getChild(1).getText(); // Name
+		name = ctx.getChild(1).getText(); // Name
 		String value = ctx.getChild(3).getText(); // Value
-		currentScope = scopes.get(ctx);
-		
-		System.out.println("DECL:" + currentScope.getScopeName());
-		
-		if(ctx.getChild(3).getChildCount() > 1) {
-			for(int i = 0; i < ctx.getChild(3).getChildCount(); i++) {
-				OfpType test = visit(ctx.getChild(3));
-				System.out.println("TEST: " + test.name());
-				
-			}
+		if(scopes.get(ctx) != null) {
+			currentScope = scopes.get(ctx);
 		}
-		OfpType exprType = visit(ctx.getChild(3));
-		OfpType idType = scopes.get(ctx).resolve(name).getType();
+		
+		// System.out.println("DECL:" + currentScope.getScopeName());
+		temp = scopes.get(ctx).resolve(name).getType();
+
+		System.out.println(" RESULT CHILD COUNT: " + ctx.getChild(3).getChildCount());
+
+		//visit(ctx.getChild(3));
+		//typeEqual(idType, exprType, ctx, name);
 		
 		
-		
-		
-		if(exprType != idType) {
-			errorListener.reportError(ErrorType.TypeMismatch, ctx.getStart().getLine(),
-					"Type mismatch on variable " + name + " [" + idType.name() + "," + exprType.name()+"]");
-		}
-	 // System.out.println(scopes.get(ctx).resolve(ctx.getChild(1).getText()).getType());
+
+		/*
+		 * if(exprType != idType) { errorListener.reportError(ErrorType.TypeMismatch,
+		 * ctx.getStart().getLine(), "Type mismatch on variable " + name + " [" +
+		 * idType.name() + "," + exprType.name()+"]"); }
+		 */
+		// System.out.println(scopes.get(ctx).resolve(ctx.getChild(1).getText()).getType());
 		visitChildren(ctx);
 		return null;
 	}
 
 	@Override
 	public OfpType visitVarType(VarTypeContext ctx) {
-		//System.out.println("Test VarType " + ctx.getText());
-		OfpType type = visitChildren(ctx);
+		OfpType type = visitChildren(ctx);	
 		return type;
 	}
 
 	@Override
 	public OfpType visitCondition(ConditionContext ctx) {
-		//System.out.println("Test Condition " + ctx.getText());
-		for(int i = 0; i < ctx.getChild(0).getChildCount(); i+=2) {
+		// System.out.println("Test Condition " + ctx.getText());
+		for (int i = 0; i < ctx.getChild(0).getChildCount(); i += 2) {
 			String varName = ctx.getChild(0).getChild(i).getText();
-			//System.out.println(varName);
+			// System.out.println(varName);
 		}
 		visitChildren(ctx);
 		return null;
@@ -198,128 +208,204 @@ public class TypeCheck extends OfpBaseVisitor<OfpType> {
 
 	@Override
 	public OfpType visitPrint(PrintContext ctx) {
-		//System.out.println("Test Print " + ctx.getText());
+		// System.out.println("Test Print " + ctx.getText());
 		visitChildren(ctx);
 		return null;
 	}
 
 	@Override
 	public OfpType visitIfStmt(IfStmtContext ctx) {
-		//System.out.println("Test ifstmt " + ctx.getText());
+		// System.out.println("Test ifstmt " + ctx.getText());
 		visitChildren(ctx);
 		return null;
 	}
 
 	@Override
 	public OfpType visitArray(ArrayContext ctx) {
-		//System.out.println("Test array " + ctx.getText());
-		visitChildren(ctx);
-		return null;
+		for (int i = 0; i < ctx.getChild(1).getChildCount(); i += 2) {
+			OfpType exprType = visit(ctx.getChild(1).getChild(i));
+			System.out.println("1COMPARISON: " + exprType + " " + temp);
+			typeEqual(temp, exprType, ctx, name, ctx.getStart().getLine());
+	}
+		return null; 
 	}
 
 	@Override
 	public OfpType visitAsgnStmt(AsgnStmtContext ctx) {
-		//System.out.println("Test AsgnStmt " + ctx.getText());
+		// System.out.println("Test AsgnStmt " + ctx.getText());
 		String name = ctx.getChild(0).getText(); // Name
-		OfpType idType = scopes.get(ctx).resolve(name).getType();
+		//currentScope = scopes.get(ctx);
+		if(currentScope.resolve(name) != null || search(name) == true) {
+			
+		System.out.println("IM HERE" + name + search(name));
+		checkExist(name,ctx, ctx.getStart().getLine());
+		OfpType idType = getType(name);
 		OfpType exprType = visit(ctx.getChild(2));
-		
-		
+		temp = getType(name);
 		System.out.println("ID TYPE: " + idType.name());
 		System.out.println("EXPR TYPE: " + idType.name());
-		
-		if(exprType != idType) {
+
+		if (exprType != idType) {
 			errorListener.reportError(ErrorType.TypeMismatch, ctx.getStart().getLine(),
-					"Type mismatch on variable " + name + " [" + idType.name() + "," + exprType.name()+"]");
+					"Type mismatch on variable " + name + " [" + idType.name() + "," + exprType.name() + "]");
 		}
-	 // System.out.println(scopes.get(ctx).resolve(ctx.getChild(1).getText()).getType());
+		// System.out.println(scopes.get(ctx).resolve(ctx.getChild(1).getText()).getType());
+
 		visitChildren(ctx);
-		
-		
-		
-		
-		
-		
-		
-		visitChildren(ctx);
+		}
 		return null;
 	}
 
 	@Override
 	public OfpType visitParameter(ParameterContext ctx) {
-		//System.out.println("Test Parameter " + ctx.getText());
+		// System.out.println("Test Parameter " + ctx.getText());
 		visitChildren(ctx);
 		return null;
 	}
 
 	@Override
 	public OfpType visitLocalDecl(LocalDeclContext ctx) {
-		//System.out.println("Test LocalDecl " + ctx.getText());
+		// System.out.println("Test LocalDecl " + ctx.getText());
 		visitChildren(ctx);
 		return null;
 	}
 
 	@Override
 	public OfpType visitParameterList(ParameterListContext ctx) {
-		//System.out.println("Test ParamList " + ctx.getText());
+		// System.out.println("Test ParamList " + ctx.getText());
 		visitChildren(ctx);
 		return null;
 	}
 
 	@Override
 	public OfpType visitBlock(BlockContext ctx) {
-		//System.out.println("Test Block " + ctx.getText());
+		// System.out.println("Test Block " + ctx.getText());
 		visitChildren(ctx);
 		return null;
 	}
 
 	@Override
 	public OfpType visitExpr(ExprContext ctx) {
-		//System.out.println("Test Expr " + ctx.getText());
 		OfpType type = visitChildren(ctx);
+		
+		typeEqual(temp, type, ctx, name, ctx.getStart().getLine());
+		
+		
+		
+		
+		
 		return type;
+	}
+	
+	@Override
+	public OfpType visitMethodAccess(MethodAccessContext ctx) {
+		OfpType type = visit(ctx.getChild(0));
+		//System.out.println("METHOD ACCESS: " + type.name());
+		typeEqual(temp, type, ctx, name, ctx.getStart().getLine());
+		return type; 
 	}
 
 	@Override
 	public OfpType visitArrayList(ArrayListContext ctx) {
-		//System.out.println("Test ArrayList " + ctx.getText());
+		// System.out.println("Test ArrayList " + ctx.getText());
 		visitChildren(ctx);
 		return null;
 	}
 
 	@Override
 	public OfpType visitStmt(StmtContext ctx) {
-		//System.out.println("Test Stmt " + ctx.getText());
+		// System.out.println("Test Stmt " + ctx.getText());
 		visitChildren(ctx);
 		return null;
 	}
 
 	@Override
 	public OfpType visitMethodCall(MethodCallContext ctx) {
-		//System.out.println("Test MethodCall " + ctx.getText());
+		// System.out.println("Test MethodCall " + ctx.getText());
 		visitChildren(ctx);
 		return null;
 	}
-	
+
 	public void loadParser(OfpParser parser) {
 		ruleNames = parser.getTokenNames();
-		//System.out.println(parser.getTokenNames());
-		/*for(String s : ruleNames) {
-			System.out.println(s);
-		}*/
+		// System.out.println(parser.getTokenNames());
+		/*
+		 * for(String s : ruleNames) { System.out.println(s); }
+		 */
+
+		arrayValueMap.put(OfpType.FloatArray, OfpType.Float);
+		arrayValueMap.put(OfpType.IntArray, OfpType.Int);
 	}
-	
-	
-	/*public String resolveName(ParseTree ctx) {
-		return ruleNames[ctx.getRuleIndex()];
-	}*/
 
-	/*public void visitAllChildren(ParseTree ctx)
-	{
-		for(int i = 0; i < ctx.getChildCount(); i++) {
-			visit(ctx.getChild(i));
+	public void typeEqual(OfpType idType, OfpType exprType, ParseTree ctx, String name, int line) {
+		if (exprType != idType) {
+			if (arrayValueMap.get(idType) != exprType) {
+				
+				if(idType == null) {
+					
+					
+				}else if(exprType == null) {
+					
+				}else {
+				errorListener.reportError(ErrorType.TypeMismatch, line,
+						"Type mismatch on variable " + name + " [" + idType.name() + "," + exprType.name() + "]");
+				}
+			}
 		}
-	} */
+	}
 
+	public boolean search(String varName) {
+		if(currentScope.getEnclosingScope()!= null) {
+			System.out.println("Hi");
+		if (currentScope.getEnclosingScope().resolve(varName) == null) {
+			
+			Scope s = currentScope.getEnclosingScope();
+			while (s.getEnclosingScope() != null) {
+				s = s.getEnclosingScope();
+				if (s.resolve(varName) != null) {
+					return true;
+				}
+			}
+			return false;
+		}
+		return true;
+		}
+		return false;
+	}
+
+	public OfpType getType(String varName) {
+		if(currentScope.getEnclosingScope()!= null) {
+		if (currentScope.getEnclosingScope().resolve(varName) == null) {
+
+			Scope s = currentScope.getEnclosingScope();
+			while (s.getEnclosingScope() != null) {
+				s = s.getEnclosingScope();
+				if (s.resolve(varName) != null) {
+					return s.resolve(varName).getType();
+				}
+			}
+			return OfpType.Undef;
+		}
+		return currentScope.getEnclosingScope().resolve(varName).getType();
+		}
+		return OfpType.Undef;
+	}
+
+	public void checkExist(String varName, ParseTree ctx, int line) {
+		if (!search(varName)) {
+			errorListener.reportError(ErrorType.SemanticError, line,
+					"Variable " + varName + " is not defined!");
+		}
+	}
+
+	/*
+	 * public String resolveName(ParseTree ctx) { return
+	 * ruleNames[ctx.getRuleIndex()]; }
+	 */
+
+	/*
+	 * public void visitAllChildren(ParseTree ctx) { for(int i = 0; i <
+	 * ctx.getChildCount(); i++) { visit(ctx.getChild(i)); } }
+	 */
 
 }

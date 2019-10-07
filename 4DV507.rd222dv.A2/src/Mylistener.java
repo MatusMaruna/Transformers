@@ -99,25 +99,16 @@ public class Mylistener implements ParseTreeListener {
 			System.out.println("");*/
 			String name = ctx.getChild(0).getText();
 			OfpType type; 
+			try {
+			type = currentScope.resolve(name).getType();
 			String value = ctx.getChild(2).getText();
-			
-			if(currentScope.resolve(name) == null) {
-				type = searchType(name);
-				currentScope.define(new Symbol(name,type));
-				scopes.put(ctx, currentScope);
-			}else {
-				type = currentScope.resolve(name).getType();
-			}
-			
-			if(type != null) {
-				currentScope.define(new Symbol(name,type));
-				scopes.put(ctx, currentScope);
-			}else {
+			currentScope.define(new Symbol(name,type));
+			scopes.put(ctx, currentScope);
+			}catch(Exception e) {
 				errorListener.reportError(ErrorType.SemanticError, ctx.getStart().getLine(),
 						"Variable "+ ctx.getChild(0).getText() + " is not defined!");
+				
 			}
-			
-			
 			
 		}
 
@@ -144,29 +135,9 @@ public class Mylistener implements ParseTreeListener {
 		
 		if(resolveName(ctx).equals("condition")) {
 			System.out.println(ctx.getChild(0).getChildCount());
-			String varName; 
+			System.out.println(currentScope.getEnclosingScope().getScopeName());
 			for(int i = 0; i < ctx.getChild(0).getChildCount(); i+=2) {
-				System.out.println(ctx.getChild(0).getChildCount());
-				//System.out.println(ctx.getChild(0).getChild(0).getChild(0).getChild(0).getText());
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				if(ctx.getChild(0).getChild(i).getChildCount() >= 2) {
-					varName = ctx.getChild(0).getChild(i).getChild(0).getText();
-					System.out.println("OUTSIDE: " + varName);
-				}else if(ctx.getChild(0).getChild(0).getChild(0).getChildCount() >= 4 ) {
-					varName = ctx.getChild(0).getChild(0).getChild(0).getChild(0).getText();
-					System.out.println("INSIDE: "  +varName);
-				}else {
-					varName = ctx.getChild(0).getChild(i).getText();
-				}
+				String varName = ctx.getChild(0).getChild(i).getText();
 				if(search(varName) == false) {
 					errorListener.reportError(ErrorType.SemanticError, ctx.getStart().getLine(),
 							"Parameter " + varName + " is undefined!");
@@ -247,25 +218,5 @@ public class Mylistener implements ParseTreeListener {
 		return false; 
 	}
 		return true;
-	}
-	
-	
-	
-	public OfpType searchType(String varName) {
-		if(currentScope.getEnclosingScope().resolve(varName) == null) {
-			
-			Scope s = currentScope.getEnclosingScope();
-			while(s.getEnclosingScope() != null) {
-				s = s.getEnclosingScope();
-				if(s.resolve(varName) != null) {
-					return s.resolve(varName).getType();
-				}
-			}
-			return null; 
-		}
-			return currentScope.getEnclosingScope().resolve(varName).getType();
-		
-		
-		
 	}
 }

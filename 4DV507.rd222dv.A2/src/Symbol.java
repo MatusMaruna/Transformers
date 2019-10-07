@@ -18,6 +18,7 @@ public class Symbol {
 		super();
 		this.id = id;
 		this.stringType = stringType;
+		this.type = OfpType.getType(stringType);
 	}
 
 	public String getId() {

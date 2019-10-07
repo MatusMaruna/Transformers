@@ -17,7 +17,11 @@ public class ErrorListener extends BaseErrorListener {
 
 	public void reportError(ErrorType type, int line, String message) {
 		errorCount++;
+		
+		if(!errors.contains(new Error(type, line, message)))
 		errors.add(new Error(type, line, message));
+		else
+		errorCount--;
 	}
 	
 	public void printErrors() {
@@ -40,9 +44,9 @@ public class ErrorListener extends BaseErrorListener {
 
  class Error{
 	
-	 ErrorType type; 
-	 int line; 
-	 String message; 
+	 public ErrorType type; 
+	public  int line; 
+	public  String message; 
 	 
 	 public Error(ErrorType type, int line, String message) {
 		 this.type = type; this.line = line; this.message = message; 
@@ -51,6 +55,28 @@ public class ErrorListener extends BaseErrorListener {
 	 public String toString() {
 		return "[" + type + "] " + "in line: " + line + " " +  message ;
 		 
+	 }
+	 
+	 
+	 @Override
+	 public boolean equals(Object object) {
+		if(object instanceof Error) {
+			if(this.type.equals(((Error) object).type) && this.line == ((Error) object).line 
+					&& this.message.equals(((Error) object).message)) {
+				return true; 
+			}else {
+				return false; 
+			}
+		}
+		return false;
+		 
+		 
+	 }
+	 
+	 
+	 @Override
+	 public int hashCode() {
+	     return this.line+this.message.hashCode();
 	 }
 	 
 	 
