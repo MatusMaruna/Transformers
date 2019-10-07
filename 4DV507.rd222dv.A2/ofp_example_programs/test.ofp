@@ -1,18 +1,5 @@
 void main(){
-int[] arr = {1,2,3,4,5,6,1.2,"Stra"};
-int x = o[1];
-int y = 3.3; 
-int z = giveFloat();
+int y = 4; 
 y = 4.4; 
-int res = maxOfTwo(p,q);
-}
-
-
-
-int maxOfTwo(int a, int b) {
-   if (a > b)
-   	  return a;
-   else 
-      return b;
 }
 

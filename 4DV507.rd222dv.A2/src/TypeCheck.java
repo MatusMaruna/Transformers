@@ -225,7 +225,6 @@ public class TypeCheck extends OfpBaseVisitor<OfpType> {
 		String name = ctx.getChild(0).getText(); // Name
 		//currentScope = scopes.get(ctx);
 		if(currentScope.resolve(name) != null || search(name) == true) {
-			
 		if(currentScope.resolve(name) == null) {
 		checkExist(name,ctx, ctx.getStart().getLine());
 		}
@@ -233,13 +232,12 @@ public class TypeCheck extends OfpBaseVisitor<OfpType> {
 		OfpType exprType = visit(ctx.getChild(2));
 		temp = getType(name);
 		if (exprType != idType) {
-			System.err.println("ERROR REPORTED HERE");
 			errorListener.reportError(ErrorType.TypeMismatch, ctx.getStart().getLine(),
 					"Type mismatch on variable " + name + " [" + idType.name() + "," + exprType.name() + "]");
 		}
 		// System.out.println(scopes.get(ctx).resolve(ctx.getChild(1).getText()).getType());
 
-		visitChildren(ctx);
+		//visitChildren(ctx);
 		}
 		return null;
 	}
@@ -286,8 +284,8 @@ public class TypeCheck extends OfpBaseVisitor<OfpType> {
 			currentScope = scopes.get(ctx);
 		}
 		OfpType type = visitChildren(ctx);
-		
-		typeEqual(temp, type, ctx, name, ctx.getStart().getLine());
+		System.out.println(type.name());
+		typeEqual(temp, type, ctx, name, 55);
 		
 		
 		
@@ -346,10 +344,11 @@ public class TypeCheck extends OfpBaseVisitor<OfpType> {
 				
 				if(idType == null) {
 					
-					
+					System.out.println("Somethings null");
 				}else if(exprType == null) {
-					
+					System.out.println("Somethings null");
 				}else {
+				System.err.println("ERROR REPORTED HERE");
 				errorListener.reportError(ErrorType.TypeMismatch, line,
 						"Type mismatch on variable " + name + " [" + idType.name() + "," + exprType.name() + "]");
 				}
