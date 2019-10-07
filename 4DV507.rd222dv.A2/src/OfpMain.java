@@ -18,7 +18,7 @@ public class OfpMain {
 		// Read test program path from args
 
 		String testDir = "./ofp_example_programs/";
-		String testProgram = "arrays.ofp";
+		String testProgram = "test.ofp";
 
 		if (!testProgram.endsWith(".ofp")) {
 			System.out.println("\nPrograms most end with suffix .ofp! Found " + testProgram);
@@ -51,7 +51,7 @@ public class OfpMain {
 		}
 
 		// Display tree
-		 Trees.inspect(root, parser);
+		// Trees.inspect(root, parser);
 
 		System.out.println("");
 		ParseTreeWalker walker = new ParseTreeWalker();
@@ -72,9 +72,9 @@ public class OfpMain {
 		}
 
 		System.out.println("----------------------------------------------------------------------");
-		/*TypeCheck typeChecking = new TypeCheck(listener.scopes, errorListener); 
+		TypeCheck typeChecking = new TypeCheck(listener.scopes, errorListener); 
 		typeChecking.loadParser(parser);
-		typeChecking.visit(root);*/
+		typeChecking.visit(root);
 		
 		errorListener.printErrors();
 		

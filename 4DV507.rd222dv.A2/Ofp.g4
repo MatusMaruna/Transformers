@@ -14,7 +14,7 @@ parameter: type ID ;
 
 parameterList: parameter (',' parameter)* ;
 
-block: '{' localDecl* stmt* '}' ;
+block: '{' stmt* '}' ;
 
 returnStmt: 'return' expr SC ;
 
@@ -39,6 +39,7 @@ stmt : asgnStmt
      | print
      | returnStmt
      | methodCall
+     | localDecl
      ; 
 
 expr : 	| ID? '(' expr ')'

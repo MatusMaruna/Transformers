@@ -1,9 +1,5 @@
 void main(){
-int[] arr; 
-int j; 
-int smallest; 
-if (j>smallest){  
-	int j = 0;  
-    }  
+int i = 4; 
+int x = 1+i; 
 }
 

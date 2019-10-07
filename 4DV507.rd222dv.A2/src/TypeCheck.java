@@ -84,6 +84,11 @@ public class TypeCheck extends OfpBaseVisitor<OfpType> {
 			case "FLOAT":
 				return OfpType.Float;
 			default: 
+				if(currentScope != null) {
+				if(currentScope.resolve(arg0.getText())!= null) {
+					return currentScope.resolve(arg0.getText()).getType(); 
+				}
+				}
 				return OfpType.Undef;
 				
 			
@@ -147,6 +152,17 @@ public class TypeCheck extends OfpBaseVisitor<OfpType> {
 		String type = ctx.getChild(0).getText(); // Type
 		String name = ctx.getChild(1).getText(); // Name
 		String value = ctx.getChild(3).getText(); // Value
+		currentScope = scopes.get(ctx);
+		
+		System.out.println("DECL:" + currentScope.getScopeName());
+		
+		if(ctx.getChild(3).getChildCount() > 1) {
+			for(int i = 0; i < ctx.getChild(3).getChildCount(); i++) {
+				OfpType test = visit(ctx.getChild(3));
+				System.out.println("TEST: " + test.name());
+				
+			}
+		}
 		OfpType exprType = visit(ctx.getChild(3));
 		OfpType idType = scopes.get(ctx).resolve(name).getType();
 		
