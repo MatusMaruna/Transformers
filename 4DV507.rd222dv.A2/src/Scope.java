@@ -47,10 +47,7 @@ public class Scope {
 		if (symbols.containsKey(name)) // if in current scope
 			return symbols.get(name);
 		else { // move to enclosing scope
-			if (enclosingScope == null) {
-				return null; // not in table
-			} else
-				return enclosingScope.resolve(name);
+			return null;
 		}
 
 	}

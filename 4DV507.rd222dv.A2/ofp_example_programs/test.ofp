@@ -3,7 +3,7 @@ int[] arr;
 int j; 
 int smallest; 
 if (j>smallest){  
-		int i = 0; 
+	int j = 0;  
     }  
 }
 
