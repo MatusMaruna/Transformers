@@ -150,6 +150,9 @@ public class TypeCheck extends OfpBaseVisitor<OfpType> {
 		OfpType exprType = visit(ctx.getChild(3));
 		OfpType idType = scopes.get(ctx).resolve(name).getType();
 		
+		
+		
+		
 		if(exprType != idType) {
 			errorListener.reportError(ErrorType.TypeMismatch, ctx.getStart().getLine(),
 					"Type mismatch on variable " + name + " [" + idType.name() + "," + exprType.name()+"]");

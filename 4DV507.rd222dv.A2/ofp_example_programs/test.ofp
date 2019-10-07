@@ -1,4 +1,9 @@
 void main(){
-float f = 1;
+int[] arr; 
+int j; 
+int smallest; 
+if (j>smallest){  
+		int i = 0; 
+    }  
 }
 
