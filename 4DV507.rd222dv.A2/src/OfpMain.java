@@ -1,12 +1,8 @@
 import java.io.IOException;
 
-import org.antlr.v4.gui.Trees;
-import org.antlr.v4.runtime.ANTLRErrorListener;
 import org.antlr.v4.runtime.BufferedTokenStream;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
-import org.antlr.v4.runtime.Recognizer;
-import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
 
 import antlr4.OfpLexer;
@@ -18,7 +14,7 @@ public class OfpMain {
 		// Read test program path from args
 
 		String testDir = "./ofp_example_programs/";
-		String testProgram = "arithmetic.ofp";
+		String testProgram = "test.ofp";
 
 		if (!testProgram.endsWith(".ofp")) {
 			System.out.println("\nPrograms most end with suffix .ofp! Found " + testProgram);
@@ -72,13 +68,13 @@ public class OfpMain {
 		}
 
 		System.out.println("----------------------------------------------------------------------");
-		TypeCheck typeChecking = new TypeCheck(listener.scopes, errorListener); 
+		TypeCheck typeChecking = new TypeCheck(listener.scopes, errorListener);
 		typeChecking.loadParser(parser);
 		typeChecking.visit(root);
-		
+
 		errorListener.printErrors();
-		
-		//System.out.println(listener.scopeList.toString());
+
+		// System.out.println(listener.scopeList.toString());
 
 	}
 
