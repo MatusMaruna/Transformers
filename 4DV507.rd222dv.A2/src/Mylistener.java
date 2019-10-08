@@ -150,6 +150,13 @@ public class Mylistener implements ParseTreeListener {
 				//System.out.println(ctx.getChild(0).getChild(0).getChild(0).getChild(0).getText());
 				if(ctx.getChild(0).getChild(i).getChildCount() >= 2) {
 					varName = ctx.getChild(0).getChild(i).getChild(0).getText();
+					
+					if(ctx.getChild(0).getChild(i).getChild(0).getChildCount() >1) {
+						varName = ctx.getChild(0).getChild(i).getChild(0).getChild(0).getText();
+					}
+					
+					
+					
 					System.out.println("OUTSIDE: " + varName);
 				}else if(ctx.getChild(0).getChild(0).getChild(0).getChildCount() >= 4 ) {
 					varName = ctx.getChild(0).getChild(0).getChild(0).getChild(0).getText();

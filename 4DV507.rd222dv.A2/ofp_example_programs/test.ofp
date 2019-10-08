@@ -1,20 +1,8 @@
-void main(){
-int p; int q; int r;
-	p = 2;
-	q = p+2;
-	r = p+q*3;
-	println(r);  # 14
+# arrays.ofp
+
+void main() {
+float[] f = {9.3,8.8,17.5,1.0,2.1,3.2, 4.4};
+println(f[0]);   # 9.3
 	
-}
-
-
-
-
-
-int maxOfTwo(int a, int b) {
-   if (a > b)
-   	  return a;
-   else 
-      return b;
 }
 
