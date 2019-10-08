@@ -142,39 +142,13 @@ public class Mylistener implements ParseTreeListener {
 			OfpType type = OfpType.getType(ctx.getChild(0).getText());
 			currentScope.define(new Symbol(name, type));
 			currentScope.parameters.add(type);
-			System.out.println(globalScope.getScopeName());
 			globalScope.parameterMap.put(currentScope.getScopeName(), currentScope.parameters);
 			scopes.put(ctx, currentScope);
 
 		}
 
 		if (resolveName(ctx).equals("condition")) {
-			/*
-			 * System.out.println(ctx.getChild(0).getChildCount()); String varName; for(int
-			 * i = 0; i < ctx.getChild(0).getChildCount(); i+=2) {
-			 * System.out.println(ctx.getChild(0).getChildCount());
-			 * //System.out.println(ctx.getChild(0).getChild(0).getChild(0).getChild(0).
-			 * getText()); if(ctx.getChild(0).getChild(i).getChildCount() >= 2) { varName =
-			 * ctx.getChild(0).getChild(i).getChild(0).getText();
-			 * 
-			 * if(ctx.getChild(0).getChild(i).getChild(0).getChildCount() >1) { varName =
-			 * ctx.getChild(0).getChild(i).getChild(0).getChild(0).getText(); }
-			 * 
-			 * 
-			 * 
-			 * System.out.println("OUTSIDE: " + varName); }else
-			 * if(ctx.getChild(0).getChild(0).getChild(0).getChildCount() >= 4 ) { varName =
-			 * ctx.getChild(0).getChild(0).getChild(0).getChild(0).getText();
-			 * System.out.println("INSIDE: " +varName); }else { varName =
-			 * ctx.getChild(0).getChild(i).getText(); } if(search(varName) == false &&
-			 * !(varName.indexOf('\'') > -1) &&
-			 * !(varName.indexOf('\"') > -1) && !varName.matches("-?\\d+(\\.\\d+)?") &&
-			 * currentScope.resolve(varName) == null) {
-			 * 
-			 * 
-			 * errorListener.reportError(ErrorType.SemanticError, ctx.getStart().getLine(),
-			 * "Parameter " + varName + " is undefined!"); }; }
-			 */
+			
 		}
 
 	}
@@ -243,7 +217,6 @@ public class Mylistener implements ParseTreeListener {
 						return true;
 					}
 				}
-				System.out.println(s.getScopeName() + varName);
 				s.printScope();
 				return false;
 			}
