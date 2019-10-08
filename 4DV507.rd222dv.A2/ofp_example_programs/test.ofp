@@ -1,21 +1,12 @@
-# arrays.ofp
-
+# Program entry point
 void main() {
-float[] f = {9.3,8.8,17.5,1.0,2.1,3.2, 4.4};
-println(f[0]);   # 9.3
+
+	int[] x = giveMe();
+	x = giveMe();
 	
 }
 
-float findMax(float[] f) {
-	float max = f[0];
-	int i=1;
-	while (i<f.length) {
-		float p = f[i];
-		if (p>max) {
-			max = p;
-		}
-		i = i + 1;
-	}
-	
-	return max;
+int[] giveMe(char[] str, char oldChar, char newChar){
+
+
 }

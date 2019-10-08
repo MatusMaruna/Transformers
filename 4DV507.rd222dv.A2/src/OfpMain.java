@@ -18,7 +18,7 @@ public class OfpMain {
 		// Read test program path from args
 
 		String testDir = "./ofp_example_programs/";
-		String testProgram = "strings.ofp";
+		String testProgram = "six_declaration_errors.ofp";
 
 		if (!testProgram.endsWith(".ofp")) {
 			System.out.println("\nPrograms most end with suffix .ofp! Found " + testProgram);

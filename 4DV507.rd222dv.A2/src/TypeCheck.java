@@ -121,6 +121,9 @@ public class TypeCheck extends OfpBaseVisitor<OfpType> {
 		OfpType exprType; 
 		if(ctx.getChildCount() == 4) {
 			exprType = visit(ctx.getChild(0));
+			if(exprType.equals(OfpType.String)) {
+				exprType = OfpType.CharArray;
+			}
 		}else {
 			exprType = visit(ctx.getChild(1));	
 		}
@@ -186,10 +189,42 @@ public class TypeCheck extends OfpBaseVisitor<OfpType> {
 		if(scopes.get(ctx) != null) {
 			currentScope = scopes.get(ctx);
 		}
-		for (int i = 0; i < ctx.getChild(0).getChildCount(); i += 2) {
-			String varName = ctx.getChild(0).getChild(i).getText();
-			// System.out.println(varName);
+		
+		System.out.println(ctx.getChild(0).getChildCount());
+		String varName; 
+		for(int i = 0; i < ctx.getChild(0).getChildCount(); i+=2) {
+			System.out.println(ctx.getChild(0).getChildCount());
+			//System.out.println(ctx.getChild(0).getChild(0).getChild(0).getChild(0).getText());
+			if(ctx.getChild(0).getChild(i).getChildCount() >= 2) {
+				varName = ctx.getChild(0).getChild(i).getChild(0).getText();
+				
+				if(ctx.getChild(0).getChild(i).getChild(0).getChildCount() >1) {
+					varName = ctx.getChild(0).getChild(i).getChild(0).getChild(0).getText();
+				}
+				
+				
+				
+				System.out.println("OUTSIDE: " + varName);
+			}else if(ctx.getChild(0).getChild(0).getChild(0).getChildCount() >= 4 ) {
+				varName = ctx.getChild(0).getChild(0).getChild(0).getChild(0).getText();
+				System.out.println("INSIDE: "  +varName);
+			}else {
+				varName = ctx.getChild(0).getChild(i).getText();
+			}
+			if(search(varName) == false && !(varName.indexOf('\'') > -1) && !(varName.indexOf('\"') > -1) && !varName.matches("-?\\d+(\\.\\d+)?") 
+					&& currentScope.resolve(varName) == null) {
+				
+				
+				errorListener.reportError(ErrorType.SemanticError, ctx.getStart().getLine(),
+						"Parameter " + varName + " is undefined!");
+			};
 		}
+		
+		
+		
+		
+		
+		
 		visitChildren(ctx);
 		return null;
 	}
@@ -241,8 +276,10 @@ public class TypeCheck extends OfpBaseVisitor<OfpType> {
 			 temp = getType(name);
 		}
 		OfpType exprType;
-		if(arrayValueMap.containsKey(idType)) {
+		if(arrayValueMap.containsKey(idType) && !ctx.getChild(3).getText().equals(";")) {
+		System.err.println("Visit array" + idType);
 		exprType = visit(ctx.getChild(3));
+		System.err.println(exprType);
 		}else {
 		exprType = visit(ctx.getChild(2));
 		}
