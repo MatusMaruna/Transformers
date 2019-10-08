@@ -2,6 +2,7 @@ import java.util.ArrayList;
 
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ErrorNode;
+import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.ParseTreeListener;
 import org.antlr.v4.runtime.tree.ParseTreeProperty;
 import org.antlr.v4.runtime.tree.TerminalNode;
@@ -143,7 +144,7 @@ public class Mylistener implements ParseTreeListener {
 		}
 		
 		if(resolveName(ctx).equals("condition")) {
-			System.out.println(ctx.getChild(0).getChildCount());
+			/*System.out.println(ctx.getChild(0).getChildCount());
 			String varName; 
 			for(int i = 0; i < ctx.getChild(0).getChildCount(); i+=2) {
 				System.out.println(ctx.getChild(0).getChildCount());
@@ -164,14 +165,18 @@ public class Mylistener implements ParseTreeListener {
 				}else {
 					varName = ctx.getChild(0).getChild(i).getText();
 				}
-				if(search(varName) == false) {
+				if(search(varName) == false && !(varName.indexOf('\'') > -1) && !(varName.indexOf('\"') > -1) && !varName.matches("-?\\d+(\\.\\d+)?") 
+						&& currentScope.resolve(varName) == null) {
+					
+					
 					errorListener.reportError(ErrorType.SemanticError, ctx.getStart().getLine(),
 							"Parameter " + varName + " is undefined!");
 				};
-			}
+			}*/
 		}
 
 	}
+
 
 	@Override
 	public void exitEveryRule(ParserRuleContext ctx) {
@@ -230,21 +235,25 @@ public class Mylistener implements ParseTreeListener {
 		return ctx.toString();
 	}
 	
-	public Boolean search(String varName) {
-		
-		if(currentScope.getEnclosingScope().resolve(varName) == null) {
-		
-		Scope s = currentScope.getEnclosingScope();
-		while(s.getEnclosingScope() != null) {
-			s = s.getEnclosingScope();
-			if(s.resolve(varName) != null) {
-				return true;
+	public boolean search(String varName) {
+		if(currentScope.getEnclosingScope()!= null) {
+		if (currentScope.getEnclosingScope().resolve(varName) == null) {
+			Scope s = currentScope.getEnclosingScope();
+			while (s.getEnclosingScope() != null) {
+				s = s.getEnclosingScope();
+				if (s.resolve(varName) != null) {
+					return true;
+				}
 			}
+			System.out.println(s.getScopeName() + varName);
+			s.printScope();
+			return false;
 		}
-		return false; 
-	}
 		return true;
+		}
+		return false;
 	}
+	
 	
 	
 	

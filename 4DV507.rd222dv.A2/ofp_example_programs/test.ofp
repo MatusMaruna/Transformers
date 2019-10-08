@@ -1,10 +1,12 @@
-# arrays.ofp
+# Program entry point
+void main() {
 
-void main() {	
-	char[] charArr = {'a','b','c','d','e','f'};
-	charArr = replace(charArr,'b','B');	
+	int[] x = giveMe();
+	x = giveMe();
+
 }
 
-char[] replace(char[] str, char oldChar, char newChar) {
-	
+int[] giveMe(char[] str, char oldChar, char newChar){
+
+
 }

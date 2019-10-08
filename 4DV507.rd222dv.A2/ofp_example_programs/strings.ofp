@@ -50,6 +50,8 @@ void printArray(char[] arr) {
 	println("");
 }
 
+
+
 # True if str contains both X and Y
 bool containsXandY(string str) {
    if ( contains(str,'X') ) {
@@ -58,6 +60,7 @@ bool containsXandY(string str) {
    }
    return false;
 }
+
 
 bool contains(string str, char ch) {
    int i=0;
