@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -42,6 +43,7 @@ public class TypeCheck extends OfpBaseVisitor<OfpType> {
 	OfpType methodType;
 	String checkBool;
 	int paramCount;
+	int counter = 0;
 	private Map<OfpType, OfpType> arrayValueMap = new LinkedHashMap<OfpType, OfpType>();
 
 	public TypeCheck(ParseTreeProperty<Scope> scopes, ErrorListener errorListener) {
@@ -354,12 +356,18 @@ public class TypeCheck extends OfpBaseVisitor<OfpType> {
 
 		paramCount = ctx.getChildCount();
 		System.err.println("CountList " + paramCount);
-
-		OfpType paramTemp;
+		counter = 0;
 		for (int i = 0; i < paramCount; i += 2) {
-			paramTemp = visit(ctx.getChild(i));
+
+			OfpType paramTemp = visit(ctx.getChild(i));
+
+			String paramTempStr = ctx.getChild(i).getText();
+			counter++;
 			System.err.println("TEST: " + paramTemp);
+
+			System.err.println("paramTempStr: " + paramTempStr);
 		}
+		System.err.println("paramTempCount: " + counter);
 
 		visitChildren(ctx);
 		return null;
@@ -416,10 +424,61 @@ public class TypeCheck extends OfpBaseVisitor<OfpType> {
 		return type;
 	}
 
+	ArrayList<OfpType> getParams(String name) {
+		if (currentScope.getEnclosingScope() != null) {
+			if (currentScope.getEnclosingScope().resolve(name) == null) {
+
+				Scope s = currentScope.getEnclosingScope();
+				while (s.getEnclosingScope() != null) {
+					s = s.getEnclosingScope();
+					if (s.resolve(name) != null) {
+						return s.parameterMap.get(name);
+					}
+				}
+				return null;
+			}
+			return currentScope.getEnclosingScope().parameterMap.get(name);
+		}
+		return null;
+
+	}
+
 	@Override
 	public OfpType visitMethodAccess(MethodAccessContext ctx) {
 		OfpType type = visit(ctx.getChild(0));
-		// System.out.println("METHOD ACCESS: " + type.name());
+		System.err.println(ctx.getChild(0).getText());
+		// System.err.println("METHOD ACCESS: " + type.name());
+		ArrayList<OfpType> params = getParams(ctx.getChild(0).getText());
+		OfpType paramType;
+		int count = 0;
+
+		for (int i = 0; i < ctx.getChild(2).getChild(0).getChildCount(); i += 2) {
+			paramType = visit(ctx.getChild(2).getChild(0).getChild(i));
+			count++;
+		}
+		int count1 = 0;
+		if (params.size() == count) {
+			for (int i = 0; i < ctx.getChild(2).getChild(0).getChildCount(); i += 2) {
+				paramType = visit(ctx.getChild(2).getChild(0).getChild(i));
+				if (paramType != params.get(count1++)) {
+					// System.err.println(paramType + " " + params.get(count1));
+					System.err.println("Type Error");
+					errorListener.reportError(ErrorType.TypeMismatch, ctx.getStart().getLine(),
+							" Parameter Type Error ");
+				}
+			}
+		} else {
+			System.err.print("Count Error");
+			errorListener.reportError(ErrorType.TypeMismatch, ctx.getStart().getLine(), " Parameter Count Error ");
+		}
+
+		/*
+		 * int childCount = ctx.getChild(2).getChildCount();
+		 * System.err.println("Inside method accessparam: " + childCount);
+		 * 
+		 * if (counter == childCount) { System.err.println("wrong paramCOUNT"); }
+		 * System.err.println("**********counter " + counter);
+		 */
 		typeEqual(temp, type, ctx, name, ctx.getStart().getLine());
 		return type;
 	}

@@ -1,12 +1,19 @@
 # Program entry point
 void main() {
+	string s = "All students got the highest grade A!";
 
-	int[] x = giveMe();
-	x = giveMe();
-
+	println(res);   # res = 2
+	
+	int a = 1;
+	char c = 'c';
+	char b = 'b';
+	char[] charArr = {'a','b','c','d','e','f'};
+	charArr = replace(charArr,c, a);
+	
 }
 
-int[] giveMe(char[] str, char oldChar, char newChar){
-
-
+char[] replace(char[] str, char oldChar, char newChar) {
+	int i = 0;
+	
+	return str;
 }

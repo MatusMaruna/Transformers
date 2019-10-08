@@ -9,6 +9,8 @@ public class Scope {
 	private Scope enclosingScope;
 	private Map<String, Symbol> symbols = new LinkedHashMap<String, Symbol>();
 	private ArrayList<Scope> scopeChildren = new ArrayList<>();
+	public ArrayList<OfpType> parameters = new ArrayList<OfpType>();
+	public Map<String, ArrayList<OfpType>> parameterMap = new LinkedHashMap<String, ArrayList<OfpType>>();
 
 	public Scope(Scope enclosingScope, String name) {
 		this.enclosingScope = enclosingScope;
@@ -18,9 +20,9 @@ public class Scope {
 	public String getScopeType() {
 		return type;
 	}
-	
+
 	public Scope getEnclosingScope() {
-		return enclosingScope; 
+		return enclosingScope;
 	}
 
 	public void setScopeType(String type) {
