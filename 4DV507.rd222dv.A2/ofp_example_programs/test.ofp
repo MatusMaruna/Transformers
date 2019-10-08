@@ -1,19 +1,14 @@
 # Program entry point
 void main() {
-	string s = "All students got the highest grade A!";
 
-	println(res);   # res = 2
-	
-	int a = 1;
-	char c = 'c';
-	char b = 'b';
-	char[] charArr = {'a','b','c','d','e','f'};
-	charArr = replace(charArr,c, a);
-	
 }
 
-char[] replace(char[] str, char oldChar, char newChar) {
-	int i = 0;
-	
-	return str;
-}
+
+
+int mult(int a) {
+	int b = 0; 
+	if (b == 1)
+	   return a;
+    else
+       return a + mult(b-1);
+} 

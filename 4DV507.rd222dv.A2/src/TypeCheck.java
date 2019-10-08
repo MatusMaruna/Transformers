@@ -268,7 +268,34 @@ public class TypeCheck extends OfpBaseVisitor<OfpType> {
 	@Override
 	public OfpType visitPrint(PrintContext ctx) {
 		temp = null;
-		visitChildren(ctx);
+		OfpType type = visit(ctx.getChild(2));
+
+		if (ctx.getChild(3).getChildCount() > 1) {
+			if (ctx.getChild(3).getChild(0).getText().equals("[")) {
+
+				if (type != OfpType.CharArray && type != OfpType.FloatArray && type != OfpType.StringArray
+						&& type != OfpType.IntArray && type != OfpType.FloatArray) {
+					System.out.println(type);
+					errorListener.reportError(ErrorType.TypeMismatch, ctx.getStart().getLine(),
+							"Type mismatch on print, can only print Bool, String, Char, Int, Float");
+
+				}
+
+			} else {
+				System.out.println(type);
+
+				if (type != OfpType.Bool && type != OfpType.String && type != OfpType.Char && type != OfpType.Int
+						&& type != OfpType.Float) {
+
+					errorListener.reportError(ErrorType.TypeMismatch, ctx.getStart().getLine(),
+							"Type mismatch on print, can only print Bool, String, Char, Int, Float");
+
+				}
+
+			}
+
+		}
+
 		return null;
 	}
 
@@ -457,6 +484,7 @@ public class TypeCheck extends OfpBaseVisitor<OfpType> {
 			count++;
 		}
 		int count1 = 0;
+		if(params != null) {
 		if (params.size() == count) {
 			for (int i = 0; i < ctx.getChild(2).getChild(0).getChildCount(); i += 2) {
 				paramType = visit(ctx.getChild(2).getChild(0).getChild(i));
@@ -470,6 +498,7 @@ public class TypeCheck extends OfpBaseVisitor<OfpType> {
 		} else {
 			System.err.print("Count Error");
 			errorListener.reportError(ErrorType.TypeMismatch, ctx.getStart().getLine(), " Parameter Count Error ");
+		}
 		}
 
 		/*
