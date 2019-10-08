@@ -118,7 +118,13 @@ public class TypeCheck extends OfpBaseVisitor<OfpType> {
 
 	@Override
 	public OfpType visitArrType(ArrTypeContext ctx) {
-		OfpType exprType = visit(ctx.getChild(1));
+		OfpType exprType; 
+		if(ctx.getChildCount() == 4) {
+			exprType = visit(ctx.getChild(0));
+		}else {
+			exprType = visit(ctx.getChild(1));	
+		}
+		
 		typeEqual(temp, exprType, ctx, name, ctx.getStart().getLine());
 		
 		return null;

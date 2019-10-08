@@ -6,3 +6,16 @@ println(f[0]);   # 9.3
 	
 }
 
+int[] reverse(int[] arr) {
+	int sz = arr.length;
+	int[] toReturn = new int[sz];
+	int i = 0;
+	int n = 2; 
+	while (i < sz) {
+		int n = arr[sz-i-1];
+		toReturn[i] = n;
+		i = i + 1;
+	} 
+	return toReturn;
+}
+
