@@ -338,6 +338,8 @@ public class TypeCheck extends OfpBaseVisitor<OfpType> {
 
 		arrayValueMap.put(OfpType.FloatArray, OfpType.Float);
 		arrayValueMap.put(OfpType.IntArray, OfpType.Int);
+		arrayValueMap.put(OfpType.StringArray, OfpType.String);
+		arrayValueMap.put(OfpType.CharArray, OfpType.Char);
 	}
 
 	public void typeEqual(OfpType idType, OfpType exprType, ParseTree ctx, String name, int line) {

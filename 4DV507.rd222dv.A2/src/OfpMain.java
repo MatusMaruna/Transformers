@@ -18,7 +18,7 @@ public class OfpMain {
 		// Read test program path from args
 
 		String testDir = "./ofp_example_programs/";
-		String testProgram = "strings.ofp";
+		String testProgram = "arithmetic.ofp";
 
 		if (!testProgram.endsWith(".ofp")) {
 			System.out.println("\nPrograms most end with suffix .ofp! Found " + testProgram);
@@ -51,7 +51,7 @@ public class OfpMain {
 		}
 
 		// Display tree
-		 Trees.inspect(root, parser);
+		// Trees.inspect(root, parser);
 
 		System.out.println("");
 		ParseTreeWalker walker = new ParseTreeWalker();
