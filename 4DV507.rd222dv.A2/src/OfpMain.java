@@ -13,18 +13,15 @@ public class OfpMain {
 
 	public static void main(String[] args) throws Exception {
 		// Read test program path from args
-
-		String testDir = "./ofp_example_programs/";
-		String testProgram = "test.ofp";
+		String testProgram = args[0];
 
 		if (!testProgram.endsWith(".ofp")) {
 			System.out.println("\nPrograms most end with suffix .ofp! Found " + testProgram);
 			System.exit(-1);
 		}
 
-		System.out.println("Reading test program from: " + testDir + testProgram);
+		System.out.println("Reading test program from: " + testProgram);
 		String progName = testProgram.substring(0, testProgram.length() - 4);
-		System.out.println("Program name: " + progName);
 
 		// Parse input program
 		System.out.println("\nParsing started");
@@ -32,7 +29,7 @@ public class OfpMain {
 		OfpParser.StartContext root = null;
 		ErrorListener errorListener = new ErrorListener();
 		try {
-			CharStream inputStream = CharStreams.fromFileName(testDir + testProgram);
+			CharStream inputStream = CharStreams.fromFileName(testProgram);
 			OfpLexer lexer = new OfpLexer(inputStream);
 			parser = new OfpParser(new BufferedTokenStream(lexer));
 			parser.addErrorListener(errorListener);
