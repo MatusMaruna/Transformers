@@ -127,10 +127,10 @@ public class TypeCheck extends OfpBaseVisitor<OfpType> {
 		OfpType exprType;
 		if (ctx.getChildCount() == 4) {
 			exprType = visit(ctx.getChild(0));
-			if(exprType.equals(OfpType.String)) {
+			if (exprType.equals(OfpType.String)) {
 				exprType = OfpType.CharArray;
 			}
-		}else {
+		} else {
 			exprType = visit(ctx.getChild(1));
 		}
 
@@ -158,9 +158,13 @@ public class TypeCheck extends OfpBaseVisitor<OfpType> {
 
 		System.out.println("MethType " + methodType);
 		OfpType returnType = visit(ctx.getChild(1));
+		String returnText = ctx.getChild(1).getText();
 
 		System.out.println("return type " + returnType);
 
+		if ((returnText.equals("true") || returnText.equals("false")) && !search(returnText)) {
+			returnType = OfpType.Bool;
+		}
 		if (methodType != returnType) {
 			System.err.println("WRONG RETURN TYPE");
 			typeEqual(methodType, returnType, ctx, name, ctx.getStart().getLine());
@@ -205,14 +209,23 @@ public class TypeCheck extends OfpBaseVisitor<OfpType> {
 
 	@Override
 	public OfpType visitCondition(ConditionContext ctx) {
-		System.err.println("-----------condition " + ctx.getText());
-		checkBool = ctx.getChild(0).getChild(1).getText();
-		System.err.println("-----------condition " + checkBool);
-		/*
-		 * String retType = ctx.COP().getText();
-		 * System.err.println("-----------retType " + retType);
-		 */
-		checkBoolType(checkBool, ctx);
+		if (ctx.getChild(0).getChildCount() == 1) {
+			System.err.println("*****" + visit(ctx.getChild(0)));
+			if (visit(ctx.getChild(0)) != OfpType.Bool) {
+				errorListener.reportError(ErrorType.TypeMismatch, ctx.getStart().getLine(), "bool type");
+			}
+		}
+
+		if (ctx.getChild(0).getChildCount() > 1) {
+			System.err.println("-----------condition " + ctx.getText());
+			checkBool = ctx.getChild(0).getChild(1).getText();
+			System.err.println("-----------condition " + checkBool);
+			checkBoolType(checkBool, ctx);
+			/*
+			 * String retType = ctx.COP().getText();
+			 * System.err.println("-----------retType " + retType);
+			 */
+		}
 
 		if (scopes.get(ctx) != null) {
 			currentScope = scopes.get(ctx);
@@ -220,38 +233,31 @@ public class TypeCheck extends OfpBaseVisitor<OfpType> {
 
 		System.out.println(ctx.getChild(0).getChildCount());
 		String varName;
-		for(int i = 0; i < ctx.getChild(0).getChildCount(); i+=2) {
+		for (int i = 0; i < ctx.getChild(0).getChildCount(); i += 2) {
 			System.out.println(ctx.getChild(0).getChildCount());
-			//System.out.println(ctx.getChild(0).getChild(0).getChild(0).getChild(0).getText());
-			if(ctx.getChild(0).getChild(i).getChildCount() >= 2) {
+			// System.out.println(ctx.getChild(0).getChild(0).getChild(0).getChild(0).getText());
+			if (ctx.getChild(0).getChild(i).getChildCount() >= 2) {
 				varName = ctx.getChild(0).getChild(i).getChild(0).getText();
 
-				if(ctx.getChild(0).getChild(i).getChild(0).getChildCount() >1) {
+				if (ctx.getChild(0).getChild(i).getChild(0).getChildCount() > 1) {
 					varName = ctx.getChild(0).getChild(i).getChild(0).getChild(0).getText();
 				}
 
-
-
 				System.out.println("OUTSIDE: " + varName);
-			}else if(ctx.getChild(0).getChild(0).getChild(0).getChildCount() >= 4 ) {
+			} else if (ctx.getChild(0).getChild(0).getChild(0).getChildCount() >= 4) {
 				varName = ctx.getChild(0).getChild(0).getChild(0).getChild(0).getText();
-				System.out.println("INSIDE: "  +varName);
-			}else {
+				System.out.println("INSIDE: " + varName);
+			} else {
 				varName = ctx.getChild(0).getChild(i).getText();
 			}
-			if(search(varName) == false && !(varName.indexOf('\'') > -1) && !(varName.indexOf('\"') > -1) && !varName.matches("-?\\d+(\\.\\d+)?")
-					&& currentScope.resolve(varName) == null) {
-
+			if (search(varName) == false && !(varName.indexOf('\'') > -1) && !(varName.indexOf('\"') > -1)
+					&& !varName.matches("-?\\d+(\\.\\d+)?") && currentScope.resolve(varName) == null) {
 
 				errorListener.reportError(ErrorType.SemanticError, ctx.getStart().getLine(),
 						"Parameter " + varName + " is undefined!");
-			};
+			}
+			;
 		}
-
-
-
-
-
 
 		visitChildren(ctx);
 		return null;
@@ -290,29 +296,29 @@ public class TypeCheck extends OfpBaseVisitor<OfpType> {
 		}
 		// System.out.println("Test AsgnStmt " + ctx.getText());
 		String name = ctx.getChild(0).getText(); // Name
-		//currentScope = scopes.get(ctx);
-		if(currentScope.resolve(name) != null || search(name) == true) {
-		if(currentScope.resolve(name) == null) {
-		checkExist(name,ctx, ctx.getStart().getLine());
-		}
-		OfpType idType;
-		if(currentScope.resolve(name) != null) {
-			 idType = currentScope.resolve(name).getType();
-			 temp = idType;
-		}else {
-			 idType = getType(name);
-			 temp = getType(name);
-		}
-		OfpType exprType;
-		if(arrayValueMap.containsKey(idType) && !ctx.getChild(3).getText().equals(";")) {
-		System.err.println("Visit array" + idType);
-		exprType = visit(ctx.getChild(3));
-		System.err.println(exprType);
-		}else {
-		exprType = visit(ctx.getChild(2));
-		}
-		typeEqual(idType, exprType, ctx, name, ctx.getStart().getLine());
-		// System.out.println(scopes.get(ctx).resolve(ctx.getChild(1).getText()).getType());
+		// currentScope = scopes.get(ctx);
+		if (currentScope.resolve(name) != null || search(name) == true) {
+			if (currentScope.resolve(name) == null) {
+				checkExist(name, ctx, ctx.getStart().getLine());
+			}
+			OfpType idType;
+			if (currentScope.resolve(name) != null) {
+				idType = currentScope.resolve(name).getType();
+				temp = idType;
+			} else {
+				idType = getType(name);
+				temp = getType(name);
+			}
+			OfpType exprType;
+			if (arrayValueMap.containsKey(idType) && !ctx.getChild(3).getText().equals(";")) {
+				System.err.println("Visit array" + idType);
+				exprType = visit(ctx.getChild(3));
+				System.err.println(exprType);
+			} else {
+				exprType = visit(ctx.getChild(2));
+			}
+			typeEqual(idType, exprType, ctx, name, ctx.getStart().getLine());
+			// System.out.println(scopes.get(ctx).resolve(ctx.getChild(1).getText()).getType());
 
 			// visitChildren(ctx);
 		}
@@ -379,10 +385,10 @@ public class TypeCheck extends OfpBaseVisitor<OfpType> {
 
 		if (ctx.getChildCount() == 2) {
 			type = visit(ctx.getChild(0));
-			if(arrayValueMap.containsKey(type) || ctx.getChildCount() == 2) {
+			if (arrayValueMap.containsKey(type) || ctx.getChildCount() == 2) {
 				temp = null;
 			}
-		}else {
+		} else {
 			type = visitChildren(ctx);
 		}
 
