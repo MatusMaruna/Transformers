@@ -40,6 +40,8 @@ public class TypeCheck extends OfpBaseVisitor<OfpType> {
 	OfpType temp;
 	String name;
 	OfpType methodType;
+	String checkBool;
+	int paramCount;
 	private Map<OfpType, OfpType> arrayValueMap = new LinkedHashMap<OfpType, OfpType>();
 
 	public TypeCheck(ParseTreeProperty<Scope> scopes, ErrorListener errorListener) {
@@ -123,9 +125,9 @@ public class TypeCheck extends OfpBaseVisitor<OfpType> {
 	@Override
 	public OfpType visitArrType(ArrTypeContext ctx) {
 		OfpType exprType;
-		if(ctx.getChildCount() == 4) {
+		if (ctx.getChildCount() == 4) {
 			exprType = visit(ctx.getChild(0));
-		}else {
+		} else {
 			exprType = visit(ctx.getChild(1));
 		}
 
@@ -200,6 +202,15 @@ public class TypeCheck extends OfpBaseVisitor<OfpType> {
 
 	@Override
 	public OfpType visitCondition(ConditionContext ctx) {
+		System.err.println("-----------condition " + ctx.getText());
+		checkBool = ctx.getChild(0).getChild(1).getText();
+		System.err.println("-----------condition " + checkBool);
+		/*
+		 * String retType = ctx.COP().getText();
+		 * System.err.println("-----------retType " + retType);
+		 */
+		checkBoolType(checkBool, ctx);
+
 		if (scopes.get(ctx) != null) {
 			currentScope = scopes.get(ctx);
 		}
@@ -244,27 +255,27 @@ public class TypeCheck extends OfpBaseVisitor<OfpType> {
 		}
 		// System.out.println("Test AsgnStmt " + ctx.getText());
 		String name = ctx.getChild(0).getText(); // Name
-		//currentScope = scopes.get(ctx);
-		if(currentScope.resolve(name) != null || search(name) == true) {
-		if(currentScope.resolve(name) == null) {
-		checkExist(name,ctx, ctx.getStart().getLine());
-		}
-		OfpType idType;
-		if(currentScope.resolve(name) != null) {
-			 idType = currentScope.resolve(name).getType();
-			 temp = idType;
-		}else {
-			 idType = getType(name);
-			 temp = getType(name);
-		}
-		OfpType exprType;
-		if(arrayValueMap.containsKey(idType)) {
-		exprType = visit(ctx.getChild(3));
-		}else {
-		exprType = visit(ctx.getChild(2));
-		}
-		typeEqual(idType, exprType, ctx, name, ctx.getStart().getLine());
-		// System.out.println(scopes.get(ctx).resolve(ctx.getChild(1).getText()).getType());
+		// currentScope = scopes.get(ctx);
+		if (currentScope.resolve(name) != null || search(name) == true) {
+			if (currentScope.resolve(name) == null) {
+				checkExist(name, ctx, ctx.getStart().getLine());
+			}
+			OfpType idType;
+			if (currentScope.resolve(name) != null) {
+				idType = currentScope.resolve(name).getType();
+				temp = idType;
+			} else {
+				idType = getType(name);
+				temp = getType(name);
+			}
+			OfpType exprType;
+			if (arrayValueMap.containsKey(idType)) {
+				exprType = visit(ctx.getChild(3));
+			} else {
+				exprType = visit(ctx.getChild(2));
+			}
+			typeEqual(idType, exprType, ctx, name, ctx.getStart().getLine());
+			// System.out.println(scopes.get(ctx).resolve(ctx.getChild(1).getText()).getType());
 
 			// visitChildren(ctx);
 		}
@@ -276,6 +287,7 @@ public class TypeCheck extends OfpBaseVisitor<OfpType> {
 		if (scopes.get(ctx) != null) {
 			currentScope = scopes.get(ctx);
 		}
+
 		visitChildren(ctx);
 		return null;
 	}
@@ -294,6 +306,18 @@ public class TypeCheck extends OfpBaseVisitor<OfpType> {
 		if (scopes.get(ctx) != null) {
 			currentScope = scopes.get(ctx);
 		}
+
+		System.out.println("Test ParameterList " + ctx.getText());
+
+		paramCount = ctx.getChildCount();
+		System.err.println("CountList " + paramCount);
+
+		OfpType paramTemp;
+		for (int i = 0; i < paramCount; i += 2) {
+			paramTemp = visit(ctx.getChild(i));
+			System.err.println("TEST: " + paramTemp);
+		}
+
 		visitChildren(ctx);
 		return null;
 	}
@@ -310,45 +334,38 @@ public class TypeCheck extends OfpBaseVisitor<OfpType> {
 	@Override
 	public OfpType visitExpr(ExprContext ctx) {
 		// System.out.println("visitExpr " + ctx.getText());
+
 		if (scopes.get(ctx) != null) {
 			currentScope = scopes.get(ctx);
 		}
 		OfpType type;
 
-		if(ctx.getChildCount() == 2) {
+		if (ctx.getChildCount() == 2) {
 			type = visit(ctx.getChild(0));
-		}else {
+		} else {
 			type = visitChildren(ctx);
 		}
 
-
-
-
-		if(temp == OfpType.Undef) {
-			//temp = visit(ctx.getParent().getChild(0));
+		if (temp == OfpType.Undef) {
+			// temp = visit(ctx.getParent().getChild(0));
 			name = ctx.getText();
-			if(search(ctx.getText())) {
+			if (search(ctx.getText())) {
 				type = getType(ctx.getText());
 			}
 		}
-		if(arrayValueMap.containsKey(temp)) {
-			if(ctx.getChildCount() == 2  && ctx.getChild(1).getChildCount() == 2 ) {
-			String exprType = ctx.getChild(1).getChild(0).getText();
-			type = OfpType.getType(exprType);
+		if (arrayValueMap.containsKey(temp)) {
+			if (ctx.getChildCount() == 2 && ctx.getChild(1).getChildCount() == 2) {
+				String exprType = ctx.getChild(1).getChild(0).getText();
+				type = OfpType.getType(exprType);
 
 			}
 
-
 		}
 
-		if(temp != null) {
-		typeEqual	(temp, type, ctx, name, ctx.getStart().getLine());
+		if (temp != null) {
+			typeEqual(temp, type, ctx, name, ctx.getStart().getLine());
 
 		}
-
-
-
-
 
 		return type;
 	}
@@ -403,9 +420,9 @@ public class TypeCheck extends OfpBaseVisitor<OfpType> {
 		if (exprType != idType) {
 			if (arrayValueMap.get(idType) != exprType && arrayValueMap.get(exprType) != idType) {
 
-				if(idType != null && exprType != null) {
-				errorListener.reportError(ErrorType.TypeMismatch, line,
-						"Type mismatch on variable " + name + " [" + idType.name() + "," + exprType.name() + "]");
+				if (idType != null && exprType != null) {
+					errorListener.reportError(ErrorType.TypeMismatch, line,
+							"Type mismatch on variable " + name + " [" + idType.name() + "," + exprType.name() + "]");
 				}
 			}
 		}
@@ -462,4 +479,18 @@ public class TypeCheck extends OfpBaseVisitor<OfpType> {
 	 * ctx.getChildCount(); i++) { visit(ctx.getChild(i)); } }
 	 */
 
+	public void checkBoolType(String operator, ConditionContext ctx) {
+		switch (operator) {
+		case "<":
+			break;
+		case ">":
+			break;
+		case "==":
+			break;
+		default:
+			String message = " Conditions are not of type bool ";
+			errorListener.reportError(ErrorType.TypeMismatch, ctx.getStart().getLine(), message);
+
+		}
+	}
 }
