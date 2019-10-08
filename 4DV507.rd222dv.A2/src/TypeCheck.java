@@ -299,6 +299,9 @@ public class TypeCheck extends OfpBaseVisitor<OfpType> {
 		
 		if(ctx.getChildCount() == 2) {
 			type = visit(ctx.getChild(0));
+			if(arrayValueMap.containsKey(type) || ctx.getChildCount() == 2) {
+				temp = null;
+			}
 		}else {
 			type = visitChildren(ctx);
 		}
@@ -355,6 +358,7 @@ public class TypeCheck extends OfpBaseVisitor<OfpType> {
 		if(scopes.get(ctx) != null) {
 			currentScope = scopes.get(ctx);
 		}
+		temp = null;
 		visitChildren(ctx);
 		return null;
 	}

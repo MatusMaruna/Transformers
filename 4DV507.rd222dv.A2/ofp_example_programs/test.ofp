@@ -6,16 +6,16 @@ println(f[0]);   # 9.3
 	
 }
 
-int[] reverse(int[] arr) {
-	int sz = arr.length;
-	int[] toReturn = new int[sz];
-	int i = 0;
-	int n = 2; 
-	while (i < sz) {
-		int n = arr[sz-i-1];
-		toReturn[i] = n;
+float findMax(float[] f) {
+	float max = f[0];
+	int i=1;
+	while (i<f.length) {
+		float p = f[i];
+		if (p>max) {
+			max = p;
+		}
 		i = i + 1;
-	} 
-	return toReturn;
+	}
+	
+	return max;
 }
-
