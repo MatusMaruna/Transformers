@@ -92,9 +92,8 @@ public class PythonCodeGenerator extends OfpBaseVisitor<String> {
 				ind += "    ";
 				indentCache.put(indentLevel, ind);
 			}
-			return ind;
 		}
-		return null; // Not sure what to return here yet
+		return ind;
 	}
 
 	@Override
@@ -112,15 +111,12 @@ public class PythonCodeGenerator extends OfpBaseVisitor<String> {
 		if(ctx.getChild(3).getText() != ")") {  // check if function has params
 			buf.append(visit(ctx.getChild(3)));
 		}
-		buf.append("):");
+		buf.append("):\n");
+		depth = depth+1;
 
-
-		// Visit block
-
-
-
+		buf.append(visit(ctx.getChild(ctx.getChildCount()-1))); // Visit block
+		depth = depth-1;
 		buf.append("\n");
-
 		return buf.toString();
 	}
 
@@ -258,8 +254,14 @@ public class PythonCodeGenerator extends OfpBaseVisitor<String> {
 
 	@Override
 	public String visitBlock(BlockContext ctx) {
-		// TODO Auto-generated method stub
-		return null;
+		StringBuilder buf = new StringBuilder();
+    	buf.append(indent(depth) + "# Test in method\n"); // test decleration in Block
+
+		for(int i = 0; i<ctx.getChildCount(); i++){
+			buf.append(indent(depth) + visit(ctx.getChild(i)) + "\n");
+		}
+
+		return buf.toString();
 	}
 
 	@Override
