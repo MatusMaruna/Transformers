@@ -24,7 +24,7 @@ type :    'int' arrType?
 		| 'char' arrType?
 		| 'bool'
 		;
-		
+
 varType : 	 ID
 			|MINUS? INT
 			|MINUS? FLOAT

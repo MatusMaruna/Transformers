@@ -1,4 +1,5 @@
 import java.io.IOException;
+import java.io.PrintWriter;
 
 import org.antlr.v4.gui.Trees;
 import org.antlr.v4.runtime.BufferedTokenStream;
@@ -78,7 +79,19 @@ public class OfpMain {
 		System.out.println("Generating Python Code");
 		System.out.println("Test");
 		
-		PythonCodeGenerator codeGen = new PythonCodeGenerator();
+		PythonCodeGenerator pyGen = new PythonCodeGenerator(listener.scopes);
+		String pyProgram = pyGen.visit(root);
+
+		String pyOutputPath = testProgram.replaceAll("\\.ofp$", ".py");
+		try {
+			PrintWriter pw = new PrintWriter(pyOutputPath);
+			pw.print(pyProgram);
+			pw.close();
+
+		}catch(IOException e){
+			e.printStackTrace();
+		}
+		System.out.println("\nPython program saves as: " + pyOutputPath);
 
 
 	}
