@@ -182,8 +182,12 @@ public class PythonCodeGenerator extends OfpBaseVisitor<String> {
 
 	@Override
 	public String visitDeclaration(DeclarationContext ctx) {
-		// TODO Auto-generated method stub
-		return null;
+		StringBuilder buf = new StringBuilder();
+		buf.append(ctx.getChild(1).getText() + "="); // get name of the variable
+
+		buf.append(visit(ctx.getChild(3))); // expr|arrType|array
+
+		return buf.toString();
 	}
 
 	@Override
@@ -255,7 +259,7 @@ public class PythonCodeGenerator extends OfpBaseVisitor<String> {
 	@Override
 	public String visitBlock(BlockContext ctx) {
 		StringBuilder buf = new StringBuilder();
-    	buf.append(indent(depth) + "# Test in method\n"); // test decleration in Block
+    	buf.append(indent(depth) + "# Test in method\n"); // test declaration in Block
 
 		for(int i = 0; i<ctx.getChildCount(); i++){
 			buf.append(indent(depth) + visit(ctx.getChild(i)) + "\n");
@@ -278,8 +282,9 @@ public class PythonCodeGenerator extends OfpBaseVisitor<String> {
 
 	@Override
 	public String visitStmt(StmtContext ctx) {
-		// TODO Auto-generated method stub
-		return null;
+		StringBuilder buf = new StringBuilder();
+		buf.append(visit(ctx.getChild(0)));
+		return buf.toString();
 	}
 
 	@Override

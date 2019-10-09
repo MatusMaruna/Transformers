@@ -15,9 +15,9 @@ def maxOfThree(a,b,c):
 #
 # Test in method
 null
-null
-null
-null
+p=null
+q=null
+res=null
 null
 null
 null
