@@ -71,8 +71,14 @@ public class OfpMain {
 		typeChecking.visit(root);
 
 		errorListener.printErrors();
+		
+		
+		
+		
+		System.out.println("Generating Python Code");
+		
+		PythonCodeGenerator codeGen = new PythonCodeGenerator();
 
-		// System.out.println(listener.scopeList.toString());
 
 	}
 
