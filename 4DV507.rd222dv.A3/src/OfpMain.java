@@ -77,7 +77,6 @@ public class OfpMain {
 		
 		
 		System.out.println("Generating Python Code");
-		System.out.println("Test");
 		
 		PythonCodeGenerator pyGen = new PythonCodeGenerator(listener.scopes);
 		String pyProgram = pyGen.visit(root);

@@ -1,3 +1,5 @@
+import antlr4.OfpVisitor;
+import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.*;
 
 import antlr4.OfpBaseVisitor;
@@ -103,14 +105,45 @@ public class PythonCodeGenerator extends OfpBaseVisitor<String> {
 
 	@Override
 	public String visitMethod(MethodContext ctx) {
-		// TODO Auto-generated method stub
-		return null;
+		currentScope = scopes.get(ctx);
+		System.out.println("Visiting method" + ctx.getChild(1).getText());
+		StringBuilder buf = new StringBuilder();
+		buf.append("def " + ctx.getChild(1).getText() + "("); //  def functionName(
+		if(ctx.getChild(3).getText() != ")") {  // check if function has params
+			buf.append(visit(ctx.getChild(3)));
+		}
+		buf.append("):");
+
+
+		// Visit block
+
+
+
+		buf.append("\n");
+
+		return buf.toString();
 	}
 
 	@Override
 	public String visitStart(StartContext ctx) {
-		// TODO Auto-generated method stub
-		return null;
+        System.out.println("Visiting start");
+		currentScope = scopes.get(ctx);
+		globalScope = currentScope;
+		StringBuilder buf = new StringBuilder();
+		// main must be generated last
+		ParserRuleContext main = new ParserRuleContext();
+		for(int i = 0; i < ctx.getChildCount(); i++){
+			ParserRuleContext p = (ParserRuleContext) ctx.getChild(i);
+			String fName = p.getChild(1).getText();
+			if(fName.equals("main")){
+				main = p;
+			}else{
+				buf.append(visit(p));
+			}
+
+		}
+		buf.append(visit(main));
+		return buf.toString();
 	}
 
 	@Override
@@ -119,8 +152,10 @@ public class PythonCodeGenerator extends OfpBaseVisitor<String> {
 		return null;
 	}
 
+
 	@Override
 	public String visitMain(MainContext ctx) {
+    	System.out.println("Visitng main");
 		currentScope = scopes.get(ctx);
 		String start = "#\n#  Program entry point - main \n#\n";
 
@@ -211,8 +246,14 @@ public class PythonCodeGenerator extends OfpBaseVisitor<String> {
 
 	@Override
 	public String visitParameterList(ParameterListContext ctx) {
-		// TODO Auto-generated method stub
-		return null;
+    	StringBuilder buf = new StringBuilder();
+		for(int i = 0; i < ctx.getChildCount(); i+=2){  // param1,param2,param3
+			buf.append(getSafePythonId(ctx.getChild(i).getChild(1).getText())); // get name leave type
+			if(i+2 < ctx.getChildCount()){
+				buf.append(","); // seperate params
+			}
+		}
+		return buf.toString();
 	}
 
 	@Override
@@ -244,4 +285,14 @@ public class PythonCodeGenerator extends OfpBaseVisitor<String> {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+    @Override
+    public String visitTerminal(TerminalNode terminalNode) {
+        return null;
+    }
+
+    @Override
+    public String visitErrorNode(ErrorNode errorNode) {
+        return null;
+    }
 }
