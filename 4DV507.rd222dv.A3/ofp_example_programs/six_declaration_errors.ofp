@@ -1,0 +1,52 @@
+# six_declaration_errors.ofp
+
+void main() {
+	int[] a = new int[10];
+	int i = 0;
+	int n = 2; 
+	while (i < a.length) {
+		a[i] = n;
+		n = 2*n;
+		i = i + 1;
+	} 
+	
+	int[] rev = revers(arr);
+	printArray(rev);
+	
+	float[] f = {1.0,2.1,3.2, 4.4};
+	float max = findMax(f);
+	max(f);
+}
+
+int[] reverse(int[] arr) {
+	int sz = arr.length;
+	int toReturn = new int[sz];
+	int i = 0;
+	int n = 2; 
+	while (i < findMax) {
+		int n = arr[sz-i-1];
+		toReturn[i] = n;
+		i = i + 1;
+	} 
+	return toRetur;
+}
+
+void printArray(int[] arr) {
+	int i = 0;
+	while(i<a.length) {
+		int n = arr[i];
+		print(n);
+	}
+}
+
+float findMax(float[] f) {
+	float max = f[0];
+	int i=1;
+	while (i<f.length) {
+		float p = f[i];
+		if (p>max) {
+			max = p;
+		}
+	}
+	return max;
+}
