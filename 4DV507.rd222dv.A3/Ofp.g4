@@ -4,7 +4,7 @@ grammar Ofp;
     package antlr4;
 }
 
-start : method* main method*;
+start : method* main method* ; 
 	  
 main: 'void' 'main' '(' ')' block ;
 

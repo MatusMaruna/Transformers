@@ -72,12 +72,9 @@ public class OfpMain {
 		typeChecking.visit(root);
 
 		errorListener.printErrors();
-		
-		
-		
-		
+
 		System.out.println("Generating Python Code");
-		
+
 		PythonCodeGenerator pyGen = new PythonCodeGenerator(listener.scopes);
 		String pyProgram = pyGen.visit(root);
 
@@ -87,11 +84,10 @@ public class OfpMain {
 			pw.print(pyProgram);
 			pw.close();
 
-		}catch(IOException e){
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		System.out.println("\nPython program saves as: " + pyOutputPath);
-
 
 	}
 
