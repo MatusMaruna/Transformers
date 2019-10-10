@@ -224,7 +224,7 @@ public class PythonCodeGenerator extends OfpBaseVisitor<String> {
 
 		for (int i = 2; i < ctx.getChildCount(); i++) { // start at child 2 "("
 			if (!ctx.getChild(i).getText().equals(";")) { // finish and not print ";"
-				buf.append(ctx.getChild(i).getText());
+				buf.append(getSafePythonId(ctx.getChild(i).getText()));
 			}
 		}
 
@@ -335,20 +335,38 @@ public class PythonCodeGenerator extends OfpBaseVisitor<String> {
 	public String visitExpr(ExprContext ctx) {
 		StringBuilder buf = new StringBuilder();
 
-		// int[] a=new int[10,11]; = python equal is a=[10,11] FIXME?
-		if (ctx.getChild(0).getText().equals("new")) {
-			buf.append(ctx.getChild(1).getChild(1).getText());
-			// if childcount is > 1 => ex: q = 3*3; -> so expr is 3*3, loop over all
-			// children +append text
-		} else if (ctx.getChildCount() > 1) {
+		// arr.length == python eual len(arr)
+		/*
+		 * if (ctx.getChildCount() >= 2) { if
+		 * (ctx.getChild(1).getText().equals(".length")) { buf.append("len(" +
+		 * ctx.getChild(0).getText() + ")"); } } // int[] a=new int[10,11]; = python
+		 * equal is a=[10,11] FIXME? if (ctx.getChild(0).getText().equals("new")) {
+		 * buf.append(ctx.getChild(1).getChild(1).getText()); // if childcount is > 1 =>
+		 * ex: q = 3*3; -> so expr is 3*3, loop over all // children +append text } else
+		 * if (ctx.getChildCount() > 1) { for (int i = 0; i < ctx.getChildCount(); i++)
+		 * { buf.append(ctx.getChild(i).getText()); } } else {
+		 * buf.append(ctx.getChild(0).getText()); } return buf.toString();
+		 */
+		int children = ctx.getChildCount();
+		switch (children) {
+		case 1:
 			for (int i = 0; i < ctx.getChildCount(); i++) {
 				buf.append(ctx.getChild(i).getText());
 			}
-		} else {
+			break;
+
+		case 2:
+			if (ctx.getChild(0).getText().equals("new") && !(ctx.getChild(1).equals(".length"))) {
+				buf.append(ctx.getChild(1).getChild(1).getText());
+			} else {
+				buf.append("len(" + ctx.getChild(0).getText() + ")");
+			}
+			break;
+		default:
 			buf.append(ctx.getChild(0).getText());
+			break;
 		}
 		return buf.toString();
-
 	}
 
 	@Override
