@@ -212,7 +212,15 @@ public class PythonCodeGenerator extends OfpBaseVisitor<String> {
 
 	@Override
 	public String visitVarType(VarTypeContext ctx) {
-		return null;
+	    StringBuilder buf = new StringBuilder();
+
+	    for(int i = 0; i < ctx.getChildCount(); i++){
+	        buf.append(ctx.getChild(i).toString());
+        }
+
+
+
+		return buf.toString();
 	}
 
 	@Override // weird grammar
@@ -327,7 +335,6 @@ public class PythonCodeGenerator extends OfpBaseVisitor<String> {
 	@Override
 	public String visitBlock(BlockContext ctx) {
 		StringBuilder buf = new StringBuilder();
-		buf.append(indent(depth) + "# Test in method\n"); // test declaration in Block
 
 		for (int i = 1; i < ctx.getChildCount() - 1; i++) {
 			buf.append(indent(depth) + visit(ctx.getChild(i)) + "\n");
@@ -376,7 +383,17 @@ public class PythonCodeGenerator extends OfpBaseVisitor<String> {
 
 	@Override
 	public String visitMethodCall(MethodCallContext ctx) {
-		return null;
+        StringBuilder buf = new StringBuilder();
+        buf.append(ctx.getChild(0).getText() + "("); // MethodName(
+        for(int i = 2; i<ctx.getChildCount(); i++){
+            if (!ctx.getChild(i).getText().equals(";")) { // finish and not print ";"
+                buf.append(getSafePythonId(visit(ctx.getChild(i))));
+            }
+        }
+
+
+
+		return buf.toString();
 	}
 
 	@Override
