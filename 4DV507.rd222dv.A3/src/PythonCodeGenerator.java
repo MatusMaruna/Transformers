@@ -141,7 +141,6 @@ public class PythonCodeGenerator extends OfpBaseVisitor<String> {
 
 	@Override
 	public String visitArrType(ArrTypeContext ctx) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -160,19 +159,16 @@ public class PythonCodeGenerator extends OfpBaseVisitor<String> {
 
 	@Override
 	public String visitElseStmt(ElseStmtContext ctx) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public String visitReturnStmt(ReturnStmtContext ctx) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public String visitType(TypeContext ctx) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -188,13 +184,11 @@ public class PythonCodeGenerator extends OfpBaseVisitor<String> {
 
 	@Override
 	public String visitVarType(VarTypeContext ctx) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public String visitCondition(ConditionContext ctx) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -214,21 +208,28 @@ public class PythonCodeGenerator extends OfpBaseVisitor<String> {
 		return buf.toString();
 	}
 
-	@Override
+	@Override // if (x < 10) { ==> python equal if x < 10:
 	public String visitIfStmt(IfStmtContext ctx) {
-		// TODO Auto-generated method stub
-		return null;
+		System.out.println("visit IfStmt");
+		StringBuilder buf = new StringBuilder();
+		buf.append(ctx.getChild(0).getText() + " " + ctx.getChild(2).getText() + ":\n");
+
+		// FIXME TODO ifstmt prints but not entering block child
+		for (int i = 5; i < ctx.getChildCount(); i++) {
+			buf.append(visit(ctx.getChild(i)) + "\n");
+		}
+		// currentScope = currentScope.getEnclosingScope();
+		// buf.append("\n");
+		return buf.toString();
 	}
 
 	@Override
 	public String visitMethodAccess(MethodAccessContext ctx) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public String visitArray(ArrayContext ctx) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -237,7 +238,8 @@ public class PythonCodeGenerator extends OfpBaseVisitor<String> {
 		System.out.println("visit Asgn");
 
 		StringBuilder buf = new StringBuilder();
-		System.out.println("COUNT " + ctx.getChildCount() + " " + ctx.getChild(1).getText());
+		// System.out.println("COUNT " + ctx.getChildCount() + " " +
+		// ctx.getChild(1).getText());
 		if (ctx.getChild(1).getText().equals("=")) {
 			buf.append(getSafePythonId(ctx.getChild(0).getText()) + "="); // get name of the variable
 			buf.append(visit(ctx.getChild(2))); // print what comes after "="
@@ -253,14 +255,16 @@ public class PythonCodeGenerator extends OfpBaseVisitor<String> {
 
 	@Override
 	public String visitParameter(ParameterContext ctx) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public String visitLocalDecl(LocalDeclContext ctx) {
-		// TODO Auto-generated method stub
-		return null;
+		StringBuilder buf = new StringBuilder();
+		// int y; => python equal pass (see moodle page)
+		buf.append("pass");
+
+		return buf.toString();
 	}
 
 	@Override
@@ -309,7 +313,6 @@ public class PythonCodeGenerator extends OfpBaseVisitor<String> {
 
 	@Override
 	public String visitArrayList(ArrayListContext ctx) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -322,7 +325,6 @@ public class PythonCodeGenerator extends OfpBaseVisitor<String> {
 
 	@Override
 	public String visitMethodCall(MethodCallContext ctx) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
