@@ -85,10 +85,18 @@ public class PythonCodeGenerator extends OfpBaseVisitor<String> {
 		return ind;
 	}
 
-	@Override
+	@Override // while (i < x+1) { == in python while i < x + 1:
 	public String visitWhileStmt(WhileStmtContext ctx) {
-		// TODO Auto-generated method stub
-		return null;
+		System.out.println("visit WhileStmt");
+		StringBuilder buf = new StringBuilder();
+		buf.append(ctx.getChild(0).getText() + " " + ctx.getChild(2).getText() + ":\n");
+
+		for (int i = 5; i < ctx.getChildCount(); i++) {
+			buf.append(visit(ctx.getChild(i)) + "\n");
+		}
+		// currentScope = currentScope.getEnclosingScope();
+		// buf.append("\n");
+		return buf.toString();
 	}
 
 	@Override
@@ -229,9 +237,16 @@ public class PythonCodeGenerator extends OfpBaseVisitor<String> {
 		System.out.println("visit Asgn");
 
 		StringBuilder buf = new StringBuilder();
-		buf.append(getSafePythonId(ctx.getChild(0).getText()) + "="); // get name of the variable
-
-		buf.append(visit(ctx.getChild(2))); // print what comes after "="
+		System.out.println("COUNT " + ctx.getChildCount() + " " + ctx.getChild(1).getText());
+		if (ctx.getChild(1).getText().equals("=")) {
+			buf.append(getSafePythonId(ctx.getChild(0).getText()) + "="); // get name of the variable
+			buf.append(visit(ctx.getChild(2))); // print what comes after "="
+		} else {
+			buf.append(getSafePythonId(ctx.getChild(0).getText() + ctx.getChild(1).getText()) + "=");
+			buf.append(visit(ctx.getChild(3))); // print what comes after "="
+		}
+		// buf.append(getSafePythonId(ctx.getChild(0).getText() +
+		// ctx.getChild(1).getText()) + "=");
 
 		return buf.toString();
 	}
@@ -276,8 +291,18 @@ public class PythonCodeGenerator extends OfpBaseVisitor<String> {
 	public String visitExpr(ExprContext ctx) {
 		StringBuilder buf = new StringBuilder();
 
-		buf.append(ctx.getChild(0).getText());
-
+		// int[] a=new int[10,11]; = python equal is a=[10,11] FIXME?
+		if (ctx.getChild(0).getText().equals("new")) {
+			buf.append(ctx.getChild(1).getChild(1).getText());
+			// if childcount is > 1 => ex: q = 3*3; -> so expr is 3*3, loop over all
+			// children +append text
+		} else if (ctx.getChildCount() > 1) {
+			for (int i = 0; i < ctx.getChildCount(); i++) {
+				buf.append(ctx.getChild(i).getText());
+			}
+		} else {
+			buf.append(ctx.getChild(0).getText());
+		}
 		return buf.toString();
 
 	}
