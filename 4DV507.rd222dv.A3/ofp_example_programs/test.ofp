@@ -1,33 +1,5 @@
 # arrays.ofp
 
 void main() {
-int a; int b; int c;
-   if (a > b) {
-      if (a > c) 
-   	  	 return a;
-   	  else if (c > a)
-   	     return c;
-   	  else # c == a
-   	     return c;
-   } else { 
-      if (b > c) 
-   	  	 return b;
-   	  else if (c > b) 
-   	     return c;
-   	  else # c == b 
-   	     return c;
-   } 
-}
-
-int[] reverse(int[] arr) {
-	int sz = arr.length;
-	int[] toReturn = new int[sz];
-	int i = 0;
-	int n = 2; 
-	while (i < sz) {
-		int n = arr[sz-i-1];
-		toReturn[i] = n;
-		i = i + 1;
-	} 
-	return toReturn;
+println(f[f.length-1]);  # print last ==> also 17.5
 }

@@ -91,7 +91,7 @@ public class PythonCodeGenerator extends OfpBaseVisitor<String> {
 		System.out.println("visit WhileStmt");
 		StringBuilder buf = new StringBuilder();
 
-		buf.append(ctx.getChild(0).getText() + " " + ctx.getChild(2).getText() + ":\n");
+		buf.append(ctx.getChild(0).getText() + " " + visit(ctx.getChild(2)) + ":\n");
 		depth = depth + 1;
 
 		buf.append(visit(ctx.getChild(4))); // visit block child
@@ -211,24 +211,25 @@ public class PythonCodeGenerator extends OfpBaseVisitor<String> {
 		return null;
 	}
 
-	@Override
+	@Override // WEIRD grammar
 	public String visitCondition(ConditionContext ctx) {
-		return null;
+		StringBuilder buf = new StringBuilder();
+		buf.append(visit(ctx.getChild(0)));
+		return buf.toString();
 	}
 
 	@Override // println(f[f.length-1]) == print(f[f.length-1]) ->in py
+	// FIX~
 	public String visitPrint(PrintContext ctx) {
 		System.out.println("Visiting Print");
 		StringBuilder buf = new StringBuilder();
-		buf.append("print(");
+		buf.append("print");
 
-		for (int i = 2; i < ctx.getChildCount(); i++) { // start at child 2 "("
+		for (int i = 1; i < ctx.getChildCount(); i++) { // start at child 2 "("
 			if (!ctx.getChild(i).getText().equals(";")) { // finish and not print ";"
-				buf.append(getSafePythonId(ctx.getChild(i).getText()));
+				buf.append(getSafePythonId(visit(ctx.getChild(i))));
 			}
 		}
-
-		buf.append("\n");
 		return buf.toString();
 	}
 
@@ -238,7 +239,7 @@ public class PythonCodeGenerator extends OfpBaseVisitor<String> {
 		System.out.println("visit IfStmt");
 		StringBuilder buf = new StringBuilder();
 
-		buf.append(ctx.getChild(0).getText() + " " + ctx.getChild(2).getText() + ":\n");
+		buf.append(ctx.getChild(0).getText() + " " + visit(ctx.getChild(2)) + ":\n");
 
 		depth = depth + 1;
 
@@ -334,37 +335,25 @@ public class PythonCodeGenerator extends OfpBaseVisitor<String> {
 	@Override
 	public String visitExpr(ExprContext ctx) {
 		StringBuilder buf = new StringBuilder();
-
-		// arr.length == python eual len(arr)
-		/*
-		 * if (ctx.getChildCount() >= 2) { if
-		 * (ctx.getChild(1).getText().equals(".length")) { buf.append("len(" +
-		 * ctx.getChild(0).getText() + ")"); } } // int[] a=new int[10,11]; = python
-		 * equal is a=[10,11] FIXME? if (ctx.getChild(0).getText().equals("new")) {
-		 * buf.append(ctx.getChild(1).getChild(1).getText()); // if childcount is > 1 =>
-		 * ex: q = 3*3; -> so expr is 3*3, loop over all // children +append text } else
-		 * if (ctx.getChildCount() > 1) { for (int i = 0; i < ctx.getChildCount(); i++)
-		 * { buf.append(ctx.getChild(i).getText()); } } else {
-		 * buf.append(ctx.getChild(0).getText()); } return buf.toString();
-		 */
+		System.out.println(ctx.getText());
 		int children = ctx.getChildCount();
 		switch (children) {
 		case 1:
-			for (int i = 0; i < ctx.getChildCount(); i++) {
-				buf.append(ctx.getChild(i).getText());
-			}
+			buf.append(ctx.getChild(0).getText());
+			System.out.println(ctx.getChild(0).getText());
 			break;
 
 		case 2:
-			if (ctx.getChild(0).getText().equals("new") && !(ctx.getChild(1).equals(".length"))) {
+			if (ctx.getChild(0).getText().equals("new") ) {
 				buf.append(ctx.getChild(1).getChild(1).getText());
 			} else {
 				buf.append("len(" + ctx.getChild(0).getText() + ")");
 			}
 			break;
 		default:
-			buf.append(ctx.getChild(0).getText());
-			break;
+			for (int i = 0; i < ctx.getChildCount(); i++) {
+				buf.append(visit(ctx.getChild(i)));
+			}
 		}
 		return buf.toString();
 	}
@@ -388,7 +377,7 @@ public class PythonCodeGenerator extends OfpBaseVisitor<String> {
 
 	@Override
 	public String visitTerminal(TerminalNode terminalNode) {
-		return null;
+		return terminalNode.getText();
 	}
 
 	@Override
