@@ -281,7 +281,12 @@ public class PythonCodeGenerator extends OfpBaseVisitor<String> {
 
 	@Override
 	public String visitArray(ArrayContext ctx) {
-		return null;
+	    StringBuilder buf = new StringBuilder();
+	    buf.append("[");
+	    buf.append(visit(ctx.getChild(1))); // ArrayList
+        buf.append(']');
+
+		return buf.toString();
 	}
 
 	@Override
@@ -371,7 +376,15 @@ public class PythonCodeGenerator extends OfpBaseVisitor<String> {
 
 	@Override
 	public String visitArrayList(ArrayListContext ctx) {
-		return null;
+	    StringBuilder buf = new StringBuilder();
+
+	    for(int i = 0; i<ctx.getChildCount(); i++){
+	        buf.append(visit(ctx.getChild(i)));
+        }
+
+
+
+		return buf.toString();
 	}
 
 	@Override
