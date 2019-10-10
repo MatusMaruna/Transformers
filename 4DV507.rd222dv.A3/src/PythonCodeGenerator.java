@@ -145,7 +145,11 @@ public class PythonCodeGenerator extends OfpBaseVisitor<String> {
 
 	@Override
 	public String visitArrType(ArrTypeContext ctx) {
-		return null;
+		StringBuilder buf = new StringBuilder();
+		for(int i = 0; i<ctx.getChildCount(); i++) {
+			buf.append(visit(ctx.getChild(i))); // Visit '{' Expr '}'
+		}
+		return buf.toString();
 	}
 
 	@Override
@@ -211,7 +215,7 @@ public class PythonCodeGenerator extends OfpBaseVisitor<String> {
 		return null;
 	}
 
-	@Override // WEIRD grammar
+	@Override // weird grammar
 	public String visitCondition(ConditionContext ctx) {
 		StringBuilder buf = new StringBuilder();
 		buf.append(visit(ctx.getChild(0)));
@@ -339,15 +343,15 @@ public class PythonCodeGenerator extends OfpBaseVisitor<String> {
 		int children = ctx.getChildCount();
 		switch (children) {
 		case 1:
-			buf.append(ctx.getChild(0).getText());
+			buf.append(getSafePythonId(ctx.getChild(0).getText()));
 			System.out.println(ctx.getChild(0).getText());
 			break;
 
 		case 2:
 			if (ctx.getChild(0).getText().equals("new") ) {
-				buf.append(ctx.getChild(1).getChild(1).getText());
+				buf.append(getSafePythonId(ctx.getChild(1).getChild(1).getText()));
 			} else {
-				buf.append("len(" + ctx.getChild(0).getText() + ")");
+				buf.append("len(" + getSafePythonId(ctx.getChild(0).getText()) + ")");
 			}
 			break;
 		default:
