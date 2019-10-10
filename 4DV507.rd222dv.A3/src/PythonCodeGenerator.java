@@ -147,8 +147,8 @@ public class PythonCodeGenerator extends OfpBaseVisitor<String> {
 	@Override
 	public String visitArrType(ArrTypeContext ctx) {
 		StringBuilder buf = new StringBuilder();
-		for (int i = 0; i < ctx.getChildCount(); i++) {
-			buf.append(visit(ctx.getChild(i))); // Visit '{' Expr '}'
+		for(int i = 0; i<ctx.getChildCount(); i++) {
+			buf.append(getSafePythonId(visit(ctx.getChild(i)))); // Visit '{' Expr '}'
 		}
 		return buf.toString();
 	}
@@ -245,7 +245,19 @@ public class PythonCodeGenerator extends OfpBaseVisitor<String> {
 
 	@Override
 	public String visitVarType(VarTypeContext ctx) {
-		StringBuilder buf = new StringBuilder();
+	    StringBuilder buf = new StringBuilder();
+
+	    for(int i = 0; i < ctx.getChildCount(); i++){
+	    	if(ctx.getChild(i).toString().equals("true")){
+	    		buf.append("True");
+			}
+	    	else if(ctx.getChild(i).toString().equals("false")){
+	    		buf.append("False");
+			} else {
+				buf.append(ctx.getChild(i).toString());
+			}
+        }
+
 
 		for (int i = 0; i < ctx.getChildCount(); i++) {
 			buf.append(ctx.getChild(i).toString());
@@ -306,7 +318,13 @@ public class PythonCodeGenerator extends OfpBaseVisitor<String> {
 
 	@Override
 	public String visitMethodAccess(MethodAccessContext ctx) {
-		return null;
+		StringBuilder buf = new StringBuilder();
+		for(int i = 0; i<ctx.getChildCount(); i++){
+			buf.append(getSafePythonId(visit(ctx.getChild(i))));
+		}
+
+
+		return buf.toString();
 	}
 
 	@Override
@@ -327,10 +345,10 @@ public class PythonCodeGenerator extends OfpBaseVisitor<String> {
 		// System.out.println("COUNT " + ctx.getChildCount() + " " +
 		// ctx.getChild(1).getText());
 		if (ctx.getChild(1).getText().equals("=")) {
-			buf.append(getSafePythonId(ctx.getChild(0).getText()) + "="); // get name of the variable
+			buf.append(getSafePythonId(visit(ctx.getChild(0))) + "="); // get name of the variable
 			buf.append(visit(ctx.getChild(2))); // print what comes after "="
 		} else {
-			buf.append(getSafePythonId(ctx.getChild(0).getText() + ctx.getChild(1).getText()) + "=");
+			buf.append(getSafePythonId(visit(ctx.getChild(0)))+ getSafePythonId(visit(ctx.getChild(1))) + "=");
 			buf.append(visit(ctx.getChild(3))); // print what comes after "="
 		}
 		// buf.append(getSafePythonId(ctx.getChild(0).getText() +
@@ -385,8 +403,16 @@ public class PythonCodeGenerator extends OfpBaseVisitor<String> {
 		int children = ctx.getChildCount();
 		switch (children) {
 		case 1:
-			buf.append(getSafePythonId(ctx.getChild(0).getText()));
-			System.out.println(ctx.getChild(0).getText());
+			// If first sibling is return and child is true or false do not check
+			// for safe python id
+			if(ctx.getParent().getChild(0).getText().equals("return") &&
+					(ctx.getChild(0).getChild(0).getText().equals("true") ||
+					ctx.getChild(0).getChild(0).getText().equals("false"))){
+				buf.append(visit(ctx.getChild(0)));
+			}else {
+				buf.append(getSafePythonId(visit(ctx.getChild(0))));
+			}
+			//System.out.println(ctx.getChild(0).getText());
 			break;
 
 		case 2:
@@ -407,7 +433,12 @@ public class PythonCodeGenerator extends OfpBaseVisitor<String> {
 
 	@Override
 	public String visitArrayList(ArrayListContext ctx) {
-		StringBuilder buf = new StringBuilder();
+	    StringBuilder buf = new StringBuilder();
+
+	    for(int i = 0; i<ctx.getChildCount(); i++){
+	        buf.append(getSafePythonId(visit(ctx.getChild(i))));
+        }
+
 
 		for (int i = 0; i < ctx.getChildCount(); i++) {
 			buf.append(visit(ctx.getChild(i)));
