@@ -1,5 +1,4 @@
 #
 #  Program entry point - main 
 #
-# Test in method
-print(fnull)
+a=[None]*10

@@ -255,7 +255,6 @@ public class PythonCodeGenerator extends OfpBaseVisitor<String> {
 
 		depth = depth + 1;
 
-		// FIXME TODO ifstmt prints but not entering block child
 		if (!(ctx.getChild(4).getChild(0).getText().equals("{"))) { // if first child is block|stmt
 			buf.append(indent(depth) + visit(ctx.getChild(4)) + "\n"); // indent if stmt
 		} else {
@@ -361,7 +360,8 @@ public class PythonCodeGenerator extends OfpBaseVisitor<String> {
 
 		case 2:
 			if (ctx.getChild(0).getText().equals("new") ) {
-				buf.append(getSafePythonId(ctx.getChild(1).getChild(1).getText()));
+				buf.append("[None]*");
+				buf.append(getSafePythonId(visit(ctx.getChild(1).getChild(1).getChild(1))));
 			} else {
 				buf.append("len(" + getSafePythonId(ctx.getChild(0).getText()) + ")");
 			}

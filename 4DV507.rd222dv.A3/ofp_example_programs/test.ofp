@@ -1,5 +1,5 @@
 # arrays.ofp
 
 void main() {
-println(f[f.length-1]);  # print last ==> also 17.5
+int[] a = new int[10];
 }

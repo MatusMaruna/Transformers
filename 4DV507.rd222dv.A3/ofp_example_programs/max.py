@@ -1,14 +1,11 @@
 def maxOfTwo(a,b):
-    # Test in method
     if a>b:
         return a
     else:
         return b
 
 def maxOfThree(a,b,c):
-    # Test in method
     if a>b:
-        # Test in method
         if a>c:
             return a
         else:
@@ -17,7 +14,6 @@ def maxOfThree(a,b,c):
             else:
                 return c
     else:
-        # Test in method
         if b>c:
             return b
         else:
@@ -30,7 +26,6 @@ def maxOfThree(a,b,c):
 #
 #  Program entry point - main 
 #
-# Test in method
 p=3
 q=7
 res=maxOfTwo(p,q)
