@@ -89,11 +89,16 @@ public class PythonCodeGenerator extends OfpBaseVisitor<String> {
 	public String visitWhileStmt(WhileStmtContext ctx) {
 		System.out.println("visit WhileStmt");
 		StringBuilder buf = new StringBuilder();
-		buf.append(ctx.getChild(0).getText() + " " + ctx.getChild(2).getText() + ":\n");
+
+		buf.append(indent(depth) + ctx.getChild(0).getText() + " " + ctx.getChild(2).getText() + ":\n");
+
+		depth = depth + 1;
 
 		for (int i = 5; i < ctx.getChildCount(); i++) {
 			buf.append(visit(ctx.getChild(i)) + "\n");
 		}
+		depth = depth - 1;
+
 		// currentScope = currentScope.getEnclosingScope();
 		// buf.append("\n");
 		return buf.toString();
@@ -212,12 +217,14 @@ public class PythonCodeGenerator extends OfpBaseVisitor<String> {
 	public String visitIfStmt(IfStmtContext ctx) {
 		System.out.println("visit IfStmt");
 		StringBuilder buf = new StringBuilder();
-		buf.append(ctx.getChild(0).getText() + " " + ctx.getChild(2).getText() + ":\n");
+		buf.append(indent(depth) + ctx.getChild(0).getText() + " " + ctx.getChild(2).getText() + ":\n");
 
+		depth = depth + 1;
 		// FIXME TODO ifstmt prints but not entering block child
 		for (int i = 5; i < ctx.getChildCount(); i++) {
 			buf.append(visit(ctx.getChild(i)) + "\n");
 		}
+		depth = depth - 1;
 		// currentScope = currentScope.getEnclosingScope();
 		// buf.append("\n");
 		return buf.toString();
@@ -241,10 +248,10 @@ public class PythonCodeGenerator extends OfpBaseVisitor<String> {
 		// System.out.println("COUNT " + ctx.getChildCount() + " " +
 		// ctx.getChild(1).getText());
 		if (ctx.getChild(1).getText().equals("=")) {
-			buf.append(getSafePythonId(ctx.getChild(0).getText()) + "="); // get name of the variable
+			buf.append(indent(depth) + getSafePythonId(ctx.getChild(0).getText()) + "="); // get name of the variable
 			buf.append(visit(ctx.getChild(2))); // print what comes after "="
 		} else {
-			buf.append(getSafePythonId(ctx.getChild(0).getText() + ctx.getChild(1).getText()) + "=");
+			buf.append(indent(depth) + getSafePythonId(ctx.getChild(0).getText() + ctx.getChild(1).getText()) + "=");
 			buf.append(visit(ctx.getChild(3))); // print what comes after "="
 		}
 		// buf.append(getSafePythonId(ctx.getChild(0).getText() +

@@ -8,11 +8,13 @@ def maxOfTwo(a):
 #
 # Test in method
 null
-x=10
-if x<10:
+a=[10]
+i=0
+n=2
+while i<a.length:
+    a[i]=n
+    n=2*n
+    i=i+1
 null
-
-res=maxOfTwo(x)
-print(res)
 
 null
