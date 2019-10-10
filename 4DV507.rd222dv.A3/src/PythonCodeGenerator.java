@@ -4,6 +4,7 @@ import java.util.HashSet;
 
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ErrorNode;
+import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.ParseTreeProperty;
 import org.antlr.v4.runtime.tree.TerminalNode;
 
@@ -146,7 +147,7 @@ public class PythonCodeGenerator extends OfpBaseVisitor<String> {
 	@Override
 	public String visitArrType(ArrTypeContext ctx) {
 		StringBuilder buf = new StringBuilder();
-		for(int i = 0; i<ctx.getChildCount(); i++) {
+		for (int i = 0; i < ctx.getChildCount(); i++) {
 			buf.append(visit(ctx.getChild(i))); // Visit '{' Expr '}'
 		}
 		return buf.toString();
@@ -170,17 +171,49 @@ public class PythonCodeGenerator extends OfpBaseVisitor<String> {
 		currentScope = scopes.get(ctx);
 		StringBuilder buf = new StringBuilder();
 
-		buf.append(indent(depth) + "else:" + "\n");
+		ParseTree ifStmt = ctx.getChild(1).getChild(0);
 
-		depth = depth + 1;
+		// For printing the elif: check if elseStmt-stmt-ifStmt contains an "if" as
+		// child 0
+		if ((ifStmt.getChildCount() > 1) && (ifStmt.getChild(0).getText().equals("if"))) {
+			// if (ifStmt.getChild(0).getText().equals("if")) {
+			// if it contains an "if", append the "elif" and visit the second child of the
+			// ifStmt scope which is the condition
+			buf.append(indent(depth) + "elif " + visit(ifStmt.getChild(2)) + ":\n");
+			depth = depth + 1;
 
-		// FIXME else if == python equal is elif
-		if (!(ctx.getChild(1).getChild(0).getText().equals("{"))) { // if first child is block|stmt
-			buf.append(indent(depth) + visit(ctx.getChild(1))); // indent if stmt
+			// if this ifStmt child number 4 is not a bracket, we visit this child
+			if (!(ifStmt.getChild(4).getChild(0).getText().equals("{"))) { // if first child is // block|stmt
+				buf.append(indent(depth) + visit(ifStmt.getChild(4)) + "\n"); // indent if stmt
+			} else {
+				buf.append(visit(ifStmt.getChild(4))); // no indent if block
+			}
+
+			depth = depth - 1;
+			// if the else statement has another else at the endor other child
+			// we print "else" and visit this child
+			if (ifStmt.getChildCount() > 4) {
+				for (int i = 5; i < ifStmt.getChildCount(); i++) {
+					buf.append(indent(depth) + "else:" + "\n");
+					depth = depth + 1;
+					// if there is no more if statement after the "else"
+					// visit the next childs first child
+					if (!ifStmt.getText().equals("if")) {
+						buf.append(indent(depth) + visit(ifStmt.getChild(i).getChild(1))); // no indent if block
+					}
+
+				}
+			}
 		} else {
-			buf.append(visit(ctx.getChild(1))); // no indent if block
-		}
+			buf.append(indent(depth) + "else:" + "\n");
 
+			depth = depth + 1;
+
+			if (!(ctx.getChild(1).getChild(0).getText().equals("{"))
+					|| !ctx.getChild(1).getChild(0).getText().equals("ifStmt")) { // if first child is block|stmt
+				buf.append(visit(ctx.getChild(1))); // indent if stmt
+			}
+		}
 		depth = depth - 1;
 		currentScope = currentScope.getEnclosingScope();
 		return buf.toString();
@@ -212,13 +245,11 @@ public class PythonCodeGenerator extends OfpBaseVisitor<String> {
 
 	@Override
 	public String visitVarType(VarTypeContext ctx) {
-	    StringBuilder buf = new StringBuilder();
+		StringBuilder buf = new StringBuilder();
 
-	    for(int i = 0; i < ctx.getChildCount(); i++){
-	        buf.append(ctx.getChild(i).toString());
-        }
-
-
+		for (int i = 0; i < ctx.getChildCount(); i++) {
+			buf.append(ctx.getChild(i).toString());
+		}
 
 		return buf.toString();
 	}
@@ -280,10 +311,10 @@ public class PythonCodeGenerator extends OfpBaseVisitor<String> {
 
 	@Override
 	public String visitArray(ArrayContext ctx) {
-	    StringBuilder buf = new StringBuilder();
-	    buf.append("[");
-	    buf.append(visit(ctx.getChild(1))); // ArrayList
-        buf.append(']');
+		StringBuilder buf = new StringBuilder();
+		buf.append("[");
+		buf.append(visit(ctx.getChild(1))); // ArrayList
+		buf.append(']');
 
 		return buf.toString();
 	}
@@ -359,7 +390,7 @@ public class PythonCodeGenerator extends OfpBaseVisitor<String> {
 			break;
 
 		case 2:
-			if (ctx.getChild(0).getText().equals("new") ) {
+			if (ctx.getChild(0).getText().equals("new")) {
 				buf.append("[None]*");
 				buf.append(getSafePythonId(visit(ctx.getChild(1).getChild(1).getChild(1))));
 			} else {
@@ -376,13 +407,11 @@ public class PythonCodeGenerator extends OfpBaseVisitor<String> {
 
 	@Override
 	public String visitArrayList(ArrayListContext ctx) {
-	    StringBuilder buf = new StringBuilder();
+		StringBuilder buf = new StringBuilder();
 
-	    for(int i = 0; i<ctx.getChildCount(); i++){
-	        buf.append(visit(ctx.getChild(i)));
-        }
-
-
+		for (int i = 0; i < ctx.getChildCount(); i++) {
+			buf.append(visit(ctx.getChild(i)));
+		}
 
 		return buf.toString();
 	}
@@ -396,15 +425,13 @@ public class PythonCodeGenerator extends OfpBaseVisitor<String> {
 
 	@Override
 	public String visitMethodCall(MethodCallContext ctx) {
-        StringBuilder buf = new StringBuilder();
-        buf.append(ctx.getChild(0).getText() + "("); // MethodName(
-        for(int i = 2; i<ctx.getChildCount(); i++){
-            if (!ctx.getChild(i).getText().equals(";")) { // finish and not print ";"
-                buf.append(getSafePythonId(visit(ctx.getChild(i))));
-            }
-        }
-
-
+		StringBuilder buf = new StringBuilder();
+		buf.append(ctx.getChild(0).getText() + "("); // MethodName(
+		for (int i = 2; i < ctx.getChildCount(); i++) {
+			if (!ctx.getChild(i).getText().equals(";")) { // finish and not print ";"
+				buf.append(getSafePythonId(visit(ctx.getChild(i))));
+			}
+		}
 
 		return buf.toString();
 	}
