@@ -87,19 +87,17 @@ public class PythonCodeGenerator extends OfpBaseVisitor<String> {
 
 	@Override // while (i < x+1) { == in python while i < x + 1:
 	public String visitWhileStmt(WhileStmtContext ctx) {
+		currentScope = scopes.get(ctx);
 		System.out.println("visit WhileStmt");
 		StringBuilder buf = new StringBuilder();
 
-		buf.append(indent(depth) + ctx.getChild(0).getText() + " " + ctx.getChild(2).getText() + ":\n");
-
+		buf.append(ctx.getChild(0).getText() + " " + ctx.getChild(2).getText() + ":\n");
 		depth = depth + 1;
 
-		for (int i = 5; i < ctx.getChildCount(); i++) {
-			buf.append(visit(ctx.getChild(i)) + "\n");
-		}
-		depth = depth - 1;
+		buf.append(visit(ctx.getChild(4))); // visit block child
 
-		// currentScope = currentScope.getEnclosingScope();
+		depth = depth - 1;
+		currentScope = currentScope.getEnclosingScope();
 		// buf.append("\n");
 		return buf.toString();
 	}
@@ -119,6 +117,7 @@ public class PythonCodeGenerator extends OfpBaseVisitor<String> {
 		buf.append(visit(ctx.getChild(ctx.getChildCount() - 1))); // Visit block
 		depth = depth - 1;
 		buf.append("\n");
+		currentScope = currentScope.getEnclosingScope();
 		return buf.toString();
 	}
 
@@ -164,12 +163,32 @@ public class PythonCodeGenerator extends OfpBaseVisitor<String> {
 
 	@Override
 	public String visitElseStmt(ElseStmtContext ctx) {
-		return null;
+		currentScope = scopes.get(ctx);
+		StringBuilder buf = new StringBuilder();
+
+		buf.append(indent(depth) + "else:" + "\n");
+
+		depth = depth + 1;
+
+		// FIXME else if == python equal is elif
+		if (!(ctx.getChild(1).getChild(0).getText().equals("{"))) { // if first child is block|stmt
+			buf.append(indent(depth) + visit(ctx.getChild(1))); // indent if stmt
+		} else {
+			buf.append(visit(ctx.getChild(1))); // no indent if block
+		}
+
+		depth = depth - 1;
+		currentScope = currentScope.getEnclosingScope();
+		return buf.toString();
 	}
 
 	@Override
 	public String visitReturnStmt(ReturnStmtContext ctx) {
-		return null;
+		StringBuilder buf = new StringBuilder();
+
+		buf.append("return " + visit(ctx.getChild(1)));
+
+		return buf.toString();
 	}
 
 	@Override
@@ -215,17 +234,29 @@ public class PythonCodeGenerator extends OfpBaseVisitor<String> {
 
 	@Override // if (x < 10) { ==> python equal if x < 10:
 	public String visitIfStmt(IfStmtContext ctx) {
+		currentScope = scopes.get(ctx);
 		System.out.println("visit IfStmt");
 		StringBuilder buf = new StringBuilder();
-		buf.append(indent(depth) + ctx.getChild(0).getText() + " " + ctx.getChild(2).getText() + ":\n");
+
+		buf.append(ctx.getChild(0).getText() + " " + ctx.getChild(2).getText() + ":\n");
 
 		depth = depth + 1;
+
 		// FIXME TODO ifstmt prints but not entering block child
-		for (int i = 5; i < ctx.getChildCount(); i++) {
-			buf.append(visit(ctx.getChild(i)) + "\n");
+		if (!(ctx.getChild(4).getChild(0).getText().equals("{"))) { // if first child is block|stmt
+			buf.append(indent(depth) + visit(ctx.getChild(4)) + "\n"); // indent if stmt
+		} else {
+			buf.append(visit(ctx.getChild(4))); // no indent if block
 		}
+
 		depth = depth - 1;
-		// currentScope = currentScope.getEnclosingScope();
+
+		if (ctx.getChildCount() > 4) {
+			for (int i = 5; i < ctx.getChildCount(); i++) {
+				buf.append(visit(ctx.getChild(i)));
+			}
+		}
+		currentScope = currentScope.getEnclosingScope();
 		// buf.append("\n");
 		return buf.toString();
 	}
@@ -248,10 +279,10 @@ public class PythonCodeGenerator extends OfpBaseVisitor<String> {
 		// System.out.println("COUNT " + ctx.getChildCount() + " " +
 		// ctx.getChild(1).getText());
 		if (ctx.getChild(1).getText().equals("=")) {
-			buf.append(indent(depth) + getSafePythonId(ctx.getChild(0).getText()) + "="); // get name of the variable
+			buf.append(getSafePythonId(ctx.getChild(0).getText()) + "="); // get name of the variable
 			buf.append(visit(ctx.getChild(2))); // print what comes after "="
 		} else {
-			buf.append(indent(depth) + getSafePythonId(ctx.getChild(0).getText() + ctx.getChild(1).getText()) + "=");
+			buf.append(getSafePythonId(ctx.getChild(0).getText() + ctx.getChild(1).getText()) + "=");
 			buf.append(visit(ctx.getChild(3))); // print what comes after "="
 		}
 		// buf.append(getSafePythonId(ctx.getChild(0).getText() +
@@ -269,8 +300,10 @@ public class PythonCodeGenerator extends OfpBaseVisitor<String> {
 	public String visitLocalDecl(LocalDeclContext ctx) {
 		StringBuilder buf = new StringBuilder();
 		// int y; => python equal pass (see moodle page)
-		buf.append("pass");
 
+		if (currentScope.getScopeName().contains("ifStmt")) {
+			buf.append("pass");
+		}
 		return buf.toString();
 	}
 
@@ -291,7 +324,7 @@ public class PythonCodeGenerator extends OfpBaseVisitor<String> {
 		StringBuilder buf = new StringBuilder();
 		buf.append(indent(depth) + "# Test in method\n"); // test declaration in Block
 
-		for (int i = 0; i < ctx.getChildCount(); i++) {
+		for (int i = 1; i < ctx.getChildCount() - 1; i++) {
 			buf.append(indent(depth) + visit(ctx.getChild(i)) + "\n");
 		}
 

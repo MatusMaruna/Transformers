@@ -73,7 +73,7 @@ array : '{' arrayList+  '}' ;
 
 arrType : ID? '[' expr ']' ;
 
-whileStmt : 'while' '(' condition ')' '{' stmt+ '}';
+whileStmt : 'while' '(' condition ')' block;
 
 ifStmt : 'if' '(' condition ')' (stmt|block) elseStmt?;
 
