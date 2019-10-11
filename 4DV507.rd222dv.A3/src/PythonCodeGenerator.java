@@ -281,12 +281,18 @@ public class PythonCodeGenerator extends OfpBaseVisitor<String> {
 	public String visitPrint(PrintContext ctx) {
 		System.out.println("Visiting Print");
 		StringBuilder buf = new StringBuilder();
+
 		buf.append("print");
 
 		for (int i = 1; i < ctx.getChildCount(); i++) { // start at child 2 "("
 			if (!ctx.getChild(i).getText().equals(";")) { // finish and not print ";"
 				buf.append(getSafePythonId(visit(ctx.getChild(i))));
 			}
+		}
+
+		if(ctx.getChild(0).getText().equals("print")){
+			buf.deleteCharAt(buf.lastIndexOf(")"));
+			buf.append(", end=\" \")");
 		}
 		return buf.toString();
 	}

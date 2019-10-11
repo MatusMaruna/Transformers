@@ -22,12 +22,12 @@ def replace(ofp_str,oldChar,newChar):
     return ofp_str
 
 def printArray(arr):
-    print(arr[0])
+    print(arr[0], end=" ")
     i=0
     while i<len(arr):
         c=arr[i]
-        print(" ")
-        print(c)
+        print(" ", end=" ")
+        print(c, end=" ")
         i=i+1
 
     print("")
