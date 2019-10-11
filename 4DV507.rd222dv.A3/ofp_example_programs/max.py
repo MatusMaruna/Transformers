@@ -8,19 +8,34 @@ def maxOfThree(a,b,c):
     if a>b:
         if a>c:
             return a
+        elif c>a:
+            return c
         else:
-            if c>a:
-                return c
-            else:
-                return c
+            return c
     else:
         if b>c:
             return b
+        elif c>b:
+            return c
         else:
-            if c>b:
-                return c
-            else:
-                return c
+            return c
+
+
+def selectionSort(arr):
+    i=0
+    while i<len(arr)-1:
+        smallest=i
+        j=i+1
+        while j<len(arr):
+            if arr[j]<arr[smallest]:
+                smallest=j
+
+            j=j+1
+
+        smallestNumber=arr[smallest]
+        arr[smallest]=arr[i]
+        arr[i]=smallestNumber
+        i=i+1
 
 
 #

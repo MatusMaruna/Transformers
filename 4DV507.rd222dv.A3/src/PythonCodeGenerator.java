@@ -147,7 +147,7 @@ public class PythonCodeGenerator extends OfpBaseVisitor<String> {
 	@Override
 	public String visitArrType(ArrTypeContext ctx) {
 		StringBuilder buf = new StringBuilder();
-		for(int i = 0; i<ctx.getChildCount(); i++) {
+		for (int i = 0; i < ctx.getChildCount(); i++) {
 			buf.append(getSafePythonId(visit(ctx.getChild(i)))); // Visit '{' Expr '}'
 		}
 		return buf.toString();
@@ -209,9 +209,18 @@ public class PythonCodeGenerator extends OfpBaseVisitor<String> {
 
 			depth = depth + 1;
 
-			if (!(ctx.getChild(1).getChild(0).getText().equals("{"))
-					|| !ctx.getChild(1).getChild(0).getText().equals("ifStmt")) { // if first child is block|stmt
-				buf.append(visit(ctx.getChild(1))); // indent if stmt
+			/*
+			 * if (!(ctx.getChild(1).getChild(0).getText().equals("{")) ||
+			 * !ctx.getChild(1).getChild(0).getText().equals("ifStmt")) { // if first child
+			 * is block|stmt buf.append(visit(ctx.getChild(1))); // indent if stmt }
+			 */
+
+			// indent 4 spaces if if statement has NO bracket "{"
+			if (!(ctx.getChild(1).getChild(0).getText().equals("{"))) { // if first child is block|stmt
+				buf.append(indent(depth) + visit(ctx.getChild(1))); // indent if stmt
+			} else {
+				// else no indentation
+				buf.append(visit(ctx.getChild(1))); // no indent if block
 			}
 		}
 		depth = depth - 1;
@@ -245,20 +254,17 @@ public class PythonCodeGenerator extends OfpBaseVisitor<String> {
 
 	@Override
 	public String visitVarType(VarTypeContext ctx) {
-	    StringBuilder buf = new StringBuilder();
+		StringBuilder buf = new StringBuilder();
 
-	    for(int i = 0; i < ctx.getChildCount(); i++){
-	    	if(ctx.getChild(i).toString().equals("true")){
-	    		buf.append("True");
-			}
-	    	else if(ctx.getChild(i).toString().equals("false")){
-	    		buf.append("False");
+		for (int i = 0; i < ctx.getChildCount(); i++) {
+			if (ctx.getChild(i).toString().equals("true")) {
+				buf.append("True");
+			} else if (ctx.getChild(i).toString().equals("false")) {
+				buf.append("False");
 			} else {
 				buf.append(ctx.getChild(i).toString());
 			}
-        }
-
-
+		}
 
 		return buf.toString();
 	}
@@ -316,20 +322,19 @@ public class PythonCodeGenerator extends OfpBaseVisitor<String> {
 	@Override
 	public String visitMethodAccess(MethodAccessContext ctx) {
 		StringBuilder buf = new StringBuilder();
-		for(int i = 0; i<ctx.getChildCount(); i++){
+		for (int i = 0; i < ctx.getChildCount(); i++) {
 			buf.append(getSafePythonId(visit(ctx.getChild(i))));
 		}
-
 
 		return buf.toString();
 	}
 
 	@Override
 	public String visitArray(ArrayContext ctx) {
-	    StringBuilder buf = new StringBuilder();
-	    buf.append("[");
-	    buf.append(visit(ctx.getChild(1))); // ArrayList
-        buf.append(']');
+		StringBuilder buf = new StringBuilder();
+		buf.append("[");
+		buf.append(visit(ctx.getChild(1))); // ArrayList
+		buf.append(']');
 
 		return buf.toString();
 	}
@@ -345,7 +350,7 @@ public class PythonCodeGenerator extends OfpBaseVisitor<String> {
 			buf.append(getSafePythonId(visit(ctx.getChild(0))) + "="); // get name of the variable
 			buf.append(visit(ctx.getChild(2))); // print what comes after "="
 		} else {
-			buf.append(getSafePythonId(visit(ctx.getChild(0)))+ getSafePythonId(visit(ctx.getChild(1))) + "=");
+			buf.append(getSafePythonId(visit(ctx.getChild(0))) + getSafePythonId(visit(ctx.getChild(1))) + "=");
 			buf.append(visit(ctx.getChild(3))); // print what comes after "="
 		}
 		// buf.append(getSafePythonId(ctx.getChild(0).getText() +
@@ -402,18 +407,18 @@ public class PythonCodeGenerator extends OfpBaseVisitor<String> {
 		case 1:
 			// If first sibling is return and child is true or false do not check
 			// for safe python id
-			if(ctx.getParent().getChild(0).getText().equals("return") &&
-					(ctx.getChild(0).getChild(0).getText().equals("true") ||
-					ctx.getChild(0).getChild(0).getText().equals("false"))){
+			if (ctx.getParent().getChild(0).getText().equals("return")
+					&& (ctx.getChild(0).getChild(0).getText().equals("true")
+							|| ctx.getChild(0).getChild(0).getText().equals("false"))) {
 				buf.append(visit(ctx.getChild(0)));
-			}else {
+			} else {
 				buf.append(getSafePythonId(visit(ctx.getChild(0))));
 			}
-			//System.out.println(ctx.getChild(0).getText());
+			// System.out.println(ctx.getChild(0).getText());
 			break;
 
 		case 2:
-			if (ctx.getChild(0).getText().equals("new") ) {
+			if (ctx.getChild(0).getText().equals("new")) {
 				buf.append("[None]*");
 				buf.append(getSafePythonId(visit(ctx.getChild(1).getChild(1).getChild(1))));
 			} else {
@@ -430,13 +435,11 @@ public class PythonCodeGenerator extends OfpBaseVisitor<String> {
 
 	@Override
 	public String visitArrayList(ArrayListContext ctx) {
-	    StringBuilder buf = new StringBuilder();
+		StringBuilder buf = new StringBuilder();
 
-	    for(int i = 0; i<ctx.getChildCount(); i++){
-	        buf.append(getSafePythonId(visit(ctx.getChild(i))));
-        }
-
-
+		for (int i = 0; i < ctx.getChildCount(); i++) {
+			buf.append(getSafePythonId(visit(ctx.getChild(i))));
+		}
 
 		return buf.toString();
 	}
@@ -450,15 +453,13 @@ public class PythonCodeGenerator extends OfpBaseVisitor<String> {
 
 	@Override
 	public String visitMethodCall(MethodCallContext ctx) {
-        StringBuilder buf = new StringBuilder();
-        buf.append(ctx.getChild(0).getText() + "("); // MethodName(
-        for(int i = 2; i<ctx.getChildCount(); i++){
-            if (!ctx.getChild(i).getText().equals(";")) { // finish and not print ";"
-                buf.append(getSafePythonId(visit(ctx.getChild(i))));
-            }
-        }
-
-
+		StringBuilder buf = new StringBuilder();
+		buf.append(ctx.getChild(0).getText() + "("); // MethodName(
+		for (int i = 2; i < ctx.getChildCount(); i++) {
+			if (!ctx.getChild(i).getText().equals(";")) { // finish and not print ";"
+				buf.append(getSafePythonId(visit(ctx.getChild(i))));
+			}
+		}
 
 		return buf.toString();
 	}
