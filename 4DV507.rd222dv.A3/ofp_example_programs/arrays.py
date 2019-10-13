@@ -11,12 +11,12 @@ def reverse(arr):
     return toReturn
 
 def printArray(arr):
-    print(arr[0])
+    print(arr[0], end=" ")
     i=0
     while i<len(arr):
         n=arr[i]
-        print(" ")
-        print(n)
+        print(" ", end=" ")
+        print(n, end=" ")
         i=i+1
 
     print("")

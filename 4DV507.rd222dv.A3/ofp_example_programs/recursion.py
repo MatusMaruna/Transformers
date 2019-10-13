@@ -7,20 +7,18 @@ def mult(a,b):
 def div(a,b):
     if a==b:
         return 1
+    elif b>a:
+        return 0
     else:
-        if b>a:
-            return 0
-        else:
-            return 1+div(a-b,b)
+        return 1+div(a-b,b)
 
 def fib(n):
     if n==0:
         return 1
+    elif n==1:
+        return 1
     else:
-        if n==1:
-            return 1
-        else:
-            return fib(n-2)+fib(n-1)
+        return fib(n-2)+fib(n-1)
 
 #
 #  Program entry point - main 
