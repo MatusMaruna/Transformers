@@ -46,7 +46,7 @@ public class OfpMain {
 		}
 
 		// Display tree
-		Trees.inspect(root, parser);
+		//Trees.inspect(root, parser);
 
 		System.out.println("");
 		ParseTreeWalker walker = new ParseTreeWalker();
@@ -67,11 +67,11 @@ public class OfpMain {
 		}
 
 		System.out.println("----------------------------------------------------------------------");
-		TypeCheck typeChecking = new TypeCheck(listener.scopes, errorListener);
+		/*TypeCheck typeChecking = new TypeCheck(listener.scopes, errorListener);
 		typeChecking.loadParser(parser);
 		typeChecking.visit(root);
 
-		errorListener.printErrors();
+		errorListener.printErrors();*/
 
 		System.out.println("Generating Python Code");
 

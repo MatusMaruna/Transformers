@@ -89,7 +89,7 @@ public class PythonCodeGenerator extends OfpBaseVisitor<String> {
 	@Override // while (i < x+1) { == in python while i < x + 1:
 	public String visitWhileStmt(WhileStmtContext ctx) {
 		currentScope = scopes.get(ctx);
-		System.out.println("visit WhileStmt");
+		//System.out.println("visit WhileStmt");
 		StringBuilder buf = new StringBuilder();
 
 		buf.append(ctx.getChild(0).getText() + " " + visit(ctx.getChild(2)) + ":\n");
@@ -106,7 +106,7 @@ public class PythonCodeGenerator extends OfpBaseVisitor<String> {
 	@Override
 	public String visitMethod(MethodContext ctx) {
 		currentScope = scopes.get(ctx);
-		System.out.println("Visiting method" + ctx.getChild(1).getText());
+		//System.out.println("Visiting method" + ctx.getChild(1).getText());
 		StringBuilder buf = new StringBuilder();
 		buf.append("def " + ctx.getChild(1).getText() + "("); // def functionName(
 		if (ctx.getChild(3).getText() != ")") { // check if function has params
@@ -124,7 +124,7 @@ public class PythonCodeGenerator extends OfpBaseVisitor<String> {
 
 	@Override
 	public String visitStart(StartContext ctx) {
-		System.out.println("Visiting start");
+		//System.out.println("Visiting start");
 		currentScope = scopes.get(ctx);
 		globalScope = currentScope;
 		StringBuilder buf = new StringBuilder();
@@ -155,7 +155,7 @@ public class PythonCodeGenerator extends OfpBaseVisitor<String> {
 
 	@Override
 	public String visitMain(MainContext ctx) {
-		System.out.println("Visitng main");
+		//System.out.println("Visitng main");
 		currentScope = scopes.get(ctx);
 		String start = "#\n#  Program entry point - main \n#\n";
 
@@ -279,7 +279,7 @@ public class PythonCodeGenerator extends OfpBaseVisitor<String> {
 	@Override // println(f[f.length-1]) == print(f[f.length-1]) ->in py
 	// FIX~
 	public String visitPrint(PrintContext ctx) {
-		System.out.println("Visiting Print");
+		//System.out.println("Visiting Print");
 		StringBuilder buf = new StringBuilder();
 
 		buf.append("print");
@@ -300,7 +300,7 @@ public class PythonCodeGenerator extends OfpBaseVisitor<String> {
 	@Override // if (x < 10) { ==> python equal if x < 10:
 	public String visitIfStmt(IfStmtContext ctx) {
 		currentScope = scopes.get(ctx);
-		System.out.println("visit IfStmt");
+		//System.out.println("visit IfStmt");
 		StringBuilder buf = new StringBuilder();
 
 		buf.append(ctx.getChild(0).getText() + " " + visit(ctx.getChild(2)) + ":\n");
@@ -347,7 +347,7 @@ public class PythonCodeGenerator extends OfpBaseVisitor<String> {
 
 	@Override
 	public String visitAsgnStmt(AsgnStmtContext ctx) {
-		System.out.println("visit Asgn");
+		//System.out.println("visit Asgn");
 
 		StringBuilder buf = new StringBuilder();
 		// System.out.println("COUNT " + ctx.getChildCount() + " " +
@@ -407,7 +407,7 @@ public class PythonCodeGenerator extends OfpBaseVisitor<String> {
 	@Override
 	public String visitExpr(ExprContext ctx) {
 		StringBuilder buf = new StringBuilder();
-		System.out.println(ctx.getText());
+		//System.out.println(ctx.getText());
 		int children = ctx.getChildCount();
 		switch (children) {
 		case 1:
