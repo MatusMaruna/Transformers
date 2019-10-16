@@ -255,7 +255,6 @@ public class PythonCodeGenerator extends OfpBaseVisitor<String> {
 	@Override
 	public String visitVarType(VarTypeContext ctx) {
 		StringBuilder buf = new StringBuilder();
-
 		for (int i = 0; i < ctx.getChildCount(); i++) {
 			if (ctx.getChild(i).toString().equals("true")) {
 				buf.append("True");
@@ -413,8 +412,7 @@ public class PythonCodeGenerator extends OfpBaseVisitor<String> {
 		case 1:
 			// If first sibling is return and child is true or false do not check
 			// for safe python id
-			if (ctx.getParent().getChild(0).getText().equals("return")
-					&& (ctx.getChild(0).getChild(0).getText().equals("true")
+			if ((ctx.getChild(0).getChild(0).getText().equals("true")
 							|| ctx.getChild(0).getChild(0).getText().equals("false"))) {
 				buf.append(visit(ctx.getChild(0)));
 			} else {

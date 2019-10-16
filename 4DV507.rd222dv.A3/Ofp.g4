@@ -25,11 +25,12 @@ type :    'int' arrType?
 		| 'bool'
 		;
 
-varType : 	 ID
-			|MINUS? INT
+varType :   MINUS? INT
 			|MINUS? FLOAT
 			|STR
 			|CHAR
+			|BOOL
+			|ID
 			;
 
 stmt : asgnStmt
@@ -81,7 +82,7 @@ elseStmt : ('else' (stmt|block)) ;
 
 condition : (expr COP expr) | expr ;
 
-print : ('println'|'print') '(' (ID arrType?| STR) ')' SC ;
+print : ('println'|'print') '(' (expr|STR) ')' SC ;
 
 PLUS : '+' ;
 MINUS : '-' ;
@@ -96,10 +97,10 @@ COP: SMALL|BIGGER|EQ ;
 
 INT : ('0'..'9')+ ;
 FLOAT : ('0'..'9')+'.'('0'..'9')+;
+BOOL: 'true'|'false';
 ID  :	('a'..'z'|'A'..'Z')('a'..'z'|'A'..'Z')* ;
 STR: '"' (((SYM|ID)(SYM|ID)*) | ' ')* '"';
 CHAR: '\'' (((SYM|ID)(SYM|ID)*) | ' ')* '\'';
-
 SYM: ('0'..'9'|'_'|'!'|'.'|','|'?'|'='|':'|'('|')') ;
 
 COMMENT :  '#' ~[\r\n]* -> skip ;
