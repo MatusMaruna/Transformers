@@ -1,3 +1,4 @@
+package symbolTable;
 
 public class Symbol {
 	private String id;

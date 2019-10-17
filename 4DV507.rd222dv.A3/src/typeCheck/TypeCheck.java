@@ -1,7 +1,11 @@
+package typeCheck;
+
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import symbolTable.*;
+import typeCheck.*;
 import org.antlr.v4.runtime.tree.ErrorNode;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.ParseTreeProperty;
@@ -32,6 +36,8 @@ import antlr4.OfpParser.StmtContext;
 import antlr4.OfpParser.TypeContext;
 import antlr4.OfpParser.VarTypeContext;
 import antlr4.OfpParser.WhileStmtContext;
+import symbolTable.OfpType;
+
 
 public class TypeCheck extends OfpBaseVisitor<OfpType> {
 	Scope currentScope;

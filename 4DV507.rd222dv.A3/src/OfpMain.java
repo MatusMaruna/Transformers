@@ -1,7 +1,9 @@
 import java.io.IOException;
 import java.io.PrintWriter;
 
-import org.antlr.v4.gui.Trees;
+import pythonGenerator.PythonCodeGenerator;
+import symbolTable.ErrorListener;
+import symbolTable.*;
 import org.antlr.v4.runtime.BufferedTokenStream;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
@@ -9,6 +11,7 @@ import org.antlr.v4.runtime.tree.ParseTreeWalker;
 
 import antlr4.OfpLexer;
 import antlr4.OfpParser;
+import symbolTable.Scope;
 
 public class OfpMain {
 
@@ -54,9 +57,9 @@ public class OfpMain {
 		listener.loadParser(parser);
 		walker.walk(listener, root);
 
-		System.out.println("\n Symbol Table: ");
+		System.out.println("\n symbolTable.Symbol Table: ");
 		System.out.println("----------------------------------------------------------------------");
-		System.out.printf("%10s%25s%25s%n", "Id", "Type", "Scope Name(Rule)");
+		System.out.printf("%10s%25s%25s%n", "Id", "Type", "symbolTable.Scope Name(Rule)");
 		System.out.println("----------------------------------------------------------------------");
 		for (Scope s : listener.scopeList) {
 			s.printScope();
@@ -67,7 +70,7 @@ public class OfpMain {
 		}
 
 		System.out.println("----------------------------------------------------------------------");
-		/*TypeCheck typeChecking = new TypeCheck(listener.scopes, errorListener);
+		/*typeCheck.TypeCheck typeChecking = new typeCheck.TypeCheck(listener.scopes, errorListener);
 		typeChecking.loadParser(parser);
 		typeChecking.visit(root);
 

@@ -1,5 +1,8 @@
-import java.util.ArrayList;
+package symbolTable;
 
+import java.util.ArrayList;
+import symbolTable.*;
+import typeCheck.*;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ErrorNode;
 import org.antlr.v4.runtime.tree.ParseTreeListener;
@@ -8,10 +11,11 @@ import org.antlr.v4.runtime.tree.TerminalNode;
 
 import antlr4.OfpParser;
 
+
 public class Mylistener implements ParseTreeListener {
 	ArrayList<String> scopeRules = new ArrayList<String>();
-	ArrayList<Scope> scopeList = new ArrayList<Scope>();
-	ParseTreeProperty<Scope> scopes = new ParseTreeProperty<Scope>(); // idk
+	public ArrayList<Scope> scopeList = new ArrayList<Scope>();
+	public ParseTreeProperty<Scope> scopes = new ParseTreeProperty<Scope>(); // idk
 	Scope currentScope;
 	Scope s;
 	Scope globalScope;
@@ -28,7 +32,7 @@ public class Mylistener implements ParseTreeListener {
 	public void enterEveryRule(ParserRuleContext ctx) {
 		// System.out.println("rule entered: " + resolveName(ctx));
 		if (scopeRules.contains(resolveName(ctx))) {
-			// System.out.println("Entered new Scope : " + resolveName(ctx));
+			// System.out.println("Entered new symbolTable.Scope : " + resolveName(ctx));
 			String name = ctx.getChild(1).getText();
 			String type = ctx.getChild(0).getText();
 			if (resolveName(ctx) == "main") {
@@ -53,7 +57,7 @@ public class Mylistener implements ParseTreeListener {
 			}
 			/*
 			 * System.out.println( "\n New tester: Type: " + type + " Id: " + name +
-			 * " inside Scope : " + resolveName(ctx) + "\n");
+			 * " inside symbolTable.Scope : " + resolveName(ctx) + "\n");
 			 */
 
 			s = new Scope(currentScope, name);
@@ -158,7 +162,7 @@ public class Mylistener implements ParseTreeListener {
 		// System.out.println("rule exited: " + resolveName(ctx));
 
 		if (scopeRules.contains(resolveName(ctx))) {
-			// System.out.println("Left Scope : " + resolveName(ctx));
+			// System.out.println("Left symbolTable.Scope : " + resolveName(ctx));
 			currentScope.setScopeType(resolveName(ctx));
 			currentScope = currentScope.setEnclosingScope();
 		}

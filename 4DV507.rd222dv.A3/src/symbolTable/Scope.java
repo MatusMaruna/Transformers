@@ -1,3 +1,5 @@
+package symbolTable;
+
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -38,10 +40,10 @@ public class Scope {
 	}
 
 	/*
-	 * public Scope nextChild() { // creates new children Scope nextChild; if (next
+	 * public symbolTable.Scope nextChild() { // creates new children symbolTable.Scope nextChild; if (next
 	 * >= scopeChildren.size()) { // child does not exist nextChild = new
-	 * Scope(this); // create new Scope scopeChildren.add(nextChild); } else {
-	 * //Child exists nextChild = (Scope) scopeChildren.get(next); // visit child }
+	 * symbolTable.Scope(this); // create new symbolTable.Scope scopeChildren.add(nextChild); } else {
+	 * //Child exists nextChild = (symbolTable.Scope) scopeChildren.get(next); // visit child }
 	 * next++; return nextChild; }
 	 */
 
@@ -87,9 +89,9 @@ public class Scope {
 	@Override
 	public String toString() {
 		if (enclosingScope != null)
-			return "Scope name : " + name + " Enclosing Scope id : " + enclosingScope.name;
+			return "symbolTable.Scope name : " + name + " Enclosing symbolTable.Scope id : " + enclosingScope.name;
 		else
-			return "Scope name : " + name;
+			return "symbolTable.Scope name : " + name;
 	}
 
 }

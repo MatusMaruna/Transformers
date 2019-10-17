@@ -1,7 +1,7 @@
+package symbolTable;
 
 import java.util.ArrayList;
 
-import org.antlr.v4.runtime.ANTLRErrorListener;
 import org.antlr.v4.runtime.BaseErrorListener;
 import org.antlr.v4.runtime.RecognitionException;
 import org.antlr.v4.runtime.Recognizer;
@@ -83,8 +83,4 @@ public class ErrorListener extends BaseErrorListener {
 	 
 }
  
- 
- enum ErrorType {
-	 SemanticError, TypeMismatch , ParsingError, MultipleDeclerationError,
- }
  

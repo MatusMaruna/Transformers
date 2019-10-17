@@ -1,3 +1,4 @@
+package symbolTable;
 
 public enum OfpType {
 	Int("int"), String("string"), IntArray("int[]"), Char("char"), Float("float"), Bool("bool"), FloatArray("float[]"),
