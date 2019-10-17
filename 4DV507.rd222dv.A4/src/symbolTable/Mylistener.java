@@ -1,6 +1,8 @@
 package symbolTable;
 
 import java.util.ArrayList;
+
+import bytecodeGenerator.FunctionSymbol;
 import symbolTable.*;
 import typeCheck.*;
 import org.antlr.v4.runtime.ParserRuleContext;
@@ -16,6 +18,7 @@ public class Mylistener implements ParseTreeListener {
 	ArrayList<String> scopeRules = new ArrayList<String>();
 	public ArrayList<Scope> scopeList = new ArrayList<Scope>();
 	public ParseTreeProperty<Scope> scopes = new ParseTreeProperty<Scope>(); // idk
+	public FunctionSymbol fs;
 	Scope currentScope;
 	Scope s;
 	Scope globalScope;
@@ -24,8 +27,11 @@ public class Mylistener implements ParseTreeListener {
 	int countElse = 0;
 	ErrorListener errorListener;
 
-	public Mylistener(ErrorListener errorListener) {
+	public Mylistener(ErrorListener errorListener, FunctionSymbol fs) {
+
 		this.errorListener = errorListener;
+
+		this.fs = fs;
 	}
 
 	@Override

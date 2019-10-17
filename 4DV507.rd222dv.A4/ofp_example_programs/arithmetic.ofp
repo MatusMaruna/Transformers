@@ -1,4 +1,4 @@
-# arithmetic.ofp
+ # arithmetic.ofp
 
 void main() {
 	int p; int q; int r;

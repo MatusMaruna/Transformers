@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 
 import bytecodeGenerator.ByteCodeGenerator;
+import bytecodeGenerator.FunctionSymbol;
 import com.sun.tools.javac.Main;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassVisitor;
@@ -58,10 +59,11 @@ public class OfpMain {
 
 		// Display tree
 		//Trees.inspect(root, parser);
+		FunctionSymbol fs = new FunctionSymbol();
 
 		System.out.println("");
 		ParseTreeWalker walker = new ParseTreeWalker();
-		Mylistener listener = new Mylistener(errorListener);
+		Mylistener listener = new Mylistener(errorListener, fs);
 		listener.loadParser(parser);
 		walker.walk(listener, root);
 
