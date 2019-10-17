@@ -1,0 +1,56 @@
+# max.ofp
+
+void main() {
+	int p = 3;
+	int q = 7;
+	int res = maxOfTwo(p,q);
+	println(res);        # 7
+	
+	res = maxOfThree(p,q,9);
+	println(res);      # 9
+	
+}
+
+int maxOfTwo(int a, int b) {
+   if (a > b)
+   	  return a;
+   else 
+      return b;
+}
+
+int maxOfThree(int a, int b, int c) {
+   if (a > b) {
+      if (a > c) 
+   	  	 return a;
+   	  else if (c > a)
+   	     return c;
+   	  else # c == a
+   	     return c;
+   } else { 
+      if (b > c) 
+   	  	 return b;
+   	  else if (c > b) 
+   	     return c;
+   	  else # c == b 
+   	     return c;
+   } 
+}
+
+void selectionSort(float[] arr){  
+	int i = 0;
+    while (i < arr.length - 1)  {  
+        int smallest = i;  
+        int j = i+1;
+        while (j < arr.length){  
+            if (arr[j] < arr[smallest]){  
+                smallest = j;    # searching for lowest index  
+            } 
+            j = j+1; 
+        }  
+        # Swap
+        float smallestNumber = arr[smallest];   
+        arr[smallest] = arr[i];  
+        arr[i] = smallestNumber; 
+        i = i+1; 
+    }  
+}  
