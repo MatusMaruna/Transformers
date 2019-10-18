@@ -14,7 +14,6 @@ public class FunctionSymbol extends Symbol {
 
 
     public void addVariable(Symbol varSym){
-        System.out.println(varSym.hashCode());
         if(varSym.getType() == OfpType.Float){
             indecies.put(varSym.getId(), varCount+=varCount+2);
         }else{

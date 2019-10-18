@@ -34,7 +34,11 @@ public class OfpMain {
 		}
 
 		System.out.println("Reading test program from: " + testProgram);
-		String progName = testProgram.substring(0, testProgram.length() - 4);
+		String progPath = testProgram.substring(0, testProgram.length() - 4);
+		File prog = new File(progPath);
+		String progName = prog.getName();
+
+
 
 		// Parse input program
 		System.out.println("\nParsing started");
@@ -105,19 +109,19 @@ public class OfpMain {
 		ByteCodeGenerator bcGen = new ByteCodeGenerator(listener.scopes, progName);
 		bcGen.visit(root);
 
-		/*System.out.println("\nPrint bytecode\n");
+		System.out.println("\nPrint bytecode\n");
 		byte[] code = bcGen.getByteArray();
 		ClassReader cr = new ClassReader(code);
 		ClassVisitor tracer = new TraceClassVisitor(new PrintWriter(System.out));
 		ClassVisitor checker = new CheckClassAdapter(tracer, true);
 		cr.accept(checker, 0);
 
-		File javaOutFile = new File("test_class_files" + progName+".class");
+		File javaOutFile = new File( prog.getParent() + "/" + progName +".class");
 		FileOutputStream fos = new FileOutputStream(javaOutFile);
 		fos.write(code);
 		fos.close();
 		System.out.println("Bytecode saved in" + javaOutFile.getAbsolutePath());
-		System.out.println("\n Executing bytecode");*/
+		System.out.println("\n Executing bytecode");
 
 		/*Main loader = new Main();
 		Class<?> exampleClass = loader.defineClass(progName, code, 0 , code.length);

@@ -4,10 +4,17 @@ import antlr4.OfpBaseVisitor;
 import antlr4.OfpParser;
 import antlr4.OfpVisitor;
 import org.antlr.v4.runtime.tree.*;
+import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Type;
+import org.objectweb.asm.commons.GeneratorAdapter;
+import org.objectweb.asm.commons.Method;
 import symbolTable.OfpType;
 import symbolTable.Scope;
 import symbolTable.Symbol;
+
+import java.io.PrintStream;
+
+import static org.objectweb.asm.Opcodes.*;
 
 public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
 
@@ -15,6 +22,8 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
     private String progName;
     private Scope currentScope;
     private Scope globalScope;
+    private ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_MAXS);
+    GeneratorAdapter mg;
 
     public ByteCodeGenerator(ParseTreeProperty<Scope> scopes, String progName) {
         this.scopes = scopes;
@@ -25,16 +34,30 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
 
     @Override
     public Type visitStart(OfpParser.StartContext ctx) {
-        System.out.println("Hello World");
+        Method m = Method.getMethod("void <init>()");
+        cw.visit(V1_1, ACC_PUBLIC, progName, null, "java/lang/Object", null);
+        mg = new GeneratorAdapter(ACC_PUBLIC , m, null,null, cw);
+        mg.loadThis();
+        mg.invokeConstructor(Type.getType(Object.class), m);
+        mg.returnValue();
+        mg.endMethod();
+        cw.visitEnd();
         visitChildren(ctx);
         return null;
     }
 
     @Override
     public Type visitMain(OfpParser.MainContext ctx) {
-        System.out.println("Visiting main");
-        System.out.println(scopes.get(ctx).getFunctionSymbol().indecies.toString());
-        System.out.println(scopes.get(ctx).getFunctionSymbol().indexOf(new Symbol("n", "int")));
+        //System.out.println(scopes.get(ctx).getFunctionSymbol().indecies.toString());
+        //System.out.println(scopes.get(ctx).getFunctionSymbol().indexOf(new Symbol("n", "int")));
+        Method main = Method.getMethod("void main (String[])");
+        mg = new GeneratorAdapter(ACC_PUBLIC + ACC_STATIC, main, null,null, cw);
+        mg.getStatic(Type.getType(System.class), "out", Type.getType(PrintStream.class));
+        mg.push("Hello World!");
+        mg.invokeVirtual(Type.getType(PrintStream.class), Method.getMethod("void println (String)"));
+        mg.returnValue();
+        mg.endMethod();
+
         return null;
     }
 
@@ -163,6 +186,6 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
     public byte[] getByteArray() {
 
 
-        return new byte[0];
+        return cw.toByteArray();
     }
 }
