@@ -34,6 +34,7 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
     public Type visitMain(OfpParser.MainContext ctx) {
         System.out.println("Visiting main");
         System.out.println(scopes.get(ctx).getFunctionSymbol().indecies.toString());
+        System.out.println(scopes.get(ctx).getFunctionSymbol().indexOf(new Symbol("n", "int")));
         return null;
     }
 
