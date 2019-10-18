@@ -1,5 +1,7 @@
 package symbolTable;
 
+import bytecodeGenerator.FunctionSymbol;
+
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -11,8 +13,13 @@ public class Scope {
 	private Scope enclosingScope;
 	private Map<String, Symbol> symbols = new LinkedHashMap<String, Symbol>();
 	private ArrayList<Scope> scopeChildren = new ArrayList<>();
+	private FunctionSymbol fs = new FunctionSymbol();
+
+	// Useless
 	public ArrayList<OfpType> parameters = new ArrayList<OfpType>();
 	public Map<String, ArrayList<OfpType>> parameterMap = new LinkedHashMap<String, ArrayList<OfpType>>();
+
+	// *
 
 	public Scope(Scope enclosingScope, String name) {
 		this.enclosingScope = enclosingScope;
@@ -39,13 +46,14 @@ public class Scope {
 		this.name = name;
 	}
 
-	/*
-	 * public symbolTable.Scope nextChild() { // creates new children symbolTable.Scope nextChild; if (next
-	 * >= scopeChildren.size()) { // child does not exist nextChild = new
-	 * symbolTable.Scope(this); // create new symbolTable.Scope scopeChildren.add(nextChild); } else {
-	 * //Child exists nextChild = (symbolTable.Scope) scopeChildren.get(next); // visit child }
-	 * next++; return nextChild; }
-	 */
+
+	public void setFunctionSymbol(FunctionSymbol fs){
+		this.fs = fs;
+	}
+
+	public FunctionSymbol getFunctionSymbol(){
+		return fs;
+	}
 
 	public Symbol resolve(String name) {
 		if (symbols.containsKey(name)) // if in current scope

@@ -5,31 +5,42 @@ import antlr4.OfpParser;
 import antlr4.OfpVisitor;
 import org.antlr.v4.runtime.tree.*;
 import org.objectweb.asm.Type;
+import symbolTable.OfpType;
 import symbolTable.Scope;
+import symbolTable.Symbol;
 
 public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
 
-    ParseTreeProperty<Scope> scopes;
-    String progName;
+    private  ParseTreeProperty<Scope> scopes;
+    private String progName;
+    private Scope currentScope;
+    private Scope globalScope;
 
     public ByteCodeGenerator(ParseTreeProperty<Scope> scopes, String progName) {
         this.scopes = scopes;
         this.progName = progName;
+
     }
 
 
     @Override
     public Type visitStart(OfpParser.StartContext ctx) {
+        System.out.println("Hello World");
+        visitChildren(ctx);
         return null;
     }
 
     @Override
     public Type visitMain(OfpParser.MainContext ctx) {
+        System.out.println("Visiting main");
+        System.out.println(scopes.get(ctx).getFunctionSymbol().indecies.toString());
         return null;
     }
 
     @Override
     public Type visitMethod(OfpParser.MethodContext ctx) {
+        System.out.println("Visiting method");
+        System.out.println(scopes.get(ctx).getFunctionSymbol().indecies.toString());
         return null;
     }
 
@@ -135,16 +146,6 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
 
     @Override
     public Type visitPrint(OfpParser.PrintContext ctx) {
-        return null;
-    }
-
-    @Override
-    public Type visit(ParseTree parseTree) {
-        return null;
-    }
-
-    @Override
-    public Type visitChildren(RuleNode ruleNode) {
         return null;
     }
 

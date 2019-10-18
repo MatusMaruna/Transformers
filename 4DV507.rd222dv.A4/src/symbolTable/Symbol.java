@@ -26,9 +26,13 @@ public class Symbol {
 		return id;
 	}
 
+	public void setId(String id){ this.id = id; }
+
 	public OfpType getType() {
 		return type;
 	}
+
+	public void setType(OfpType type){this.type = type; }
 
 	public String getStringType() {
 		return stringType;
@@ -37,5 +41,11 @@ public class Symbol {
 	@Override
 	public String toString() {
 		return "Record id: " + id + " Record type: " + type;
+	}
+
+
+	@Override
+	public int hashCode() {
+		return this.id.hashCode()+this.type.hashCode();
 	}
 }

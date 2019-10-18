@@ -3,6 +3,7 @@ package symbolTable;
 import java.util.ArrayList;
 
 import bytecodeGenerator.FunctionSymbol;
+import bytecodeGenerator.ParamSymbol;
 import symbolTable.*;
 import typeCheck.*;
 import org.antlr.v4.runtime.ParserRuleContext;
@@ -16,10 +17,10 @@ import antlr4.OfpParser;
 
 public class Mylistener implements ParseTreeListener {
 	ArrayList<String> scopeRules = new ArrayList<String>();
-	public ArrayList<Scope> scopeList = new ArrayList<Scope>();
-	public ParseTreeProperty<Scope> scopes = new ParseTreeProperty<Scope>(); // idk
-	public FunctionSymbol fs;
+	public ArrayList<Scope> scopeList = new ArrayList<Scope>(); // for printing
+	public ParseTreeProperty<Scope> scopes = new ParseTreeProperty<Scope>();
 	Scope currentScope;
+	FunctionSymbol currentFunction;
 	Scope s;
 	Scope globalScope;
 	int countIf = 0;
@@ -27,11 +28,10 @@ public class Mylistener implements ParseTreeListener {
 	int countElse = 0;
 	ErrorListener errorListener;
 
-	public Mylistener(ErrorListener errorListener, FunctionSymbol fs) {
+	public Mylistener(ErrorListener errorListener) {
 
 		this.errorListener = errorListener;
 
-		this.fs = fs;
 	}
 
 	@Override
@@ -43,10 +43,16 @@ public class Mylistener implements ParseTreeListener {
 			String type = ctx.getChild(0).getText();
 			if (resolveName(ctx) == "main") {
 				type = ctx.getChild(0).getText();
-				currentScope.define(new Symbol(name, type));
+				currentFunction = new FunctionSymbol();
+				currentFunction.setId(name);
+				currentFunction.setType(OfpType.getType(type));
+				currentScope.define(currentFunction);
 			}
 			if (resolveName(ctx) == "method") {
-				currentScope.define(new Symbol(name, type));
+				 currentFunction = new FunctionSymbol();
+				 currentFunction.setId(name);
+				 currentFunction.setType(OfpType.getType(type));
+				 currentScope.define(currentFunction);
 			}
 			if (resolveName(ctx) == "ifStmt") {
 				name = "ifStmt " + countIf++;
@@ -67,6 +73,7 @@ public class Mylistener implements ParseTreeListener {
 			 */
 
 			s = new Scope(currentScope, name);
+			s.setFunctionSymbol(currentFunction);
 			scopeList.add(s);
 			currentScope = s;
 			scopes.put(ctx, currentScope);
@@ -95,6 +102,7 @@ public class Mylistener implements ParseTreeListener {
 			String name = ctx.getChild(1).getText();
 			String value = ctx.getChild(3).getText();
 			OfpType type = OfpType.getType(ctx.getChild(0).getText());
+			currentFunction.addVariable(new Symbol(name, type));
 			currentScope.define(new Symbol(name, type));
 			scopes.put(ctx, currentScope);
 
@@ -138,6 +146,7 @@ public class Mylistener implements ParseTreeListener {
 			 */
 			String name = ctx.getChild(1).getText();
 			OfpType type = OfpType.getType(ctx.getChild(0).getText());
+			currentFunction.addVariable(new Symbol(name, type));
 			currentScope.define(new Symbol(name, type));
 			scopes.put(ctx, currentScope);
 		}
@@ -150,15 +159,17 @@ public class Mylistener implements ParseTreeListener {
 			 */
 			String name = ctx.getChild(1).getText();
 			OfpType type = OfpType.getType(ctx.getChild(0).getText());
+
+			ParamSymbol s = new ParamSymbol();
+			s.setId(name);
+			s.setType(type);
+			currentFunction.addParameter(s);
+
 			currentScope.define(new Symbol(name, type));
-			currentScope.parameters.add(type);
-			globalScope.parameterMap.put(currentScope.getScopeName(), currentScope.parameters);
+			//currentScope.parameters.add(type);
+			//globalScope.parameterMap.put(currentScope.getScopeName(), currentScope.parameters);
 			scopes.put(ctx, currentScope);
 
-		}
-
-		if (resolveName(ctx).equals("condition")) {
-			
 		}
 
 	}

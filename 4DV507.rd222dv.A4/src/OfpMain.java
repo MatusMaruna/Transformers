@@ -59,11 +59,10 @@ public class OfpMain {
 
 		// Display tree
 		//Trees.inspect(root, parser);
-		FunctionSymbol fs = new FunctionSymbol();
 
 		System.out.println("");
 		ParseTreeWalker walker = new ParseTreeWalker();
-		Mylistener listener = new Mylistener(errorListener, fs);
+		Mylistener listener = new Mylistener(errorListener);
 		listener.loadParser(parser);
 		walker.walk(listener, root);
 
@@ -101,7 +100,6 @@ public class OfpMain {
 			e.printStackTrace();
 		}
 		System.out.println("\nPython program saves as: " + pyOutputPath);
-
 
 		System.out.println("\nBytecode generation started \n");
 		ByteCodeGenerator bcGen = new ByteCodeGenerator(listener.scopes, progName);
