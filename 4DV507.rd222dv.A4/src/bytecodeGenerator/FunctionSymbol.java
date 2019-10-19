@@ -9,28 +9,32 @@ import java.util.Map;
 public class FunctionSymbol extends Symbol {
 
     private int varCount = 0;
-    public Map<String,Integer> indecies = new LinkedHashMap<String,Integer>();
+    public Map<String,Integer> variableIndecies = new LinkedHashMap<String,Integer>();
+    public Map<String,Integer> paramIndecies = new LinkedHashMap<String,Integer>();
 
 
 
     public void addVariable(Symbol varSym){
         if(varSym.getType() == OfpType.Float){
-            indecies.put(varSym.getId(), varCount+=varCount+2);
+            variableIndecies.put(varSym.getId(), varCount+=varCount+2);
         }else{
-            indecies.put(varSym.getId(), varCount++);
+            variableIndecies.put(varSym.getId(), varCount++);
         }
     }
 
     public void addParameter(ParamSymbol parSym){
         if(parSym.getType() == OfpType.Float){
-            indecies.put(parSym.getId(), varCount+=varCount+2);
+            paramIndecies.put(parSym.getId(), varCount+=varCount+2);
         }else{
-            indecies.put(parSym.getId(), varCount++);
+            paramIndecies.put(parSym.getId(), varCount++);
         }
     }
 
     public int indexOf(Symbol sym){
-        return indecies.get(sym.getId());
+        if(paramIndecies.get(sym.getId()) == null)
+        return variableIndecies.get(sym.getId());
+        else
+        return paramIndecies.get(sym.getId());
     }
 
 

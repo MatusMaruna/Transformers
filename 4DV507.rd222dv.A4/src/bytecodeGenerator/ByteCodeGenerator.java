@@ -2,15 +2,12 @@ package bytecodeGenerator;
 
 import antlr4.OfpBaseVisitor;
 import antlr4.OfpParser;
-import antlr4.OfpVisitor;
 import org.antlr.v4.runtime.tree.*;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Type;
 import org.objectweb.asm.commons.GeneratorAdapter;
 import org.objectweb.asm.commons.Method;
-import symbolTable.OfpType;
 import symbolTable.Scope;
-import symbolTable.Symbol;
 
 import java.io.PrintStream;
 
@@ -64,22 +61,73 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
     @Override
     public Type visitMethod(OfpParser.MethodContext ctx) {
         System.out.println("Visiting method");
-        System.out.println(scopes.get(ctx).getFunctionSymbol().indecies.toString());
+        System.out.println(scopes.get(ctx).getFunctionSymbol().paramIndecies.toString());
+        StringBuilder sb = new StringBuilder();
+
+        Type methodType = visit(ctx.getChild(0));
+       System.out.println("From visited method: "+ methodType.getClassName());
+        String id = ctx.getChild(1).getText();
+
+        sb.append(methodType.getClassName()+ " ");
+        sb.append(id + " ");
+        sb.append("(");
+        if(ctx.getChild(3).getText() != ")"){ // if the method doesnt have 0 params
+            for(int i  = 0; i<ctx.getChild(3).getChildCount(); i+=2){
+                sb.append(visit(ctx.getChild(3).getChild(i)).getClassName());
+                if(i+2 < ctx.getChild(3).getChildCount()){
+                    sb.append(",");
+                }
+            }
+        }
+
+        sb.append(")");
+
+      System.out.println(sb.toString());
+
+        Method m = Method.getMethod(sb.toString());
+        mg = new GeneratorAdapter(ACC_PUBLIC + ACC_STATIC, m, null, null, cw);
+        for(int i = 0; i < scopes.get(ctx).getFunctionSymbol().paramIndecies.size(); i++){
+            mg.loadArg(i);
+        }
+
+
+        visit(ctx.getChild(ctx.getChildCount()-1));
+
+        mg.returnValue();
+        mg.endMethod();
+
+
+
+
+
+        visitChildren(ctx);
         return null;
     }
 
     @Override
     public Type visitParameter(OfpParser.ParameterContext ctx) {
+        System.out.println("Visiting param");
+        switch(ctx.getChild(0).getText()){
+            case "int":
+                return Type.INT_TYPE;
+            case "float":
+                return Type.DOUBLE_TYPE;
+            case "char" :
+                return Type.CHAR_TYPE;
+        }
         return null;
     }
 
     @Override
     public Type visitParameterList(OfpParser.ParameterListContext ctx) {
+        System.out.println("Visiting paramList");
+        visitChildren(ctx);
         return null;
     }
 
     @Override
     public Type visitBlock(OfpParser.BlockContext ctx) {
+        System.out.println("you are in a block");
         return null;
     }
 
@@ -90,6 +138,20 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
 
     @Override
     public Type visitType(OfpParser.TypeContext ctx) {
+        System.out.println("Visiting a type"   + ctx.getText());
+        switch(ctx.getText()){
+            case "int":
+                return Type.INT_TYPE;
+            case "float":
+                return Type.DOUBLE_TYPE;
+            case "char" :
+                return Type.CHAR_TYPE;
+            case "void" :
+                return Type.VOID_TYPE;
+        }
+
+
+
         return null;
     }
 
@@ -175,6 +237,14 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
 
     @Override
     public Type visitTerminal(TerminalNode terminalNode) {
+
+
+        switch(terminalNode.getText()){
+            case "void":
+                return Type.VOID_TYPE;
+        }
+
+
         return null;
     }
 

@@ -7,6 +7,8 @@ def sumUpTo(n):
 
     return ofp_sum
 
+def test(n,x,y):
+
 #
 #  Program entry point - main 
 #
