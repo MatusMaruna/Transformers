@@ -7,7 +7,9 @@ import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Type;
 import org.objectweb.asm.commons.GeneratorAdapter;
 import org.objectweb.asm.commons.Method;
+import symbolTable.OfpType;
 import symbolTable.Scope;
+import symbolTable.Symbol;
 
 import java.io.PrintStream;
 
@@ -32,6 +34,7 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
     @Override
     public Type visitStart(OfpParser.StartContext ctx) {
         Method m = Method.getMethod("void <init>()");
+        currentScope = scopes.get(ctx);
         cw.visit(V1_1, ACC_PUBLIC, progName, null, "java/lang/Object", null);
         mg = new GeneratorAdapter(ACC_PUBLIC , m, null,null, cw);
         mg.loadThis();
@@ -45,13 +48,14 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
 
     @Override
     public Type visitMain(OfpParser.MainContext ctx) {
-        //System.out.println(scopes.get(ctx).getFunctionSymbol().indecies.toString());
         //System.out.println(scopes.get(ctx).getFunctionSymbol().indexOf(new Symbol("n", "int")));
+        currentScope = scopes.get(ctx);
         Method main = Method.getMethod("void main (String[])");
         mg = new GeneratorAdapter(ACC_PUBLIC + ACC_STATIC, main, null,null, cw);
         mg.getStatic(Type.getType(System.class), "out", Type.getType(PrintStream.class));
         mg.push("Hello World!");
         mg.invokeVirtual(Type.getType(PrintStream.class), Method.getMethod("void println (String)"));
+        visit(ctx.getChild(ctx.getChildCount()-1));
         mg.returnValue();
         mg.endMethod();
 
@@ -60,12 +64,10 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
 
     @Override
     public Type visitMethod(OfpParser.MethodContext ctx) {
-        System.out.println("Visiting method");
-        System.out.println(scopes.get(ctx).getFunctionSymbol().paramIndecies.toString());
         StringBuilder sb = new StringBuilder();
+        currentScope = scopes.get(ctx);
 
         Type methodType = visit(ctx.getChild(0));
-       System.out.println("From visited method: "+ methodType.getClassName());
         String id = ctx.getChild(1).getText();
 
         sb.append(methodType.getClassName()+ " ");
@@ -106,7 +108,6 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
 
     @Override
     public Type visitParameter(OfpParser.ParameterContext ctx) {
-        System.out.println("Visiting param");
         switch(ctx.getChild(0).getText()){
             case "int":
                 return Type.INT_TYPE;
@@ -120,14 +121,14 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
 
     @Override
     public Type visitParameterList(OfpParser.ParameterListContext ctx) {
-        System.out.println("Visiting paramList");
         visitChildren(ctx);
         return null;
     }
-
+   // block: '{' stmt* '}' ;
     @Override
     public Type visitBlock(OfpParser.BlockContext ctx) {
-        System.out.println("you are in a block");
+        visitChildren(ctx);
+
         return null;
     }
 
@@ -138,7 +139,7 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
 
     @Override
     public Type visitType(OfpParser.TypeContext ctx) {
-        System.out.println("Visiting a type"   + ctx.getText());
+        System.out.println("Visiting a type "   + ctx.getText());
         switch(ctx.getText()){
             case "int":
                 return Type.INT_TYPE;
@@ -157,18 +158,40 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
 
     @Override
     public Type visitVarType(OfpParser.VarTypeContext ctx) {
+        if(ctx.getChildCount() > 1)
+        visit(ctx.getChild(1));
+        else
+        visit(ctx.getChild(0));
+
         return null;
     }
 
     @Override
     public Type visitStmt(OfpParser.StmtContext ctx) {
+        visitChildren(ctx);
         return null;
     }
 
     @Override
     public Type visitExpr(OfpParser.ExprContext ctx) {
+        System.out.println(ctx.getText());
+        int children = ctx.getChildCount();
+        switch (children) {
+            case 1: // methodAccess, varType, arrType, arrayList
+                visit(ctx.getChild(0));
+                mg.push(10);
+                break;
+
+            case 2: // id.length, new type
+
+                break;
+            default: // expr (multi|div|plus|minus|small|bigger|eq)
+
+        }
         return null;
     }
+
+
 
     @Override
     public Type visitMethodAccess(OfpParser.MethodAccessContext ctx) {
@@ -179,9 +202,22 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
     public Type visitLocalDecl(OfpParser.LocalDeclContext ctx) {
         return null;
     }
-
+    // declaration : type arrType? ID '=' (expr | arrType | array) SC ;
     @Override
     public Type visitDeclaration(OfpParser.DeclarationContext ctx) {
+        System.out.println("decl test "   + ctx.getText());
+        Type declType = visit(ctx.getChild(0));
+        System.out.println(declType.getClassName());
+        String id = ctx.getChild(1).getText();
+        int index = currentScope.getFunctionSymbol().indexOf(new Symbol(id, OfpType.Undef));
+        System.out.println(index);
+
+        visit(ctx.getChild(3));
+
+        mg.storeLocal(index, declType);
+        System.out.println();
+
+
         return null;
     }
 
@@ -229,15 +265,28 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
     public Type visitCondition(OfpParser.ConditionContext ctx) {
         return null;
     }
-
+    //print : ('println'|'print') '(' (expr|STR) ')' SC ;
     @Override
     public Type visitPrint(OfpParser.PrintContext ctx) {
+
+        System.err.println("test printstmt");
+        mg.getStatic(Type.getType(System.class), "out", Type.getType(PrintStream.class));
+        visit(ctx.getChild(2));
+        mg.push(ctx.getChild(2).getText());
+        if(!ctx.getChild(0).getText().equals("print")) {
+            mg.invokeVirtual(Type.getType(PrintStream.class), Method.getMethod("void println (String)"));
+        }else{
+            mg.invokeVirtual(Type.getType(PrintStream.class), Method.getMethod("void print (String)"));
+        }
+
+
+
         return null;
     }
 
     @Override
     public Type visitTerminal(TerminalNode terminalNode) {
-
+        System.out.println("Visiting terminal: " + terminalNode.getText());
 
         switch(terminalNode.getText()){
             case "void":

@@ -16,9 +16,6 @@ int sumUpTo(int n) {
 	return sum;
 }
 
-void test(int n, int x, int y){
-
-}
 
 	
 	
