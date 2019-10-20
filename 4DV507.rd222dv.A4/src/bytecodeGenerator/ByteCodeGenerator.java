@@ -143,7 +143,7 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
     public Type visitReturnStmt(OfpParser.ReturnStmtContext ctx) {
 
        // visitChildren(ctx);
-        mg.returnValue();
+       // mg.returnValue();
 
         return null;
     }
