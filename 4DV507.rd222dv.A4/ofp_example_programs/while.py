@@ -7,9 +7,10 @@ def sumUpTo(n):
 
     return ofp_sum
 
+def test(a,b,c):
+
 #
 #  Program entry point - main 
 #
 n=10
-res=sumUpTo(n)
 print(res)

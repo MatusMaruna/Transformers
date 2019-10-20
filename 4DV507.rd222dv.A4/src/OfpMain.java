@@ -107,6 +107,7 @@ public class OfpMain {
 
 		System.out.println("\nBytecode generation started \n");
 		ByteCodeGenerator bcGen = new ByteCodeGenerator(listener.scopes, progName);
+		bcGen.loadParser(parser);
 		bcGen.visit(root);
 
 		System.out.println("\nPrint bytecode\n");

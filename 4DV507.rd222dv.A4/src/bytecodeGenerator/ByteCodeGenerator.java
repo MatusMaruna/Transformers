@@ -23,6 +23,7 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
     private Scope globalScope;
     private ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_MAXS);
     GeneratorAdapter mg;
+    String[] ruleNames;
 
     public ByteCodeGenerator(ParseTreeProperty<Scope> scopes, String progName) {
         this.scopes = scopes;
@@ -30,11 +31,15 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
 
     }
 
+    public void loadParser(OfpParser parser) {
+        ruleNames = parser.getTokenNames();
+    }
 
     @Override
     public Type visitStart(OfpParser.StartContext ctx) {
         Method m = Method.getMethod("void <init>()");
         currentScope = scopes.get(ctx);
+        globalScope = scopes.get(ctx);
         cw.visit(V1_1, ACC_PUBLIC, progName, null, "java/lang/Object", null);
         mg = new GeneratorAdapter(ACC_PUBLIC , m, null,null, cw);
         mg.loadThis();
@@ -179,7 +184,7 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
         switch (children) {
             case 1: // methodAccess, varType, arrType, arrayList
                 visit(ctx.getChild(0));
-                mg.push(10);
+                //mg.push(10);
                 break;
 
             case 2: // id.length, new type
@@ -268,11 +273,8 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
     //print : ('println'|'print') '(' (expr|STR) ')' SC ;
     @Override
     public Type visitPrint(OfpParser.PrintContext ctx) {
-
-        System.err.println("test printstmt");
         mg.getStatic(Type.getType(System.class), "out", Type.getType(PrintStream.class));
         visit(ctx.getChild(2));
-        mg.push(ctx.getChild(2).getText());
         if(!ctx.getChild(0).getText().equals("print")) {
             mg.invokeVirtual(Type.getType(PrintStream.class), Method.getMethod("void println (String)"));
         }else{
@@ -286,11 +288,19 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
 
     @Override
     public Type visitTerminal(TerminalNode terminalNode) {
-        System.out.println("Visiting terminal: " + terminalNode.getText());
+        System.out.println("Visiting terminal: " + terminalNode.getText() + " "+ ruleNames[terminalNode.getSymbol().getType()]);
 
-        switch(terminalNode.getText()){
-            case "void":
+        switch(ruleNames[terminalNode.getSymbol().getType()]){
+            case "\'void\'":
                 return Type.VOID_TYPE;
+
+            case "INT":
+                mg.push(new Integer(terminalNode.getText()));
+                return Type.INT_TYPE;
+
+            case "ID":
+                mg.push(terminalNode.getText());
+                break;
         }
 
 
