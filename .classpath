@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="src" path="4DV507.rd222dv.A2/src"/>
+	<classpathentry kind="src" path="4DV507.rd222dv.A3/src"/>
+	<classpathentry excluding="testing/" kind="src" path="4DV507.rd222dv.A4/src"/>
+	<classpathentry kind="src" path="4DV507.rd222dv.A4/src/testing"/>
+	<classpathentry kind="output" path="4DV507.rd222dv.A2/build/classes"/>
+</classpath>
