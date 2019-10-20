@@ -8,7 +8,7 @@ import java.util.Map;
 
 public class FunctionSymbol extends Symbol {
 
-    private int varCount = 0;
+    private int varCount = 1;
     public Map<String,Integer> variableIndecies = new LinkedHashMap<String,Integer>();
     public Map<String,Integer> paramIndecies = new LinkedHashMap<String,Integer>();
 
@@ -32,9 +32,9 @@ public class FunctionSymbol extends Symbol {
 
     public int indexOf(Symbol sym){
         if(paramIndecies.get(sym.getId()) == null)
-        return variableIndecies.get(sym.getId());
+            return variableIndecies.get(sym.getId());
         else
-        return paramIndecies.get(sym.getId());
+            return paramIndecies.get(sym.getId());
     }
 
 

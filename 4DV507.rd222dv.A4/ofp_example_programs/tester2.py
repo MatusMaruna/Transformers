@@ -1,6 +1,18 @@
+def sumUpTo(n):
+    i=1
+    ofp_sum=0
+    while i<n+1:
+        ofp_sum=ofp_sum+i
+        i=i+1
+
+    return ofp_sum
+
+def test(a,b,c):
+
 #
 #  Program entry point - main 
 #
-
-
-a=1
+n=1
+b=1-3*2
+c=len(n)
+print(res)
