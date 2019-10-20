@@ -141,6 +141,10 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
 
     @Override
     public Type visitReturnStmt(OfpParser.ReturnStmtContext ctx) {
+
+       // visitChildren(ctx);
+        mg.returnValue();
+
         return null;
     }
 
@@ -165,7 +169,7 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
 
     @Override
     public Type visitVarType(OfpParser.VarTypeContext ctx) {
-        System.out.println("visiting vaaaaaaaaaaaaaaars");
+        // System.out.println("visiting vaaaaaaaaaaaaaaars");
         if(ctx.getChildCount() > 1)
             visit(ctx.getChild(1));
         else
@@ -192,10 +196,16 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
                 break;
 
             case 2: // id.length, new type
+            /*    for(int i=0; i<children; i++) {
+                    String id = ctx.getChild(i).getText();
+                    if(id.equals(".length")){
+                        System.out.println("***************************************");
 
+                    }
+                }*/
                 break;
             default: // expr (multi|div|plus|minus|small|bigger|eq)
-                if(children>=2){
+             //   if(children>=2){
                     // visits children which are of TYPE ??? //FIXME
                     for(int i=0; i<children; i++) {
                         visit(ctx.getChild(i));
@@ -226,7 +236,7 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
                         if(operand.equals("==")) {
                             mg.math(GeneratorAdapter.EQ, Type.INT_TYPE);
                         }
-                    }
+               //     }
                 }
         }
         return null;
