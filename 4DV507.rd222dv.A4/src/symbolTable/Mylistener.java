@@ -75,6 +75,7 @@ public class Mylistener implements ParseTreeListener {
 			s = new Scope(currentScope, name);
 			s.setFunctionSymbol(currentFunction);
 			scopeList.add(s);
+			globalScope.addChild(s, name);
 			currentScope = s;
 			scopes.put(ctx, currentScope);
 

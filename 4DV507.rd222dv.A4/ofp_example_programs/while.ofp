@@ -2,7 +2,7 @@
 
 void main() {
 	int n = 10;
-	#int res = sumUpTo(n);
+	int res = sumUpTo(n);
 	println(res);
 }
 
@@ -14,11 +14,6 @@ int sumUpTo(int n) {
 		i = i + 1;
 	} 
 	return sum;
-}
-
-void test(int a, int b, int c ){
-
-
 }
 
 
