@@ -70,7 +70,7 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
     }
 
     @Override
-    public Type visitMethod(OfpParser.MethodContext ctx) {
+    public Type visitMethod(OfpParser.MethodContext ctx) { //FIXME int[] bla(int[] arr) {
         StringBuilder sb = new StringBuilder();
         currentScope = scopes.get(ctx);
 
@@ -148,7 +148,7 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
         return null;
     }
 
-    @Override
+    @Override //FIXME int[] float[]
     public Type visitType(OfpParser.TypeContext ctx) {
         System.out.println("Visiting a type "   + ctx.getText());
         switch(ctx.getText()){
@@ -160,6 +160,9 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
                 return Type.CHAR_TYPE;
             case "void" :
                 return Type.VOID_TYPE;
+            case "bool" :
+                return Type.BOOLEAN_TYPE;
+
         }
 
 
@@ -196,13 +199,13 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
                 break;
 
             case 2: // id.length, new type
-            /*    for(int i=0; i<children; i++) {
+             /*   for(int i=0; i<children; i++) {
                     String id = ctx.getChild(i).getText();
-                    if(id.equals(".length")){
+                    if(id.equals("new")){
                         System.out.println("***************************************");
 
                     }
-                }*/
+                } */
                 break;
             default: // expr (multi|div|plus|minus|small|bigger|eq)
              //   if(children>=2){
@@ -252,7 +255,7 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
     @Override
     public Type visitLocalDecl(OfpParser.LocalDeclContext ctx) {
         System.out.println("local test "   + ctx.getText());
-
+    //FIXME doesn't work at all
         mg.getStatic(Type.getType(System.class), "out", Type.getType(PrintStream.class));
         mg.push("Hello LocalDecl!");
         mg.invokeVirtual(Type.getType(PrintStream.class), Method.getMethod("void println (String)"));
@@ -271,7 +274,7 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
         return null;
     }
     // declaration : type arrType? ID '=' (expr | arrType | array) SC ;
-    @Override
+    @Override // FIXME doesn't work for floats strings chars etc?
     public Type visitDeclaration(OfpParser.DeclarationContext ctx) {
         System.out.println("decl test "   + ctx.getText());
         Type declType = visit(ctx.getChild(0));

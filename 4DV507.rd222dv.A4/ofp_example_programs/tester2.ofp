@@ -3,6 +3,7 @@
 void main() {
 	int n = 1;
 	int b = 1 - 3 * 2;
+	#int[] a = new int[10];
 	#int res = sumUpTo(n);
 	println(res);
 }
