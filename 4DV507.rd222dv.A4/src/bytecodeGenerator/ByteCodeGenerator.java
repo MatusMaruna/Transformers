@@ -111,7 +111,7 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
 
 
 
-        visitChildren(ctx);
+       // visitChildren(ctx);
         return null;
     }
 
@@ -143,7 +143,6 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
 
     @Override
     public Type visitReturnStmt(OfpParser.ReturnStmtContext ctx) {
-        //mg.loadLocal(visit(ctx.getChild(1)));
         return null;
     }
 
@@ -168,11 +167,10 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
     @Override
     public Type visitVarType(OfpParser.VarTypeContext ctx) {
         if(ctx.getChildCount() > 1)
-        visit(ctx.getChild(1));
+       return visit(ctx.getChild(1));
         else
-        visit(ctx.getChild(0));
+       return  visit(ctx.getChild(0));
 
-        return null;
     }
 
     @Override
@@ -186,9 +184,9 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
         int children = ctx.getChildCount();
         switch (children) {
             case 1: // methodAccess, varType, arrType, arrayList
-                visit(ctx.getChild(0));
+                return visit(ctx.getChild(0));
                 //mg.push(10);
-                break;
+
 
             case 2: // id.length, new type
 
@@ -314,12 +312,14 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
     //print : ('println'|'print') '(' (expr|STR) ')' SC ;
     @Override
     public Type visitPrint(OfpParser.PrintContext ctx) {
+        System.out.println("Visiting print stmt");
         mg.getStatic(Type.getType(System.class), "out", Type.getType(PrintStream.class));
-        visit(ctx.getChild(2));
+        Type t = visit(ctx.getChild(2));
+        System.out.println("Print class name: " + t);
         if(!ctx.getChild(0).getText().equals("print")) {
-            mg.invokeVirtual(Type.getType(PrintStream.class), Method.getMethod("void println (String)"));
+            mg.invokeVirtual(Type.getType(PrintStream.class), Method.getMethod("void println (" + t.getClassName()+")"));
         }else{
-            mg.invokeVirtual(Type.getType(PrintStream.class), Method.getMethod("void print (String)"));
+            mg.invokeVirtual(Type.getType(PrintStream.class), Method.getMethod("void print ("+ t.getClassName()+")"));
         }
 
 
@@ -340,8 +340,12 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
                 return Type.INT_TYPE;
 
             case "ID":
-                mg.push(terminalNode.getText());
-                break;
+                //mg.push(terminalNode.getText());
+                Symbol s = currentScope.resolve(terminalNode.getText());
+                Type t = getTypeFromString(s.getType().toString());
+                mg.loadLocal(currentScope.getFunctionSymbol().indexOf(s), t);
+                System.out.println("CLASS NAME: " + getTypeFromString(s.getType().toString()).getClassName());
+                return getTypeFromString(s.getType().toString());
 
             case "FLOAT":
                 mg.push(new Double(terminalNode.getText()));
