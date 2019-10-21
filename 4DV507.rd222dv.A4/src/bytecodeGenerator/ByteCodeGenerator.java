@@ -250,23 +250,7 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
 
     @Override
     public Type visitLocalDecl(OfpParser.LocalDeclContext ctx) {
-        System.out.println("local test "   + ctx.getText());
-    //FIXME doesn't work at all
-
-     /*   if (ctx.getChildCount() == 3){
-            System.out.println("LOCAL DECL");
-            Type declType = visit(ctx.getChild(0));
-            System.out.println(declType.getClassName());
-            String id = ctx.getChild(1).getText();
-            int index = currentScope.getFunctionSymbol().indexOf(new Symbol(id, OfpType.Undef));
-            System.out.println(index);
-
-            mg.loadLocal(index, declType);
-            mg.storeLocal(index, declType);
-
-            System.out.println();
-        }*/
-
+    //    System.out.println("local test "   + ctx.getText());
         return null;
     }
     // declaration : type arrType? ID '=' (expr | arrType | array) SC ;
