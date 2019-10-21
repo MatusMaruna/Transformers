@@ -25,7 +25,6 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
     private ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_MAXS);
     GeneratorAdapter mg;
     String[] ruleNames;
-    Type declType;
 
     public ByteCodeGenerator(ParseTreeProperty<Scope> scopes, String progName) {
         this.scopes = scopes;
@@ -95,13 +94,13 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
 
         Method m = Method.getMethod(sb.toString());
         mg = new GeneratorAdapter(ACC_PUBLIC + ACC_STATIC, m, null, null, cw);
-        for(int i = 0; i < scopes.get(ctx).getFunctionSymbol().paramIndecies.size(); i++){
+    /*    for(int i = 0; i < scopes.get(ctx).getFunctionSymbol().paramIndecies.size(); i++){
             mg.loadArg(i);
-        }
+        }*/
 
 
         visit(ctx.getChild(ctx.getChildCount()-1));
-
+        mg.loadLocal(3);
         mg.returnValue();
         mg.endMethod();
 
@@ -155,6 +154,7 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
             case "int":
                 return Type.INT_TYPE;
             case "float":
+                System.out.println("DOUBLE HERE: " + Type.DOUBLE_TYPE);
                 return Type.DOUBLE_TYPE;
             case "char" :
                 return Type.CHAR_TYPE;
@@ -163,10 +163,7 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
             case "bool" :
                 return Type.BOOLEAN_TYPE;
 
-
         }
-
-
 
         return null;
     }
@@ -175,11 +172,10 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
     public Type visitVarType(OfpParser.VarTypeContext ctx) {
         // System.out.println("visiting vaaaaaaaaaaaaaaars");
         if(ctx.getChildCount() > 1)
-            visit(ctx.getChild(1));
+           return visit(ctx.getChild(1));
         else
-            visit(ctx.getChild(0));
+           return visit(ctx.getChild(0));
 
-        return null;
     }
 
     @Override
@@ -195,9 +191,8 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
         int children = ctx.getChildCount();
         switch (children) {
             case 1: // methodAccess, varType, arrType, arrayList
-                visit(ctx.getChild(0));
+               return visit(ctx.getChild(0));
                 //mg.push(10);
-                break;
 
             case 2: // id.length, new type
              /*   for(int i=0; i<children; i++) {
@@ -257,29 +252,29 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
     public Type visitLocalDecl(OfpParser.LocalDeclContext ctx) {
         System.out.println("local test "   + ctx.getText());
     //FIXME doesn't work at all
-        mg.getStatic(Type.getType(System.class), "out", Type.getType(PrintStream.class));
-        mg.push("Hello LocalDecl!");
-        mg.invokeVirtual(Type.getType(PrintStream.class), Method.getMethod("void println (String)"));
 
+     /*   if (ctx.getChildCount() == 3){
+            System.out.println("LOCAL DECL");
+            Type declType = visit(ctx.getChild(0));
+            System.out.println(declType.getClassName());
+            String id = ctx.getChild(1).getText();
+            int index = currentScope.getFunctionSymbol().indexOf(new Symbol(id, OfpType.Undef));
+            System.out.println(index);
 
-        Type declType = visit(ctx.getChild(0));
-        System.out.println(declType.getClassName());
-        String id = ctx.getChild(1).getText();
-        int index = currentScope.getFunctionSymbol().indexOf(new Symbol(id, OfpType.Undef));
-        System.out.println(index);
+            mg.loadLocal(index, declType);
+            mg.storeLocal(index, declType);
 
-        mg.storeLocal(index, declType);
-        System.out.println();
-
+            System.out.println();
+        }*/
 
         return null;
     }
     // declaration : type arrType? ID '=' (expr | arrType | array) SC ;
-    @Override // FIXME doesn't work for floats strings chars etc?
+    @Override // FIXME doesn't work for strings chars etc?
     public Type visitDeclaration(OfpParser.DeclarationContext ctx) {
         System.out.println("decl test "   + ctx.getText());
         Type declType = visit(ctx.getChild(0));
-        System.out.println(declType.getClassName());
+        System.out.println("className " + declType.getClassName());
         String id = ctx.getChild(1).getText();
         int index = currentScope.getFunctionSymbol().indexOf(new Symbol(id, OfpType.Undef));
         System.out.println(index);
@@ -295,6 +290,18 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
 
     @Override
     public Type visitAsgnStmt(OfpParser.AsgnStmtContext ctx) {
+
+        String id = ctx.getChild(0).getText();
+        System.out.println(id);
+        int index = currentScope.getFunctionSymbol().indexOf(new Symbol(id, OfpType.Undef));
+        System.out.println(index);
+        Type varType = visit(ctx.getChild(2));
+        System.out.println( varType);
+
+        mg.storeLocal(index, varType);
+
+        System.out.println();
+
         return null;
     }
 
@@ -398,11 +405,13 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
                 return Type.INT_TYPE;
             case "FLOAT":
                 mg.push(new Double(terminalNode.getText()));
+                System.out.println("DOUBLE " + Type.DOUBLE_TYPE);
+                System.out.println("DOUBLETEXT " + terminalNode.getText());
                 return Type.DOUBLE_TYPE;
-
             case "ID":
                 mg.push(terminalNode.getText());
                 break;
+
         }
 
 

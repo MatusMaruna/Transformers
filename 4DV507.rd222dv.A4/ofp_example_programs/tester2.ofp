@@ -1,20 +1,8 @@
 # while.txt
 
 void main() {
-	# float b;
-	int b = 1 - 3 * 2;
+	float b;
 	float a = 2.2;
-
-}
-
-int sumUpTo(int n) {
-	int i = 1;
-	int sum = 0;
-
-	return sum;
-}
-
-void test(int a, int b, int c ){
-
+	b = 1.3;
 
 }
