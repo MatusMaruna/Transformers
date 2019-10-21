@@ -350,6 +350,14 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
             case "FLOAT":
                 mg.push(new Double(terminalNode.getText()));
                 return Type.DOUBLE_TYPE;
+            case "STR":
+                StringBuilder sb = new StringBuilder();
+                sb.append(terminalNode.getText());
+                sb.deleteCharAt(0); // remove quotation marks
+                sb.deleteCharAt(sb.length()-1);
+                mg.push(sb.toString());
+                return Type.getType("java/lang/String");
+
         }
 
 
