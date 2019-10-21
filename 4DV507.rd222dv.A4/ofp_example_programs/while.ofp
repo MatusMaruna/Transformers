@@ -4,7 +4,7 @@ void main() {
 	int n = 10;
 	int res = sumUpTo(n);
 	println(res);
-	print(2);
+	println(2);
 }
 
 int sumUpTo(int n) {

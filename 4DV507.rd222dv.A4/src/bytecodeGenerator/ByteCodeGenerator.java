@@ -103,7 +103,7 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
 
 
         visit(ctx.getChild(ctx.getChildCount()-1)); // Body
-        mg.loadLocal(3);
+        mg.loadLocal(2);
         mg.returnValue();
         mg.endMethod();
 
@@ -202,7 +202,7 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
     @Override
     public Type visitMethodAccess(OfpParser.MethodAccessContext ctx) {
         System.out.println("MethodAccess name: " + ctx.getChild(0).getText());
-        String methodName = ctx.getChild(0).getText().toLowerCase();
+        String methodName = ctx.getChild(0).getText();
         Type methodType = getTypeFromString(globalScope.resolve(ctx.getChild(0).getText()).getType().toString());
         System.out.println("MethodAccess type: " + methodType.toString());
         System.out.println("MethodAccess params: "  + globalScope.getChild(ctx.getChild(0).getText()).getFunctionSymbol().paramIndecies.toString());
@@ -235,7 +235,7 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
         System.out.println("Type: " + methodType + ctx.getChild(0).getText() + ";" );
         Method m = Method.getMethod(sb.toString());
         System.out.println("Method: " + sb.toString());
-        mg.invokeStatic(Type.getType("L"+ ctx.getChild(0).getText() + ";" ),
+        mg.invokeStatic(Type.getType("L"+ progName + ";" ),
                 Method.getMethod(sb.toString()));
         //Store to calling variable;
 
