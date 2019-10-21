@@ -163,6 +163,7 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
             case "bool" :
                 return Type.BOOLEAN_TYPE;
 
+
         }
 
 
@@ -395,6 +396,9 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
             case "INT":
                 mg.push(new Integer(terminalNode.getText()));
                 return Type.INT_TYPE;
+            case "FLOAT":
+                mg.push(new Double(terminalNode.getText()));
+                return Type.DOUBLE_TYPE;
 
             case "ID":
                 mg.push(terminalNode.getText());

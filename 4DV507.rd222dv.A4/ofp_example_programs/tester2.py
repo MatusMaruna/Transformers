@@ -8,6 +8,5 @@ def test(a,b,c):
 #
 #  Program entry point - main 
 #
-n=1
 b=1-3*2
-print(res)
+a=2.2

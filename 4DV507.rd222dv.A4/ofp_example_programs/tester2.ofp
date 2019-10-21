@@ -1,11 +1,10 @@
 # while.txt
 
 void main() {
-	int n = 1;
+	# float b;
 	int b = 1 - 3 * 2;
-	#int[] a = new int[10];
-	#int res = sumUpTo(n);
-	println(res);
+	float a = 2.2;
+
 }
 
 int sumUpTo(int n) {

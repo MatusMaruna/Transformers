@@ -4,6 +4,8 @@ import java.io.PrintWriter;
 import pythonGenerator.PythonCodeGenerator;
 import symbolTable.ErrorListener;
 import symbolTable.*;
+
+import org.antlr.v4.gui.Trees;
 import org.antlr.v4.runtime.BufferedTokenStream;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
@@ -49,7 +51,7 @@ public class OfpMain {
 		}
 
 		// Display tree
-		//Trees.inspect(root, parser);
+		Trees.inspect(root, parser);
 
 		System.out.println("");
 		ParseTreeWalker walker = new ParseTreeWalker();

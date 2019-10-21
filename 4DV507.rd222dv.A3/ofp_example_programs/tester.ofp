@@ -1,14 +1,12 @@
 # tester.ofp
 
 void main() {
-int p = 3;
-string p = 3;  
-if(test()>i){
-int c = 1; 
-if(p>c){
-int d = 2; 
-}
-}
+	float b;
+	int b = 1 - 3 * 2;
+	float a = 2.2;
+	#int[] a = new int[10];
+	#int res = sumUpTo(n);
+	println(res);
 }
 
 int test(int t, int c, int p){

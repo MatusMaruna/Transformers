@@ -6,7 +6,7 @@ grammar Ofp;
 
 start : method* main method* ; 
 	  
-main: 'void' 'main' '(' ')' block ;
+main: 'void' 'main' '(' ')' block ; 
 
 method :  'void' ID '(' parameterList? ')' block | type ('['']')? ID '(' parameterList? ')' block ;
 

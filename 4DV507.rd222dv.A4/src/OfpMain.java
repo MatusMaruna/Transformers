@@ -6,6 +6,7 @@ import java.io.PrintWriter;
 import bytecodeGenerator.ByteCodeGenerator;
 import bytecodeGenerator.FunctionSymbol;
 import com.sun.tools.javac.Main;
+import org.antlr.v4.gui.Trees;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.util.CheckClassAdapter;
@@ -62,7 +63,7 @@ public class OfpMain {
 		}
 
 		// Display tree
-		//Trees.inspect(root, parser);
+		// Trees.inspect(root, parser);
 
 		System.out.println("");
 		ParseTreeWalker walker = new ParseTreeWalker();
