@@ -12,7 +12,7 @@ public class Scope {
 	private int next = 0; // visit next child
 	private Scope enclosingScope;
 	private Map<String, Symbol> symbols = new LinkedHashMap<String, Symbol>();
-	private ArrayList<Scope> scopeChildren = new ArrayList<>();
+	private Map<String, Scope> scopeChildren = new LinkedHashMap<>();
 	private FunctionSymbol fs = new FunctionSymbol();
 
 	// Useless
@@ -28,6 +28,14 @@ public class Scope {
 
 	public String getScopeType() {
 		return type;
+	}
+
+	public void addChild(Scope scope, String scopeName){
+		scopeChildren.put(scopeName, scope);
+	}
+
+	public Scope getChild(String scopeName){
+		return scopeChildren.get(scopeName);
 	}
 
 	public Scope getEnclosingScope() {
@@ -82,17 +90,11 @@ public class Scope {
 			}
 		});
 
-		scopeChildren.forEach((scope) -> {
-			scope.printScope();
-		});
+
 
 	}
 
-	public void resetScope() { // called after each traversal
-		next = 0;
-		for (int i = 0; i < scopeChildren.size(); i++)
-			scopeChildren.get(i).resetScope();
-	}
+
 
 	@Override
 	public String toString() {

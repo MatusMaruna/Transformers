@@ -1,6 +1,4 @@
 #
 #  Program entry point - main 
 #
-
-a=2.2
-print(a, end=" ")
+p=2.3-1.1

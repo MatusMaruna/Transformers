@@ -49,10 +49,10 @@ public class Mylistener implements ParseTreeListener {
 				currentScope.define(currentFunction);
 			}
 			if (resolveName(ctx) == "method") {
-				 currentFunction = new FunctionSymbol();
-				 currentFunction.setId(name);
-				 currentFunction.setType(OfpType.getType(type));
-				 currentScope.define(currentFunction);
+				currentFunction = new FunctionSymbol();
+				currentFunction.setId(name);
+				currentFunction.setType(OfpType.getType(type));
+				currentScope.define(currentFunction);
 			}
 			if (resolveName(ctx) == "ifStmt") {
 				name = "ifStmt " + countIf++;
@@ -75,6 +75,7 @@ public class Mylistener implements ParseTreeListener {
 			s = new Scope(currentScope, name);
 			s.setFunctionSymbol(currentFunction);
 			scopeList.add(s);
+			globalScope.addChild(s, name);
 			currentScope = s;
 			scopes.put(ctx, currentScope);
 

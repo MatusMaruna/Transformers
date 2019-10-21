@@ -1,8 +1,20 @@
 # while.txt
 
 void main() {
-	float b;
-	float a = 2.2;
-	print(a);
+    #float p; #int q; int r;
 
+	#int x = 100 + 666;
+	float p = 2.3 - 1.1;
+
+	#q = 99;
+	#r = 8 + 9;
+
+	#q = p+2;
+	#r = p+q*3;
+	#println(r);  # 14
+
+	#float a = 2.0 + 1.0 + 0.2345;
+	#float b = a+2.0;
+	#float c = a+b*3.0;
+	#println(c);   # 18.938
 }

@@ -1,8 +1,13 @@
-def test(t,c,p):
+def sumUpTo(n):
+    ofp_sum=0
+    return ofp_sum
 
 #
 #  Program entry point - main 
 #
 
-b=1.3
-a=2.2
+
+p=2
+q=2+3
+res=sumUpTo(n)
+print(res)
