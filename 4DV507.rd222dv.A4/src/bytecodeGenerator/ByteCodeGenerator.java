@@ -206,8 +206,12 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
                 if(ctx.getChild(0).getText().equals("new")){
                         System.out.println("************");
 
-                        mg.newArray(Type.INT_TYPE);
-                        mg.storeLocal(1, Type.getType(Object.class));
+                    mg.push(new Integer(3));
+                    mg.newArray(Type.INT_TYPE);
+                    mg.storeLocal(1, Type.getType(Object.class));
+                    mg.loadLocal(1, Type.getType(Object.class));
+                    /*    mg.newArray(Type.INT_TYPE);
+                        mg.storeLocal(1, Type.getType(Object.class));*/
                 }
                 break;
             default: // expr (multi|div|plus|minus|small|bigger|eq)
