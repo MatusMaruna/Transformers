@@ -162,6 +162,8 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
                 return Type.VOID_TYPE;
             case "bool" :
                 return Type.BOOLEAN_TYPE;
+            case "int[]":
+                return Type.getType(Object.class);
 
         }
 
@@ -189,24 +191,29 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
         System.out.println(ctx.getText());
 
         int children = ctx.getChildCount();
+        Type varType = null;
+
         switch (children) {
             case 1: // methodAccess, varType, arrType, arrayList
                return visit(ctx.getChild(0));
                 //mg.push(10);
 
             case 2: // id.length, new type
-             /*   for(int i=0; i<children; i++) {
-                    String id = ctx.getChild(i).getText();
-                    if(id.equals("new")){
-                        System.out.println("***************************************");
 
-                    }
-                } */
+                for(int i=0; i<children; i++) {
+                    varType = visit(ctx.getChild(i));
+                }
+                if(ctx.getChild(0).getText().equals("new")){
+                        System.out.println("************");
+
+                        mg.newArray(Type.INT_TYPE);
+                        mg.storeLocal(1, Type.getType(Object.class));
+                }
                 break;
             default: // expr (multi|div|plus|minus|small|bigger|eq)
                 if(children>=2){
                     // visits children which are of TYPE ??? //FIXME
-                    Type varType = null;
+
                     for(int i=0; i<children; i++) {
                         varType = visit(ctx.getChild(i));
                     }
@@ -293,6 +300,8 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
         return null;
     }
     // declaration : type arrType? ID '=' (expr | arrType | array) SC ;
+
+
     @Override // FIXME doesn't work for strings chars etc?
     public Type visitDeclaration(OfpParser.DeclarationContext ctx) {
         System.out.println("decl test "   + ctx.getText());
@@ -342,11 +351,13 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
 
     @Override
     public Type visitArray(OfpParser.ArrayContext ctx) {
+        visit(ctx.getChild(1));
         return null;
     }
 
     @Override
     public Type visitArrType(OfpParser.ArrTypeContext ctx) {
+        visitChildren(ctx);
         return null;
     }
 
@@ -440,7 +451,16 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
                 mg.loadLocal(currentScope.getFunctionSymbol().indexOf(s), t);
                 System.out.println("CLASS NAME: " + getTypeFromString(s.getType().toString()).getClassName());
                 return getTypeFromString(s.getType().toString());
-
+            case "STR":
+                StringBuilder sb = new StringBuilder();
+                sb.append(terminalNode.getText());
+                sb.deleteCharAt(0); // remove quotation marks
+                sb.deleteCharAt(sb.length()-1);
+                mg.push(sb.toString());
+                return Type.getType("java/lang/String");
+            case "ARR":
+                //mg.loadLocal
+                return Type.getType(Object.class);
         }
 
 

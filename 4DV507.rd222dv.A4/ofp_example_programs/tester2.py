@@ -1,4 +1,4 @@
 #
 #  Program entry point - main 
 #
-p=2.3-1.1
+a=[None]*3

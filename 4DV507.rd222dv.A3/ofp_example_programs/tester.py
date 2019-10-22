@@ -1,13 +1,6 @@
-def sumUpTo(n):
-    ofp_sum=0
-    return ofp_sum
-
 #
 #  Program entry point - main 
 #
-
-
-p=2
-q=2+3
-res=sumUpTo(n)
-print(res)
+x=100+666
+p=2.3-1.1
+a=[None]*3

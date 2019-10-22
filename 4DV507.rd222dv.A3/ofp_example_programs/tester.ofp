@@ -1,18 +1,7 @@
 # tester.ofp
 
 void main() {
-	int p; int q;
-	
-	p = 2;
-	
-	q = 2 + 3;
-	
-	int res = sumUpTo(n);
-	println(res);    # 55
-}
-
-int sumUpTo(int n) {
-	int sum = 0;
-	
-	return sum;
-}
+	int x = 100 + 666;
+	float p = 2.3 - 1.1;
+	int[] a = new int[3];
+	}
