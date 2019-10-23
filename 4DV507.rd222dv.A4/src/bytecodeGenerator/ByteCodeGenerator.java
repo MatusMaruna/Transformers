@@ -206,7 +206,7 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
                 //mg.push(10);
 
             case 2: // id.length, new type
-                //FIXME int[] a = new int[3]; expects Object or return and got I - because I visit children twice or because terminal case is weird?
+                //FIXME int[] a = new int[3]; expects Object or return and got I - because I visit children twice or because terminalNode case is weird?
                 if(ctx.getChild(0).getText().equals("new")){
                     varType = visit(ctx.getChild(1).getChild(1).getChild(1));
                     System.out.println("className " + varType.getClassName());
@@ -359,7 +359,7 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
         return null;
     }
 
-    @Override //FIXME Expected an object reference or a return address, but found D (for float[] c = {9.3,8.8};)
+    @Override //FIXME prints to console but not to .class (for float[] c = {9.3,8.8};) error probably in terminalNode
     public Type visitArray(OfpParser.ArrayContext ctx) {
         StringBuilder sb = new StringBuilder();
 
@@ -474,6 +474,12 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
                 mg.push(new Integer(terminalNode.getText()));
                     return Type.INT_TYPE;
             case "FLOAT":
+                if (terminalNode.getParent().getParent().getParent().getChild(0).getText().equals("{")){
+                    //FIXME :( instead of new Double - new Object? or vice versa? or elsewhere to fix?
+                    System.out.println("************************************* " + terminalNode.getText() );
+                    mg.push(new Double(terminalNode.getText()));
+                    return Type.getType(Object.class);
+                } else
                 mg.push(new Double(terminalNode.getText()));
                 System.out.println("DOUBLE " + Type.DOUBLE_TYPE);
                 System.out.println("DOUBLETEXT " + terminalNode.getText());
@@ -525,7 +531,7 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
         return cw.toByteArray();
     }
     public Type getTypeFromString(String s){
-        //FIXME terminal to make object type
+
         switch(s){
             case "int":
                 System.out.println("PRINT TEST getTYPEfromString");
@@ -533,6 +539,9 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
             case "float":
                 System.out.println("PRINT TEST getTYPEfromString FLOAT_TYPE");
                 return Type.FLOAT_TYPE;
+            case "float[]":
+                System.out.println("PRINT TEST getTYPEfromString FLOAT_TYPE[]");
+                return Type.getType(Object.class);
             case "string":
                 return Type.getType("java/lang/String");
             case "void":
