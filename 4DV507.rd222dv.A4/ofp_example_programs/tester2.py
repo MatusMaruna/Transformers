@@ -1,4 +1,5 @@
 #
 #  Program entry point - main 
 #
-a=[None]*3
+x=100+666
+p=2.3-1.1
