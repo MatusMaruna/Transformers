@@ -2,9 +2,9 @@
 
 void main() {
 
-        int x = 100 + 666;
-    	float p = 2.3 - 1.1;
-    	#int[] a = new int[3];
+        #int x = 100 + 666;
+    	#float p = 2.3 - 1.1;
+    	int[] a = new int[3];
         #int s = a.length;
         #float a = 2.0 + 1.0 + 0.2345;
         #int i = a.length;

@@ -163,6 +163,8 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
                 return Type.VOID_TYPE;
             case "bool" :
                 return Type.BOOLEAN_TYPE;
+            case "string":
+                return Type.getType("java/lang/String");
             case "int[]":
             case "float[]":
                 System.out.println("PRINT TEST visitTYPE[] ");
@@ -204,15 +206,11 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
                 //mg.push(10);
 
             case 2: // id.length, new type
-
+                //FIXME int[] a = new int[3]; expects Object or return and got I - because I visit children twice or because terminal case is weird?
                 if(ctx.getChild(0).getText().equals("new")){
                     varType = visit(ctx.getChild(1).getChild(1).getChild(1));
                     System.out.println("className " + varType.getClassName());
                     mg.newArray(varType);
-
-                    // FIXME hardcoded two lines
-                //    mg.storeLocal(1, Type.getType(Object.class));
-                //    mg.loadLocal(1, Type.getType(Object.class));
 
                     String id = ctx.getParent().getChild(1).getText();
                     System.out.println("***********ID: " + id);
@@ -225,6 +223,7 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
                 }
                 if(ctx.getChild(1).getText().equals(".length")){
                     System.out.println("LENGTH----------");
+                    visitChildren(ctx);
                 }
                 break;
             default: // expr (multi|div|plus|minus|small|bigger|eq)
@@ -360,7 +359,7 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
         return null;
     }
 
-    @Override //FIXME weird array print of float[] c = {9.3,8.8}; in .class
+    @Override //FIXME Expected an object reference or a return address, but found D (for float[] c = {9.3,8.8};)
     public Type visitArray(OfpParser.ArrayContext ctx) {
         StringBuilder sb = new StringBuilder();
 
@@ -467,7 +466,7 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
                 System.out.println("parent [ " + terminalNode.getParent().getParent().getParent().getChild(0).getText());
                 if (terminalNode.getParent().getParent().getParent().getChild(0).getText().equals("[")){
 
-                 //FIXME :( instead of new Integer - new Object? or am I pushing twice?
+                 //FIXME :( instead of new Integer - new Object? or am I pushing twice from expr ?
                     System.out.println("************************************* " + terminalNode.getText() );
                     mg.push(new Integer(terminalNode.getText()));
                     return Type.getType(Object.class);
@@ -481,6 +480,15 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
                 return Type.DOUBLE_TYPE;
             case "ID":
                 //mg.push(terminalNode.getText());
+                if (terminalNode.getParent().getChild(1).getText().equals(".length")){
+                    //FIXME maybe? "Exception: Expected I, but found R"
+                    // tested on: int[] a = new int[3]; int i = a.length;
+                    StringBuilder sb = new StringBuilder();
+                    sb.append(terminalNode.getText());
+
+                    mg.push(sb.toString());
+                    return Type.getType("java/lang/String");
+                }
                 Symbol s = currentScope.resolve(terminalNode.getText());
                 Type t = getTypeFromString(s.getType().toString());
                 System.out.println("currentScope.getFunctionSymbol().paramIndecies.toString() " + currentScope.getFunctionSymbol().paramIndecies.toString());
@@ -525,6 +533,8 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
             case "float":
                 System.out.println("PRINT TEST getTYPEfromString FLOAT_TYPE");
                 return Type.FLOAT_TYPE;
+            case "string":
+                return Type.getType("java/lang/String");
             case "void":
                 return Type.VOID_TYPE;
             case "int[]":
