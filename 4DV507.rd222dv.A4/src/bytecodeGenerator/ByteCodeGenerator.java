@@ -336,12 +336,27 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
 
     @Override
     public Type visitArray(OfpParser.ArrayContext ctx) {
+        int numOfVars = 0;
+        for(int i = 0; i<ctx.getChild(1).getChildCount(); i+=2) {
+            numOfVars++;
+        }
+        mg.push(numOfVars);
+        mg.newArray(Type.INT_TYPE);
+        int counter = 0;
+        for(int i = 0; i<ctx.getChild(1).getChildCount(); i+=2){
+            mg.dup();
+            mg.push(counter++);
+            Type t = visit(ctx.getChild(1).getChild(i));
+            mg.arrayStore(t);
+
+        }
         return null;
     }
 
     @Override
     public Type visitArrType(OfpParser.ArrTypeContext ctx) {
         visit(ctx.getChild(1));
+
 
         return null;
     }
@@ -469,7 +484,7 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
             case "void":
                 return Type.VOID_TYPE;
             case "int[]":
-                return Type.getType("[I");
+                return Type.getType(Object.class);
 
 
         }

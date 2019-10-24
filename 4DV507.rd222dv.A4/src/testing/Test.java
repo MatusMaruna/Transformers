@@ -2,12 +2,11 @@ public class Test {
 
     public static void main(String[] args) {
 
-        int[] i = new int[10];
-        i[5] = 1;
-
         System.out.println("Done");
-
-        double[] f = {9.3,8.8,17.5,1.0,2.1,3.2,4.4};
+        int[] y = new int[10];
+        int[] f = {9,8,17,1,2,3,4};
+        System.out.println(f);
+        int x = f[0];
 
 
     }
