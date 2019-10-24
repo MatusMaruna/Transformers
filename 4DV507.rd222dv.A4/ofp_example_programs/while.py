@@ -11,8 +11,11 @@ def sumUpTo(n):
 #  Program entry point - main 
 #
 n=10
+y=[None]*10
 f=[9,8,17,11,12,13,14]
-x=f[0]
+x=f[0+1]
+x=f[2]
+print(x)
 print(f)
 res=sumUpTo(n)
 print(res)

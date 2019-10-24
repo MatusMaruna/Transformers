@@ -355,7 +355,16 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
 
     @Override
     public Type visitArrType(OfpParser.ArrTypeContext ctx) {
-        visit(ctx.getChild(1));
+        if(ctx.getChildCount() == 4){
+            String arrayName = ctx.getChild(0).getText();
+            Symbol s = currentScope.resolve(arrayName);
+
+            visit(ctx.getChild(0));
+            visit(ctx.getChild(2));
+            mg.arrayLoad(Type.INT_TYPE);
+        }else {
+            visit(ctx.getChild(1));
+        }
 
 
         return null;
