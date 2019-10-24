@@ -107,7 +107,10 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
 
 
         visit(ctx.getChild(ctx.getChildCount() - 1)); // Body
-      // mg.loadArg(currentScope.getFunctionSymbol().indexOf(new Symbol("a", OfpType.Undef)));
+
+
+
+       // mg.loadLocal(2, Type.INT_TYPE);
         mg.returnValue();
         mg.endMethod();
 
@@ -151,19 +154,29 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
 
     @Override
     public Type visitType(OfpParser.TypeContext ctx) {
-        switch (ctx.getText()) {
+
+        Type t = null;
+        switch (ctx.getChild(0).getText()) {
             case "int":
-                return Type.INT_TYPE;
+                t = Type.INT_TYPE;
+                break;
             case "float":
-                return Type.DOUBLE_TYPE;
+                t = Type.DOUBLE_TYPE;
+                break;
             case "char":
-                return Type.CHAR_TYPE;
+                t = Type.CHAR_TYPE;
+                break;
             case "void":
-                return Type.VOID_TYPE;
+                t = Type.VOID_TYPE;
+                break;
+        }
+
+        if(ctx.getChildCount() >1) {
+            visit(ctx.getChild(1));
         }
 
 
-        return null;
+        return t;
     }
 
     @Override
@@ -190,6 +203,11 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
 
 
             case 2: // id.length, new type
+
+                if(ctx.getChild(0).equals("new")) {
+                Type t =  visit(ctx.getChild(1));
+
+                }
 
                 break;
             default: // expr (multi|div|plus|minus|small|bigger|eq) expr
@@ -233,6 +251,7 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
 
 
         if (!ctx.getChild(2).getText().equals(")")) {
+            System.out.println("METHOD ACCESS TEST: " + ctx.getChild(2).getText());
               visit(ctx.getChild(2));
         }
 
@@ -302,6 +321,10 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
 
     @Override
     public Type visitArrayList(OfpParser.ArrayListContext ctx) {
+        for(int i = 0; i<ctx.getChildCount(); i+=2) {
+            visit(ctx.getChild(i));
+
+        }
         return null;
     }
 
@@ -312,6 +335,8 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
 
     @Override
     public Type visitArrType(OfpParser.ArrTypeContext ctx) {
+        visit(ctx.getChild(1));
+
         return null;
     }
 
@@ -330,7 +355,7 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
         System.out.println(ctx.getChild(2).getChild(0).getText());
         int cmp = getCopSymbol(ctx.getChild(2).getChild(0).getChild(1).getText());
         mg.ifICmp(cmp, enterWhile); // Jump to loop body
-        mg.loadLocal(2, Type.INT_TYPE); // Push result
+        mg.loadLocal(2, Type.INT_TYPE); // Push result ???????
         mg.returnValue();
 
         return null;

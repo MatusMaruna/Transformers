@@ -1,28 +1,14 @@
-public class Test { 
+public class Test {
 
-public static void main(String[]args){
+    public static void main(String[] args) {
 
-int i = 0; 
-i = 5; 
-int y = 1; 
+        int[] i = new int[10];
+        i[5] = 1;
 
+        System.out.println("Done");
 
-}
-
-
-public void testMethod(){
-int r = 3; 
-int x = 0; 
-if(x > 3){
-x = 4; 
-int y = 0; 
-}
-
-	
-
-}
+        double[] f = {9.3,8.8,17.5,1.0,2.1,3.2,4.4};
 
 
-
-
+    }
 }

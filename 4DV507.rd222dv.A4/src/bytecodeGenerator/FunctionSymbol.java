@@ -29,7 +29,6 @@ public class FunctionSymbol extends Symbol {
         if(parSym.getType() == OfpType.Float){
             paramIndecies.put(parSym.getId(), varCount);
             varCount++;
-            varCount++;
         }else{
             paramIndecies.put(parSym.getId(), varCount);
             varCount++;

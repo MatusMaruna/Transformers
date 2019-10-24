@@ -11,5 +11,6 @@ def sumUpTo(n):
 #  Program entry point - main 
 #
 n=10
+x=[None]*10
 res=sumUpTo(n)
 print(res)
