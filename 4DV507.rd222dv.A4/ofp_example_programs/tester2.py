@@ -1,4 +1,4 @@
 #
 #  Program entry point - main 
 #
-a=[None]*3
+c=[9.3,8.8]

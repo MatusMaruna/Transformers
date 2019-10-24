@@ -234,12 +234,13 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
 
                 }
                 if(ctx.getChild(1).getText().equals(".length")){
-                    System.out.println("LENGTH----------");
-                    visitChildren(ctx);
+                    System.out.println("LENGTH----------" + ctx.getText() + " " + ctx.getChildCount());
+
+                    return visitChildren(ctx);
                 }
                 break;
             default: // expr (multi|div|plus|minus|small|bigger|eq)
-                if(children>=2){
+              //  if(children>=2){
                     for(int i=0; i<children; i++) {
                         varType = visit(ctx.getChild(i));
                     }
@@ -271,7 +272,7 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
                         }
                     }
                 }
-        }
+      //  }
         return null;
     }
 
@@ -373,7 +374,7 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
 
     @Override //FIXME prints to console but not to .class (for float[] c = {9.3,8.8};) weird output in .class (as two doubles)
     public Type visitArray(OfpParser.ArrayContext ctx) {
-        StringBuilder sb = new StringBuilder();
+    /*    StringBuilder sb = new StringBuilder();
 
         sb.append("{");
         if(ctx.getChild(1).getText() != "}"){ // if the method doesnt have 0 params
@@ -386,9 +387,26 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
         }
         sb.append("}");
 
-        System.out.println("sb.toString() " + sb.toString());
+        System.out.println("sb.toString() " + sb.toString());*/
+
         //visitChildren(ctx);
-        return null;
+
+        String id = ctx.getParent().getChild(1).getText();
+        System.out.println("***********ID: " + id);
+        int index = currentScope.getFunctionSymbol().indexOf(new Symbol(id, OfpType.Undef));
+        System.out.println(index);
+
+
+        Type varType = visit(ctx.getChild(1));
+        // varType = getTypeFromString(ctx.getChild(1).getChild(0).getText());
+        System.out.println("className " + varType.getClassName());
+
+        mg.newArray(varType);
+        mg.dup();
+        //   visit(ctx.getChild(1).getChild(1).getChild(1));
+        mg.storeLocal(index, Type.getType(Object.class));
+        return visitChildren(ctx);
+
     }
 
     @Override
@@ -495,12 +513,14 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
                 return Type.DOUBLE_TYPE;
             case "ID":
                 //mg.push(terminalNode.getText());
+                System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
                 if (terminalNode.getParent().getChild(1).getText().equals(".length")){
+                    System.out.println("**********************************************" + terminalNode.getText());
                     //FIXME maybe? "Exception: Expected I, but found R"
                     // tested on: int[] a = new int[3]; int i = a.length;
                     // one new arr is fixed this might work ?
                     StringBuilder sb = new StringBuilder();
-                    sb.append(terminalNode.getText());
+                    sb.append(terminalNode.getText() + terminalNode.getParent().getChild(1).getText());
 
                     mg.push(sb.toString());
                     return Type.getType("java/lang/String");
@@ -518,6 +538,7 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
                 System.out.println("CLASS NAME: " + getTypeFromString(s.getType().toString()).getClassName());
                 return getTypeFromString(s.getType().toString());
             case "STR":
+
                 StringBuilder sb = new StringBuilder();
                 sb.append(terminalNode.getText());
                 sb.deleteCharAt(0); // remove quotation marks
