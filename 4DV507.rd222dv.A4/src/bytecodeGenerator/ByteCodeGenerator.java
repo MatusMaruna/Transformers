@@ -397,16 +397,19 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
         System.out.println(index);
 
 
-        Type varType = visit(ctx.getChild(1));
+        Type varType = visit(ctx.getParent().getChild(0));
         // varType = getTypeFromString(ctx.getChild(1).getChild(0).getText());
         System.out.println(ctx.getChild(1).getText() + "//////////////////////");
         System.out.println("className " + varType.getClassName());
 
+        // from slides push - newArray - dup - store
+        visit(ctx.getChild(1));
         mg.newArray(varType);
         mg.dup();
-        visit(ctx.getChild(1));
+
         mg.storeLocal(index, Type.getType(Object.class));
 
+        //FIXME return something
         return null;
 
     }
