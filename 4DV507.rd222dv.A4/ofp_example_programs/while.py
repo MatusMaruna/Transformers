@@ -13,4 +13,3 @@ def sumUpTo(n):
 n=10
 res=sumUpTo(n)
 print(res)
-print("Wow")

@@ -3,8 +3,7 @@
 void main() {
 	int n = 10;
 	int res = sumUpTo(n);
-	println(res);
-	println("Wow");
+	println(res);    # 55
 }
 
 int sumUpTo(int n) {
@@ -13,12 +12,6 @@ int sumUpTo(int n) {
 	while (i < n+1) {
 		sum = sum + i;
 		i = i + 1;
-	} 
+	}
 	return sum;
 }
-
-
-	
-	
-
-

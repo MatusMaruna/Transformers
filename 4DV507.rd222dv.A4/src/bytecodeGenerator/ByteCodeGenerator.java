@@ -77,7 +77,7 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
         currentScope = scopes.get(ctx);
         System.out.println("Param indecies: " + currentScope.getFunctionSymbol().paramIndecies.toString());
         System.out.println("variable indecies: " + currentScope.getFunctionSymbol().variableIndecies.toString());
-        Type methodType = visit(ctx.getChild(0));
+        Type methodType = getTypeFromString(ctx.getChild(0).getText());
         String id = ctx.getChild(1).getText();
 
         sb.append(methodType.getClassName() + " ");
@@ -85,7 +85,10 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
         sb.append("(");
         if (ctx.getChild(3).getText() != ")") { // if the method doesnt have 0 params
             for (int i = 0; i < ctx.getChild(3).getChildCount(); i += 2) {
-                sb.append(visit(ctx.getChild(3).getChild(i)).getClassName());
+                String param = ctx.getChild(3).getChild(i).getChild(1).getText();
+                String strType = currentScope.resolve(param).getType().toString();
+                Type t = getTypeFromString(strType);
+                sb.append(t.getClassName());
                 if (i + 2 < ctx.getChild(3).getChildCount()) {
                     sb.append(",");
                 }
@@ -104,7 +107,8 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
 
 
         visit(ctx.getChild(ctx.getChildCount() - 1)); // Body
-        mg.loadLocal(2);
+      // mg.loadArg(currentScope.getFunctionSymbol().indexOf(new Symbol("a", OfpType.Undef)));
+        mg.loadLocal(3);
         mg.returnValue();
         mg.endMethod();
 
@@ -194,9 +198,11 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
                 int cop = getCopSymbol(ctx.getChild(1).getText());
                 visit(ctx.getChild(2));
                 if(cop != GeneratorAdapter.EQ && cop != GeneratorAdapter.GT && cop != GeneratorAdapter.LT){
+                    System.out.println(t);
+                    System.out.println(cop);
                     mg.math(cop, t);
                 }
-                break;
+               return t;
 
         }
         return null;
@@ -273,7 +279,13 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
     @Override
     public Type visitAsgnStmt(OfpParser.AsgnStmtContext ctx) {
         System.out.println("Visited assignment statement : " + ctx.getText());
+        String id = ctx.getChild(0).getText();
+        int index = currentScope.getFunctionSymbol().indexOf(new Symbol(id, OfpType.Undef));
+        Type varType = getTypeFromString((currentScope.resolve(id).getType().toString()));
+        visit(ctx.getChild(2));
+        mg.storeLocal(index, varType);
 
+        System.out.println();
 
 
         return null;
@@ -309,13 +321,12 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
         Label enterWhile = mg.mark(); // Loop body
         visit(ctx.getChild(ctx.getChildCount() - 1));
 
-
         mg.mark(exitWhile); // backpatching
         visit(ctx.getChild(2));  // visit condition
         System.out.println(ctx.getChild(2).getChild(0).getText());
         int cmp = getCopSymbol(ctx.getChild(2).getChild(0).getChild(1).getText());
         mg.ifICmp(cmp, enterWhile); // Jump to loop body
-        mg.loadLocal(2, Type.INT_TYPE); // Push result
+        mg.loadLocal(3, Type.INT_TYPE); // Push result
         mg.returnValue();
 
         return null;
@@ -418,7 +429,7 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
             case "int":
                 return Type.INT_TYPE;
             case "float":
-                return Type.FLOAT_TYPE;
+                return Type.DOUBLE_TYPE;
             case "void":
                 return Type.VOID_TYPE;
 

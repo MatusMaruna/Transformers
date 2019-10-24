@@ -1,6 +1,20 @@
-# recursion.ofp
 
 
 void main() {
-   int if = 1;
+    float f = 2.34;
+    float ff = 2.0;
+    int u = 5;
+    float fff = mult(f,u,ff);
+    println(fff);  # 4.68
+    println(fff);  # false
+
 }
+
+float mult(float a, int n, float b) {
+
+   return a * b;
+
+}
+
+
+

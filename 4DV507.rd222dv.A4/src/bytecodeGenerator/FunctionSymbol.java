@@ -16,17 +16,23 @@ public class FunctionSymbol extends Symbol {
 
     public void addVariable(Symbol varSym){
         if(varSym.getType() == OfpType.Float){
-            variableIndecies.put(varSym.getId(), varCount+=varCount+2);
+            variableIndecies.put(varSym.getId(), varCount);
+            varCount++;
+            varCount++;
         }else{
-            variableIndecies.put(varSym.getId(), varCount++);
+            variableIndecies.put(varSym.getId(), varCount);
+            varCount++;
         }
     }
 
     public void addParameter(ParamSymbol parSym){
         if(parSym.getType() == OfpType.Float){
-            paramIndecies.put(parSym.getId(), varCount+=varCount+2);
+            paramIndecies.put(parSym.getId(), varCount);
+            varCount++;
+            varCount++;
         }else{
-            paramIndecies.put(parSym.getId(), varCount++);
+            paramIndecies.put(parSym.getId(), varCount);
+            varCount++;
         }
     }
 
