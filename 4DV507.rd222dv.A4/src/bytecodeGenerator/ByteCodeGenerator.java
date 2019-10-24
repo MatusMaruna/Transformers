@@ -216,17 +216,21 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
                 mg.storeLocal(1, Type.getType(Object.class));
                  */
                 if(ctx.getChild(0).getText().equals("new")){
-                    varType = visit(ctx.getChild(1).getChild(1).getChild(1));
-                    System.out.println("className " + varType.getClassName());
-                    mg.newArray(varType);
-
                     String id = ctx.getParent().getChild(1).getText();
                     System.out.println("***********ID: " + id);
                     int index = currentScope.getFunctionSymbol().indexOf(new Symbol(id, OfpType.Undef));
                     System.out.println(index);
 
-                    visit(ctx.getChild(1).getChild(1).getChild(1));
-                    mg.storeLocal(index, varType);
+
+                    varType = visit(ctx.getChild(1).getChild(1).getChild(1));
+                   // varType = getTypeFromString(ctx.getChild(1).getChild(0).getText());
+                    System.out.println("className " + varType.getClassName());
+
+                    mg.newArray(varType);
+
+                 //   visit(ctx.getChild(1).getChild(1).getChild(1));
+                    mg.storeLocal(index, Type.getType(Object.class));
+                    
 
                 }
                 if(ctx.getChild(1).getText().equals(".length")){
@@ -472,8 +476,10 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
             case "INT":
 
                 System.out.println("parent [ " + terminalNode.getParent().getParent().getParent().getChild(0).getText());
-            /*    if (terminalNode.getParent().getParent().getParent().getChild(0).getText().equals("[")){
-                } else */
+              /*  if (terminalNode.getParent().getParent().getParent().getChild(0).getText().equals("[")){
+                    mg.loadLocal(new Integer(terminalNode.getText()));
+                    return Type.INT_TYPE;
+                } else*/
                 mg.push(new Integer(terminalNode.getText()));
                     return Type.INT_TYPE;
             case "FLOAT":
