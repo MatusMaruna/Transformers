@@ -230,7 +230,7 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
 
                  //   visit(ctx.getChild(1).getChild(1).getChild(1));
                     mg.storeLocal(index, Type.getType(Object.class));
-                    
+                    return visit(ctx.getChild(1).getChild(1).getChild(1));
 
                 }
                 if(ctx.getChild(1).getText().equals(".length")){
