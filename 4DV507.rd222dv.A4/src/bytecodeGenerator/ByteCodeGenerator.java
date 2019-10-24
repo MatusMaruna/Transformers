@@ -152,9 +152,11 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
         System.out.println("Visiting a type "   + ctx.getText());
         switch(ctx.getText()){
             case "int":
+            case "int[]":
                 System.out.println("PRINT TEST visitTYPE INT");
                 return Type.INT_TYPE;
             case "float":
+            case "float[]":
                 System.out.println("DOUBLE HERE: " + Type.DOUBLE_TYPE);
                 return Type.DOUBLE_TYPE;
             case "char" :
@@ -165,10 +167,10 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
                 return Type.BOOLEAN_TYPE;
             case "string":
                 return Type.getType("java/lang/String");
-            case "int[]":
-            case "float[]":
+         //   case "int[]":
+         /*   case "float[]":
                 System.out.println("PRINT TEST visitTYPE[] ");
-                return Type.getType(Object.class);
+                return Type.getType(Object.class);*/
 
         }
 
@@ -206,7 +208,13 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
                 //mg.push(10);
 
             case 2: // id.length, new type
-                //FIXME int[] a = new int[3]; expects Object or return and got I - because I visit children twice or because terminalNode case is weird?
+                //FIXME int[] a = new int[3]; "expected I, found R" - because I visit children twice or? Hardcoded
+                // version which works for arrays:
+                /*
+                mg.push(new Integer(3));
+                mg.newArray(Type.INT_TYPE);
+                mg.storeLocal(1, Type.getType(Object.class));
+                 */
                 if(ctx.getChild(0).getText().equals("new")){
                     varType = visit(ctx.getChild(1).getChild(1).getChild(1));
                     System.out.println("className " + varType.getClassName());
@@ -218,7 +226,7 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
                     System.out.println(index);
 
                     visit(ctx.getChild(1).getChild(1).getChild(1));
-                    mg.storeLocal(index, Type.getType(Object.class));
+                    mg.storeLocal(index, varType);
 
                 }
                 if(ctx.getChild(1).getText().equals(".length")){
@@ -359,7 +367,7 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
         return null;
     }
 
-    @Override //FIXME prints to console but not to .class (for float[] c = {9.3,8.8};) error probably in terminalNode
+    @Override //FIXME prints to console but not to .class (for float[] c = {9.3,8.8};) weird output in .class (as two doubles)
     public Type visitArray(OfpParser.ArrayContext ctx) {
         StringBuilder sb = new StringBuilder();
 
@@ -464,22 +472,17 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
             case "INT":
 
                 System.out.println("parent [ " + terminalNode.getParent().getParent().getParent().getChild(0).getText());
-                if (terminalNode.getParent().getParent().getParent().getChild(0).getText().equals("[")){
-
-                 //FIXME :( instead of new Integer - new Object? or am I pushing twice from expr ?
-                    System.out.println("************************************* " + terminalNode.getText() );
-                    mg.push(new Integer(terminalNode.getText()));
-                    return Type.getType(Object.class);
-                } else
+            /*    if (terminalNode.getParent().getParent().getParent().getChild(0).getText().equals("[")){
+                } else */
                 mg.push(new Integer(terminalNode.getText()));
                     return Type.INT_TYPE;
             case "FLOAT":
-                if (terminalNode.getParent().getParent().getParent().getChild(0).getText().equals("{")){
-                    //FIXME :( instead of new Double - new Object? or vice versa? or elsewhere to fix?
+             /*   if (terminalNode.getParent().getParent().getParent().getChild(0).getText().equals("{")){
+
                     System.out.println("************************************* " + terminalNode.getText() );
                     mg.push(new Double(terminalNode.getText()));
                     return Type.getType(Object.class);
-                } else
+                } else*/
                 mg.push(new Double(terminalNode.getText()));
                 System.out.println("DOUBLE " + Type.DOUBLE_TYPE);
                 System.out.println("DOUBLETEXT " + terminalNode.getText());
@@ -489,6 +492,7 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
                 if (terminalNode.getParent().getChild(1).getText().equals(".length")){
                     //FIXME maybe? "Exception: Expected I, but found R"
                     // tested on: int[] a = new int[3]; int i = a.length;
+                    // one new arr is fixed this might work ?
                     StringBuilder sb = new StringBuilder();
                     sb.append(terminalNode.getText());
 
@@ -534,21 +538,23 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
 
         switch(s){
             case "int":
+            case "int[]":
                 System.out.println("PRINT TEST getTYPEfromString");
                 return Type.INT_TYPE;
             case "float":
+            case "float[]":
                 System.out.println("PRINT TEST getTYPEfromString FLOAT_TYPE");
                 return Type.FLOAT_TYPE;
-            case "float[]":
+        /*    case "float[]":
                 System.out.println("PRINT TEST getTYPEfromString FLOAT_TYPE[]");
-                return Type.getType(Object.class);
+                return Type.getType(Object.class);*/
             case "string":
                 return Type.getType("java/lang/String");
             case "void":
                 return Type.VOID_TYPE;
-            case "int[]":
+         /*   case "int[]":
                 System.out.println("PRINT TEST getTYPEfromString[]");
-                return Type.getType(Object.class);
+                return Type.getType(Object.class);*/
 
 
 

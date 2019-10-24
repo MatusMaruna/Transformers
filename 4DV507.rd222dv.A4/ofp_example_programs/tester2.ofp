@@ -4,9 +4,9 @@ void main() {
 
         #int x = 100 + 666;
     	#float p = 2.3 - 1.1;
-    	#int[] a = new int[3];
+    	int[] a = new int[3];
         #int i = a.length;
-        float[] c = {9.3,8.8};
+        #float[] c = {9.3,8.8};
         #int x = 10;
         #int res = sumUpTo(x);
 
