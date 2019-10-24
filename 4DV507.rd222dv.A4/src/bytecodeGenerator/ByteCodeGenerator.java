@@ -128,6 +128,8 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
                 return Type.DOUBLE_TYPE;
             case "char":
                 return Type.CHAR_TYPE;
+            case "int[]":
+                return Type.getType("[I");
         }
         return null;
     }
@@ -158,6 +160,9 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
         Type t = null;
         switch (ctx.getChild(0).getText()) {
             case "int":
+                if(ctx.getChildCount() > 1 && ctx.getChild(1).getText().equals("[]")){
+                    return Type.getType("[I");
+                }
                 t = Type.INT_TYPE;
                 break;
             case "float":
@@ -204,8 +209,9 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
 
             case 2: // id.length, new type
 
-                if(ctx.getChild(0).equals("new")) {
+                if(ctx.getChild(0).getText().equals("new")) {
                 Type t =  visit(ctx.getChild(1));
+                mg.newArray(t);
 
                 }
 
@@ -434,6 +440,7 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
                 mg.push(sb.toString());
                 return Type.getType("java/lang/String");
 
+
         }
 
 
@@ -461,6 +468,8 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
                 return Type.DOUBLE_TYPE;
             case "void":
                 return Type.VOID_TYPE;
+            case "int[]":
+                return Type.getType("[I");
 
 
         }
