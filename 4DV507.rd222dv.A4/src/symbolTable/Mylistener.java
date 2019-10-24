@@ -46,6 +46,7 @@ public class Mylistener implements ParseTreeListener {
 				currentFunction = new FunctionSymbol();
 				currentFunction.setId(name);
 				currentFunction.setType(OfpType.getType(type));
+				currentFunction.varCount = 1;
 				currentScope.define(currentFunction);
 			}
 			if (resolveName(ctx) == "method") {

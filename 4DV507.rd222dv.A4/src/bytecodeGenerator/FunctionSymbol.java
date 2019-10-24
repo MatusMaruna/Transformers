@@ -8,7 +8,7 @@ import java.util.Map;
 
 public class FunctionSymbol extends Symbol {
 
-    private int varCount = 1;
+    public int varCount = 0;
     public Map<String,Integer> variableIndecies = new LinkedHashMap<String,Integer>();
     public Map<String,Integer> paramIndecies = new LinkedHashMap<String,Integer>();
 

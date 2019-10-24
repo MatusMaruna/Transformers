@@ -108,7 +108,6 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
 
         visit(ctx.getChild(ctx.getChildCount() - 1)); // Body
       // mg.loadArg(currentScope.getFunctionSymbol().indexOf(new Symbol("a", OfpType.Undef)));
-        mg.loadLocal(3);
         mg.returnValue();
         mg.endMethod();
 
@@ -146,6 +145,7 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
 
     @Override
     public Type visitReturnStmt(OfpParser.ReturnStmtContext ctx) {
+        visit(ctx.getChild(1));
         return null;
     }
 
@@ -233,14 +233,18 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
 
 
         if (!ctx.getChild(2).getText().equals(")")) {
-            //  visit(ctx.getChild(2));
+              visit(ctx.getChild(2));
         }
 
 
         //ID LOAD LOCAL VISIT TERMINAL ID
 
-        mg.loadLocal(s.getFunctionSymbol().indexOf(s.resolve("n")), getTypeFromString(s.resolve("n").getType().toString()));
+      /*  mg.loadLocal(s.getFunctionSymbol().indexOf(s.resolve("n")), getTypeFromString(s.resolve("n").getType().toString()));
         System.out.println("Load local: " + s.getFunctionSymbol().indexOf(s.resolve("n")) + " " + getTypeFromString(s.resolve("n").getType().toString()));
+       */
+
+
+
         Type t = Type.getType(methodType + ctx.getChild(0).getText() + ";");
         System.out.println("Type: " + methodType + ctx.getChild(0).getText() + ";");
         Method m = Method.getMethod(sb.toString());
@@ -326,7 +330,7 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
         System.out.println(ctx.getChild(2).getChild(0).getText());
         int cmp = getCopSymbol(ctx.getChild(2).getChild(0).getChild(1).getText());
         mg.ifICmp(cmp, enterWhile); // Jump to loop body
-        mg.loadLocal(3, Type.INT_TYPE); // Push result
+        mg.loadLocal(2, Type.INT_TYPE); // Push result
         mg.returnValue();
 
         return null;
@@ -387,7 +391,7 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
                 Type t = getTypeFromString(s.getType().toString());
                 System.out.println(currentScope.getFunctionSymbol().paramIndecies.toString());
                 if(currentScope.getFunctionSymbol().paramIndecies.containsKey(s.getId())){
-                    mg.loadArg(currentScope.getFunctionSymbol().indexOf(s)-1);
+                    mg.loadArg(currentScope.getFunctionSymbol().indexOf(s));
                 }else {
                     mg.loadLocal(currentScope.getFunctionSymbol().indexOf(s), t);
                 }
