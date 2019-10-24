@@ -304,15 +304,28 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
 
         return null;
     }
-
+   // asgnStmt : ID arrType? '=' expr SC ;
     @Override
     public Type visitAsgnStmt(OfpParser.AsgnStmtContext ctx) {
         System.out.println("Visited assignment statement : " + ctx.getText());
+        int length = ctx.getChildCount();
         String id = ctx.getChild(0).getText();
         int index = currentScope.getFunctionSymbol().indexOf(new Symbol(id, OfpType.Undef));
         Type varType = getTypeFromString((currentScope.resolve(id).getType().toString()));
-        visit(ctx.getChild(2));
-        mg.storeLocal(index, varType);
+
+        if(length == 5){
+            //load array aload
+            mg.loadLocal(index);
+            //iconst position
+            visit(ctx.getChild(1));
+            //iconst value
+            visit(ctx.getChild(3));
+            //iastore, below
+            mg.arrayStore(Type.INT_TYPE);
+        }else{
+            visit(ctx.getChild(2));
+            mg.storeLocal(index, Type.INT_TYPE);
+        }
 
         System.out.println();
 

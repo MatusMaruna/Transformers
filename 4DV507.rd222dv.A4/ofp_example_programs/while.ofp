@@ -5,6 +5,8 @@ void main() {
 	int[] y = new int[10];
 	int[] f = {9,8,17,11,12,13,14};
 	int x = f[0+1];
+	println(x);
+	f[2] = 2;
 	x = f[2];
 	println(x);
 	println(f);
