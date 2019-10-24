@@ -368,8 +368,8 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
 
     @Override
     public Type visitArrayList(OfpParser.ArrayListContext ctx) {
-        visitChildren(ctx);
-        return null;
+
+        return visitChildren(ctx);
     }
 
     @Override //FIXME prints to console but not to .class (for float[] c = {9.3,8.8};) weird output in .class (as two doubles)
@@ -399,13 +399,15 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
 
         Type varType = visit(ctx.getChild(1));
         // varType = getTypeFromString(ctx.getChild(1).getChild(0).getText());
+        System.out.println(ctx.getChild(1).getText() + "//////////////////////");
         System.out.println("className " + varType.getClassName());
 
         mg.newArray(varType);
         mg.dup();
-        //   visit(ctx.getChild(1).getChild(1).getChild(1));
+        visit(ctx.getChild(1));
         mg.storeLocal(index, Type.getType(Object.class));
-        return visitChildren(ctx);
+
+        return null;
 
     }
 
