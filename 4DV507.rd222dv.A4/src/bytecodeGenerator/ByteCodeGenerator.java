@@ -130,6 +130,8 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
                 return Type.CHAR_TYPE;
             case "int[]":
                 return Type.getType("[I");
+            case "float[]":
+                return Type.getType("[D");
         }
         return null;
     }
@@ -166,10 +168,16 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
                 t = Type.INT_TYPE;
                 break;
             case "float":
+                if(ctx.getChildCount() > 1 && ctx.getChild(1).getText().equals("[]")){
+                    return Type.getType("[D");
+                }
                 t = Type.DOUBLE_TYPE;
                 break;
             case "char":
                 t = Type.CHAR_TYPE;
+                if(ctx.getChildCount() > 1 && ctx.getChild(1).getText().equals("[]")){
+                    return Type.getType("[C");
+                }
                 break;
             case "void":
                 t = Type.VOID_TYPE;
@@ -319,12 +327,12 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
             //iconst position
             visit(ctx.getChild(1));
             //iconst value
-            visit(ctx.getChild(3));
+           Type t = visit(ctx.getChild(3));
             //iastore, below
-            mg.arrayStore(Type.INT_TYPE);
+            mg.arrayStore(t);
         }else{
-            visit(ctx.getChild(2));
-            mg.storeLocal(index, Type.INT_TYPE);
+            Type t = visit(ctx.getChild(2));
+            mg.storeLocal(index, t);
         }
 
         System.out.println();
@@ -354,7 +362,9 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
             numOfVars++;
         }
         mg.push(numOfVars);
-        mg.newArray(Type.INT_TYPE);
+        Type arrayType = visit(ctx.getParent().getChild(0));
+        arrayType = arrayMap(arrayType.getClassName());
+        mg.newArray(arrayType);
         int counter = 0;
         for(int i = 0; i<ctx.getChild(1).getChildCount(); i+=2){
             mg.dup();
@@ -368,19 +378,20 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
 
     @Override
     public Type visitArrType(OfpParser.ArrTypeContext ctx) {
+        Type t;
         if(ctx.getChildCount() == 4){
             String arrayName = ctx.getChild(0).getText();
             Symbol s = currentScope.resolve(arrayName);
 
             visit(ctx.getChild(0));
-            visit(ctx.getChild(2));
-            mg.arrayLoad(Type.INT_TYPE);
+            t = visit(ctx.getChild(2));
+            mg.arrayLoad(t);
         }else {
-            visit(ctx.getChild(1));
+           t =  visit(ctx.getChild(1));
         }
 
 
-        return null;
+        return t;
     }
 
 
@@ -507,11 +518,31 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
                 return Type.VOID_TYPE;
             case "int[]":
                 return Type.getType(Object.class);
+            case "float[]":
+                return Type.getType(Object.class);
+            case "char[]":
+                return Type.getType(Object.class);
+            case "string[]":
+                return Type.getType(Object.class);
 
 
         }
         return null;
 
+    }
+
+
+    public Type arrayMap(String s){
+        switch(s){
+            case "int[]":
+                return Type.INT_TYPE;
+            case "double[]":
+                return Type.DOUBLE_TYPE;
+            case "char[]":
+                return Type.CHAR_TYPE;
+        }
+
+        return null;
     }
 
 

@@ -18,6 +18,9 @@ print(x)
 f[2]=2
 x=f[2]
 print(x)
+print(f[3-1])
 print(f)
 res=sumUpTo(n)
 print(res)
+ff=[9.3,8.8,17.5,1.0,2.1,3.2,4.4]
+print(ff[0])
