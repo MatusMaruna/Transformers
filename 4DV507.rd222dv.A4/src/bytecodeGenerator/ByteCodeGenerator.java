@@ -13,6 +13,7 @@ import symbolTable.Scope;
 import symbolTable.Symbol;
 
 import java.io.PrintStream;
+import java.util.Stack;
 
 import static org.objectweb.asm.Opcodes.*;
 
@@ -25,6 +26,7 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
     private ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_MAXS);
     GeneratorAdapter mg;
     String[] ruleNames;
+    Stack<Label> labelStack = new Stack();
 
     public ByteCodeGenerator(ParseTreeProperty<Scope> scopes, String progName) {
         this.scopes = scopes;
@@ -247,6 +249,10 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
                     System.out.println(t);
                     System.out.println(cop);
                     mg.math(cop, t);
+                }else{
+                    if(!labelStack.isEmpty()){
+                        mg.ifICmp(cop, labelStack.pop());
+                    }
                 }
                return t;
 
@@ -421,12 +427,13 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
         visit(ctx.getChild(ctx.getChildCount() - 1));
 
         mg.mark(exitWhile); // backpatching
+        labelStack.push(enterWhile);
         visit(ctx.getChild(2));  // visit condition
         System.out.println(ctx.getChild(2).getChild(0).getText());
         int cmp = getCopSymbol(ctx.getChild(2).getChild(0).getChild(1).getText());
-        mg.ifICmp(cmp, enterWhile); // Jump to loop body
-        mg.loadLocal(2, Type.INT_TYPE); // Push result ???????
-        mg.returnValue();
+       // mg.ifICmp(cmp, enterWhile); // Jump to loop body
+       // mg.loadLocal(2, Type.INT_TYPE); // Push result ??????? FIXED
+      //  mg.returnValue();
 
         return null;
     }
