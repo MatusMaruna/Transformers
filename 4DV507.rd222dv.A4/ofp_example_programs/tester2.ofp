@@ -1,12 +1,9 @@
 # while.txt
 
 void main() {
-	int p = 3;
-	int q = 7;
-}
-
-int maxOfTwo(int a, int b) {
-   if (a > b)
-   	  int c = 2;
-
+   int small = 0;
+   int big = 10;
+    if(small < big){
+        println("Hello");
+    }
 }

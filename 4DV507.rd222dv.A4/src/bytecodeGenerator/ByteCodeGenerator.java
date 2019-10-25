@@ -25,6 +25,7 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
     private ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_MAXS);
     GeneratorAdapter mg;
     String[] ruleNames;
+    Label enterIf;
 
     public ByteCodeGenerator(ParseTreeProperty<Scope> scopes, String progName) {
         this.scopes = scopes;
@@ -385,21 +386,25 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
     @Override
     public Type visitIfStmt(OfpParser.IfStmtContext ctx) {
         //FIXME work in progress
-        Label enterIf = mg.mark();
         int cmp = getCopSymbol(ctx.getChild(2).getChild(0).getChild(1).getText());
         visit(ctx.getChild(2));
-        mg.ifICmp(cmp, enterIf);
+        Label exitIf = new Label();
+        mg.ifICmp(cmp, exitIf);
         visit(ctx.getChild(4));
-       /* Label exitIf = mg.mark();
-        mg.goTo(exitIf);*/
-        mg.loadLocal(2, Type.INT_TYPE); // Push result ???????
-        mg.returnValue();
-
+        mg.goTo(exitIf);
+        if (ctx.getChildCount() > 4) {
+            for (int i = 5; i < ctx.getChildCount(); i++) {
+                System.out.println("************** " + ctx.getChild(i).getText());
+                visit(ctx.getChild(i));
+            }
+        }
+        mg.mark(exitIf); // backpatching
         return null;
     }
 
     @Override
     public Type visitElseStmt(OfpParser.ElseStmtContext ctx) {
+        visit(ctx.getChild(1));
         return null;
     }
 

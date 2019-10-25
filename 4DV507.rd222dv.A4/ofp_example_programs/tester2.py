@@ -1,10 +1,8 @@
-def maxOfTwo(a,b):
-    if a>b:
-        c=2
-
-
 #
 #  Program entry point - main 
 #
-p=3
-q=7
+small=0
+big=10
+if small<big:
+    print("Hello")
+
