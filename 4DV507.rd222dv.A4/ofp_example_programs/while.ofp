@@ -2,6 +2,7 @@
 
 void main() {
 	int n = 10;
+	int p = 20;
 	int[] y = new int[10];
 	int[] f = {9,8,17,11,12,13,14};
 	int x = f[0+1];
@@ -23,6 +24,10 @@ void main() {
 	println(res);    # 55
 	float[] ff = {9.3,8.8,17.5,1.0,2.1,3.2,4.4};
     println(ff[0]);   # 9.3
+    bool t = retTru();
+    println(t);
+    int xx = ff.length;
+    println(ff[ff.length - 2]);
 }
 
 int sumUpTo(int n) {
@@ -33,4 +38,9 @@ int sumUpTo(int n) {
 		i = i + 1;
 	}
 	return sum;
+}
+
+bool retTru(){
+
+return true;
 }

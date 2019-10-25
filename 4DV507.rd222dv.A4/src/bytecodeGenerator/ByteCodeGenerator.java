@@ -134,6 +134,8 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
                 return Type.getType("[I");
             case "float[]":
                 return Type.getType("[D");
+            case "bool":
+                return Type.BOOLEAN_TYPE;
         }
         return null;
     }
@@ -187,6 +189,9 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
             case "void":
                 t = Type.VOID_TYPE;
                 break;
+            case "bool":
+                t = Type.BOOLEAN_TYPE;
+                break;
         }
 
         if(ctx.getChildCount() >1) {
@@ -221,14 +226,18 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
 
 
             case 2: // id.length, new type
-
+                Type t1;
                 if(ctx.getChild(0).getText().equals("new")) {
-                Type t =  visit(ctx.getChild(1));
-                mg.newArray(t);
+                t1 =  visit(ctx.getChild(1));
+                mg.newArray(t1);
 
+                }else{
+                    visit(ctx.getChild(0));
+                    t1 = Type.INT_TYPE;
+
+                    mg.arrayLength();
                 }
-
-                break;
+                return t1;
             default: // expr (multi|div|plus|minus|small|bigger|eq) expr
 
               Type t =  visit(ctx.getChild(0));
@@ -242,7 +251,7 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
                return t;
 
         }
-        return null;
+        //return null;
     }
 
     // methodAccess : ID? '(' expr ')';
@@ -264,12 +273,14 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
             sb.append(getTypeFromString(s.resolve(key).getType().toString()).getClassName());
             sb.append(",");
         }
-        sb.deleteCharAt(sb.lastIndexOf(","));
+        if(sb.lastIndexOf(",") != -1) {
+            sb.deleteCharAt(sb.lastIndexOf(","));
+        }
 
         sb.append(")");
 
 
-        if (!ctx.getChild(2).getText().equals(")")) {
+        if (!ctx.getChild(2).getText().equals(")") && !ctx.getChild(2).getText().equals("")) {
             System.out.println("METHOD ACCESS TEST: " + ctx.getChild(2).getText());
               visit(ctx.getChild(2));
         }
@@ -501,7 +512,13 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
             case "CHAR":
                 mg.push(new Character(terminalNode.getText().charAt(1)));
                 return Type.CHAR_TYPE;
-
+            case "BOOL":
+                if(terminalNode.getText().equals("true")) {
+                    mg.push(new Boolean(true));
+                }else {
+                    mg.push(new Boolean(false));
+                }
+                return Type.BOOLEAN_TYPE;
 
         }
 
@@ -544,6 +561,8 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
                 return Type.getType(Object.class);
             case "char":
                 return Type.CHAR_TYPE;
+            case "bool":
+                return Type.BOOLEAN_TYPE;
 
 
         }
@@ -556,7 +575,6 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
         System.out.println("ARRAY MAP : " + s);
         switch(s){
             case "int[]":
-                System.out.println("return");
                 return Type.INT_TYPE;
             case "double[]":
                 return Type.DOUBLE_TYPE;
