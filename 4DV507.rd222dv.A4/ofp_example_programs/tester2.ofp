@@ -1,9 +1,13 @@
 # while.txt
 
 void main() {
-   int small = 0;
-   int big = 10;
-    if(small < big){
-        println("Hello");
-    }
+
+}
+int max(int a, int b) {
+    int m;
+    if (a > b)
+        m = a;
+    else
+        m = b;
+    return m;
 }

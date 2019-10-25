@@ -388,17 +388,19 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
         //FIXME work in progress
         int cmp = getCopSymbol(ctx.getChild(2).getChild(0).getChild(1).getText());
         visit(ctx.getChild(2));
-        Label exitIf = new Label();
-        mg.ifICmp(cmp, exitIf);
+        Label enterIf = new Label();
+        mg.ifICmp(cmp, enterIf);
         visit(ctx.getChild(4));
+        Label exitIf = new Label();
         mg.goTo(exitIf);
+        mg.mark(enterIf);
         if (ctx.getChildCount() > 4) {
             for (int i = 5; i < ctx.getChildCount(); i++) {
                 System.out.println("************** " + ctx.getChild(i).getText());
                 visit(ctx.getChild(i));
             }
         }
-        mg.mark(exitIf); // backpatching
+        mg.mark(exitIf);// backpatching
         return null;
     }
 
