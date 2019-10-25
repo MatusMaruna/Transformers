@@ -58,7 +58,7 @@ expr : 	| methodAccess
         | arrType        
      ;
      
-methodAccess : ID? '(' expr ')';
+methodAccess : ID? '(' (expr|'') ')';
 			
 localDecl: type arrType? ID SC ;
 

@@ -1,15 +1,12 @@
 # while.txt
 
 void main() {
-
-        #int x = 100 + 666;
-    	#float p = 2.3 - 1.1;
-    	#int[] a = new int[10];
-        #int i = a.length;
-        int[] c = {9,8};
-        #int x = 10;
-        #int res = sumUpTo(x);
-
-
+	int p = 3;
+	int q = 7;
 }
 
+int maxOfTwo(int a, int b) {
+   if (a > b)
+   	  int c = 2;
+
+}

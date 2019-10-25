@@ -1,10 +1,14 @@
 # tester.ofp
 
 void main() {
-	int x = 100 + 666;
-    	float p = 2.3 - 1.1;
-    	int[] a = new int[3];
-        int s = a.length;
-	float[] c = {9.3,8.8};
+	int p = 3;
+	int q = 7;
+	int m = maxOfTwo();
 }
 
+int maxOfTwo() {
+   if (a > b)
+   	  return a;
+   else
+      return b;
+}

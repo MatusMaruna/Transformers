@@ -1,4 +1,10 @@
+def maxOfTwo(a,b):
+    if a>b:
+        c=2
+
+
 #
 #  Program entry point - main 
 #
-c=[9,8]
+p=3
+q=7
