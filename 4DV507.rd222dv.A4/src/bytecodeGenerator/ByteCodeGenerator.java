@@ -126,6 +126,8 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
                 return Type.INT_TYPE;
             case "float":
                 return Type.DOUBLE_TYPE;
+            case "string":
+                return Type.getType(String.class);
             case "char":
                 return Type.CHAR_TYPE;
             case "int[]":
@@ -174,10 +176,13 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
                 t = Type.DOUBLE_TYPE;
                 break;
             case "char":
-                t = Type.CHAR_TYPE;
                 if(ctx.getChildCount() > 1 && ctx.getChild(1).getText().equals("[]")){
                     return Type.getType("[C");
                 }
+                t = Type.CHAR_TYPE;
+                break;
+            case "string":
+                t = Type.getType("java/lang/String");
                 break;
             case "void":
                 t = Type.VOID_TYPE;
@@ -382,9 +387,9 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
         if(ctx.getChildCount() == 4){
             String arrayName = ctx.getChild(0).getText();
             Symbol s = currentScope.resolve(arrayName);
-
-            visit(ctx.getChild(0));
-            t = visit(ctx.getChild(2));
+            t = arrayMap(s.getType().toString());
+            arrayMap(visit(ctx.getChild(0)).getClassName()); //CHANGED!
+            visit(ctx.getChild(2));
             mg.arrayLoad(t);
         }else {
            t =  visit(ctx.getChild(1));
@@ -441,6 +446,11 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
         System.out.println("Visiting print stmt");
         mg.getStatic(Type.getType(System.class), "out", Type.getType(PrintStream.class));
         Type t = visit(ctx.getChild(2));
+        String type = t.getClassName();
+        if(type == null){
+            t = getTypeFromString(t.toString());
+            type = t.getClassName();
+        }
         System.out.println("Print class name: " + t);
         if (!ctx.getChild(0).getText().equals("print")) {
             mg.invokeVirtual(Type.getType(PrintStream.class), Method.getMethod("void println (" + t.getClassName() + ")"));
@@ -486,7 +496,11 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
                 sb.deleteCharAt(0); // remove quotation marks
                 sb.deleteCharAt(sb.length() - 1);
                 mg.push(sb.toString());
-                return Type.getType("java/lang/String");
+                return Type.getType(String.class);
+
+            case "CHAR":
+                mg.push(new Character(terminalNode.getText().charAt(1)));
+                return Type.CHAR_TYPE;
 
 
         }
@@ -516,6 +530,10 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
                 return Type.DOUBLE_TYPE;
             case "void":
                 return Type.VOID_TYPE;
+            case "java/lang/String":
+                return Type.getType(String.class);
+            case "string":
+                return Type.getType(String.class);
             case "int[]":
                 return Type.getType(Object.class);
             case "float[]":
@@ -524,6 +542,8 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
                 return Type.getType(Object.class);
             case "string[]":
                 return Type.getType(Object.class);
+            case "char":
+                return Type.CHAR_TYPE;
 
 
         }
@@ -533,13 +553,19 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
 
 
     public Type arrayMap(String s){
+        System.out.println("ARRAY MAP : " + s);
         switch(s){
             case "int[]":
+                System.out.println("return");
                 return Type.INT_TYPE;
             case "double[]":
                 return Type.DOUBLE_TYPE;
+            case "float[]":
+                return Type.DOUBLE_TYPE;
             case "char[]":
                 return Type.CHAR_TYPE;
+            case "java.lang.Object":
+                return Type.getType(Object.class);
         }
 
         return null;
