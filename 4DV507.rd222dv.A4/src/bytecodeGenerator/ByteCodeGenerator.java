@@ -115,7 +115,9 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
 
 
        // mg.loadLocal(2, Type.INT_TYPE);
-        mg.returnValue();
+        if(ctx.getChild(0).getText().equals("void") || ctx.getChild(0).getText().equals("\'void\'")) {
+            mg.returnValue();
+        }
         mg.endMethod();
 
 
@@ -163,6 +165,7 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
     @Override
     public Type visitReturnStmt(OfpParser.ReturnStmtContext ctx) {
         visit(ctx.getChild(1));
+        mg.returnValue();
         return null;
     }
 
@@ -241,10 +244,15 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
                 mg.newArray(t1);
 
                 }else{
-                    visit(ctx.getChild(0));
+                   Type t =  visit(ctx.getChild(0));
                     t1 = Type.INT_TYPE;
-
-                    mg.arrayLength();
+                    System.out.println(t.getClassName());
+                    if(t.getClassName().equals("java.lang.String")){
+                        mg.invokeVirtual(Type.getType(String.class),
+                                Method.getMethod("int length()"));
+                    }else {
+                        mg.arrayLength();
+                    }
                 }
                 return t1;
             default: // expr (multi|div|plus|minus|small|bigger|eq) expr
@@ -491,9 +499,11 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
     //elseStmt : ('else' (stmt|block)) ;
     @Override
     public Type visitElseStmt(OfpParser.ElseStmtContext ctx) {
+        currentScope = scopes.get(ctx);
         Label enterElse = new Label();
         System.out.println("Visiting elseStmt");
         visit(ctx.getChild(1));
+        currentScope = currentScope.getEnclosingScope();
         return null;
     }
 
