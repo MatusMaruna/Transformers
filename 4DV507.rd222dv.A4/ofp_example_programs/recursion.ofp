@@ -35,7 +35,7 @@ void main() {
    int res = mult(p,q);
    println(res);   # 39
    
-   res = div(q,p);
+    res = div(q,p);
    println(res);  # 4
    
    int n = 8;

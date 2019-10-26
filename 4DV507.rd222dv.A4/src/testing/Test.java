@@ -10,7 +10,7 @@ public static void main(String[]args){
 }
 
 
-    Boolean contains(String str, char ch) {
+    boolean contains(String str, char ch) {
         int i=0;
         while (i<str.length()) {
             char p = str.charAt(i);
@@ -20,7 +20,6 @@ public static void main(String[]args){
         }
         return false;
     }
-
 
 
 

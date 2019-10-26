@@ -10,24 +10,7 @@ void main() {
 	println(s);
 	println(f[0]);
    println("Testing");
-   println(f);
 	println(x);
-	f[2] = 2;
-	x = f[2];
-	char[] charArr = {'a','b','c','d','e','f'};
-	println(charArr[0]);
-	println(x);
-	println("Here");
-	println(f[4-1]);
-	println(f);
-	int res = sumUpTo(n);
-	println(res);    # 55
-	float[] ff = {9.3,8.8,17.5,1.0,2.1,3.2,4.4};
-    println(ff[0]);   # 9.3
-    bool t = retTru();
-    println(t);
-    int xx = ff.length;
-    println(ff[ff.length - 2]);
 
 
 

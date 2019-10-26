@@ -115,9 +115,7 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
 
 
        // mg.loadLocal(2, Type.INT_TYPE);
-        if(ctx.getChild(0).getText().equals("void") || ctx.getChild(0).getText().equals("\'void\'")) {
-            mg.returnValue();
-        }
+        mg.returnValue();
         mg.endMethod();
 
 
@@ -262,15 +260,30 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
                 System.err.println("EXPR1: " + ctx.getChild(0).getText());
                 System.err.println("COP SYMBOL: " + ctx.getChild(1).getText());
                 System.err.println("EXPR2: " + ctx.getChild(2).getText());
+
+
+                if(ctx.getChild(2).getChild(0).getChildCount() > 2 &&
+                        (cop == GeneratorAdapter.ADD  || cop == GeneratorAdapter.DIV || cop == GeneratorAdapter.MUL ||
+                cop == GeneratorAdapter.SUB) && ctx.getChild(2).getChild(0).getChild(1).getText().equals(",")){
+                    visit(ctx.getChild(2).getChild(0).getChild(0)) ;
+                    mg.math(cop, t);
+                    for(int i = 1; i<ctx.getChild(2).getChild(0).getChildCount(); i++){
+                        visit(ctx.getChild(2).getChild(0).getChild(i));
+                    }
+                }else{
+
+
+
                 visit(ctx.getChild(2));
                 if(cop != GeneratorAdapter.EQ && cop != GeneratorAdapter.GT && cop != GeneratorAdapter.LT){
                     System.out.println(t);
                     System.out.println(cop);
                     mg.math(cop, t);
-                }else{
-                    if(!labelStack.isEmpty()){
+                }else {
+                    if (!labelStack.isEmpty()) {
                         mg.ifCmp(t, cop, labelStack.pop());
                     }
+                }
                 }
                return t;
 
@@ -394,11 +407,12 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
 
     @Override
     public Type visitArrayList(OfpParser.ArrayListContext ctx) {
+        Type t = null;
         for(int i = 0; i<ctx.getChildCount(); i+=2) {
-            visit(ctx.getChild(i));
+          t =  visit(ctx.getChild(i));
 
         }
-        return null;
+        return t;
     }
 
     @Override
@@ -493,6 +507,7 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
             visit(ctx.getChild(5));
         }
         mg.mark(endIf);
+        //mg.returnValue(); // t
         currentScope = currentScope.getEnclosingScope();
         return null;
     }
