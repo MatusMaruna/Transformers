@@ -399,9 +399,18 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
 
         return null;
     }
-
+  //  methodCall : ID '(' varType* ')' SC ;
     @Override
     public Type visitMethodCall(OfpParser.MethodCallContext ctx) {
+        System.out.println("MethodAccess name: " + ctx.getChild(0).getText());
+        String methodName = ctx.getChild(0).getText();
+        System.out.println(methodName);
+        System.out.println(globalScope.resolve(ctx.getChild(0).getText()));
+        Type methodType = getTypeFromString(globalScope.resolve(ctx.getChild(0).getText()).getType().toString());
+        System.out.println("MethodAccess type: " + methodType.toString());
+        System.out.println("MethodAccess params: " + globalScope.getChild(ctx.getChild(0).getText()).getFunctionSymbol().paramIndecies.toString());
+
+
         return null;
     }
 
@@ -529,6 +538,10 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
         mg.push(1);
         mg.math(GeneratorAdapter.ADD, Type.INT_TYPE);*/
         visit(ctx.getChild(0));
+        if(ctx.getChild(0).getChildCount() == 1){
+            mg.push(new Boolean(true));
+            mg.ifCmp(Type.BOOLEAN_TYPE, GeneratorAdapter.EQ, labelStack.pop());
+        }
         return null;
     }
 
@@ -672,6 +685,9 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
                 return Type.getType("[C");
             case "bool":
                 return Type.BOOLEAN_TYPE;
+            case "void":
+                return Type.VOID_TYPE;
+
         }
         return null;
     }

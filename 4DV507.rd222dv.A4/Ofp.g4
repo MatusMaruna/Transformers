@@ -66,7 +66,7 @@ declaration : type arrType? ID '=' (expr | arrType | array) SC ;
 
 asgnStmt : ID arrType? '=' expr SC ;
 
-methodCall : ID '(' varType* ')' SC ;
+methodCall : ID '(' arrayList ')' SC ;
 
 arrayList : varType (',' varType)* ;
 

@@ -1,24 +1,24 @@
 public class Test { 
 
 public static void main(String[]args){
-    String s = "Hello";
-    char c = s.charAt(0);
-    System.out.println(c);
+    char[] charArr = {'a','b','c','d','e','f'};
+    printArray(charArr);
 
 
 
 }
 
 
-    boolean contains(String str, char ch) {
-        int i=0;
-        while (i<str.length()) {
-            char p = str.charAt(i);
-            if (p == ch)
-                return true;
-            i = i+1;
+    static void printArray(char[] arr) {
+        System.out.print(arr[0]);
+        int i = 0;
+        while(i<arr.length) {
+            char c = arr[i];
+            System.out.print(" ");
+           System.out.print(c);
+            i = i + 1;
         }
-        return false;
+        System.out.println("");
     }
 
 

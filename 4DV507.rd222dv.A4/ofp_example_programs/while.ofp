@@ -1,33 +1,43 @@
 # while.txt
 
 void main() {
-	int n = 10;
-	int p = 20;
-	int[] y = new int[10];
-	int[] f = {9,8,17,11,12,13,14};
-	int x = f[0+1];
-	string s = "test";
-	println(s);
-	println(f[0]);
-   println("Testing");
-	println(x);
+
+    char[] charArr = {'a','b','c','d','e','f'};
+	printArray(c);
 
 
 
 }
 
-int sumUpTo(int n) {
-    int[] x = new int[10];
-	int i = 1;
-	int sum = 0;
-	while (i < n+1) {
-		sum = sum + i;
+# True if str contains both X and Y
+bool containsXandY(string str) {
+   if ( contains(str,'X') ) {
+      if ( contains(str,'Y') )
+         return true;
+   }
+   return false;
+}
+
+void printArray(char[] arr) {
+	print(arr[0]);   # First element
+	int i = 0;
+	while(i<arr.length) {
+		char c = arr[i];
+		print(" ");
+		print(c);
 		i = i + 1;
 	}
-	return sum;
+	println("");
 }
 
-bool retTru(){
 
-return true;
+bool contains(string str, char ch) {
+   int i=0;
+   while (i<str.length) {
+      char p = str[i];
+      if (p == ch)
+         return true;
+      i = i+1;
+   }
+   return false;
 }
