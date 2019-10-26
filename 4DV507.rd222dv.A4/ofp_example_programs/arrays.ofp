@@ -1,4 +1,4 @@
-# arrays.ofp
+# arrays.txt
 
 void main() {
 	int[] a = new int[10];
@@ -13,7 +13,7 @@ void main() {
 	int[] rev = reverse(a);
 	printArray(rev);
 	
-	float[] f = {9.3,8.8,17.5,1.0,2.1,3.2,4.4};
+	float[] f = {9.3,8.8,17.5,1.0,2.1,3.2, 4.4};
 	println(f[0]);   # 9.3
 	float max = findMax(f);
 	println(max);    # 17.5

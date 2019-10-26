@@ -63,7 +63,7 @@ public class OfpMain {
 		}
 
 		// Display tree
-		Trees.inspect(root, parser);
+		// Trees.inspect(root, parser);
 
 		System.out.println("");
 		ParseTreeWalker walker = new ParseTreeWalker();

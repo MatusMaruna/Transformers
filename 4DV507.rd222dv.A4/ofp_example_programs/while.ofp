@@ -1,53 +1,23 @@
 # while.txt
 
 void main() {
-	int p = 3;
-	int q = 7;
-	int res = maxOfTwo(p,q);
-	println(res);        # 7
-
-	res = maxOfThree(p,q,9);
-	println(res);      # 9
-
+	int n = 10;
+	int res = sumUpTo(n);
+	println(res);    # 55
 }
 
-int maxOfTwo(int a, int b) {
-   if (a > b)
-   	  return a;
-   else
-      return b;
-}
-
-
-int maxOfThree(int a, int b, int c) {
-   if (a > b) {
-      if (a > c)
-   	  	 return a;
-   	  else if (c > a)
-   	     return c;
-   	  else # c == a
-   	     return c;
-   } else {
-      if (b > c)
-   	  	 return b;
-   	  else if (c > b)
-   	     return c;
-   	  else # c == b
-   	     return c;
-   }
-}
-
+# Computes 1+2+3+...+n) 
 int sumUpTo(int n) {
 	int i = 1;
 	int sum = 0;
 	while (i < n+1) {
 		sum = sum + i;
 		i = i + 1;
-	}
+	} 
 	return sum;
 }
 
-bool retTru(){
+	
+	
 
-return false;
-}
+

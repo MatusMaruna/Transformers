@@ -1,20 +1,37 @@
-
+# max.txt
 
 void main() {
-    float f = 2.34;
-    float ff = 2.0;
-    int u = 5;
-    float fff = mult(f,u,ff);
-    println(fff);  # 4.68
-    println(fff);  # false
+	int p = 3;
+	int q = 7;
+	int res = maxOfTwo(p,q);
+	println(res);        # 7
+
+	res = maxOfThree(p,q,9);
+	println(res);      # 9
 
 }
 
-float mult(float a, int n, float b) {
-
-   return a * b;
-
+int maxOfTwo(int a, int b) {
+   if (a > b)
+   	  return a;
+   else
+      return b;
 }
 
-
-
+int maxOfThree(int a, int b, int c) {
+   if (a > b) {
+      if (a > c)
+   	  	 return a;
+   	  else if (c > a)
+   	     return c;
+   	  else # c == a
+   	     return c;
+   } else {
+      if (b > c)
+   	  	 return b;
+   	  else if (c > b)
+   	     return c;
+   	  else # c == b
+   	     return c;
+   }
+}

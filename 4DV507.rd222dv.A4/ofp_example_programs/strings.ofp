@@ -1,4 +1,4 @@
-# strings.ofp
+# strings.txt
 
 int countA(string str) {
 	int n = 0;
@@ -40,17 +40,15 @@ char[] replace(char[] str, char oldChar, char newChar) {
 
 void printArray(char[] arr) {
 	print(arr[0]);   # First element
-	int i = 0;
+	int i = 1;
 	while(i<arr.length) {
 		char c = arr[i];
 		print(" ");
 		print(c);
 		i = i + 1;
 	}
-	println("");
+	println(" ");
 }
-
-
 
 # True if str contains both X and Y
 bool containsXandY(string str) {
@@ -60,7 +58,6 @@ bool containsXandY(string str) {
    }
    return false;
 }
-
 
 bool contains(string str, char ch) {
    int i=0;

@@ -21,23 +21,6 @@ def maxOfThree(a,b,c):
             return c
 
 
-def selectionSort(arr):
-    i=0
-    while i<len(arr)-1:
-        smallest=i
-        j=i+1
-        while j<len(arr):
-            if arr[j]<arr[smallest]:
-                smallest=j
-
-            j=j+1
-
-        smallestNumber=arr[smallest]
-        arr[smallest]=arr[i]
-        arr[i]=smallestNumber
-        i=i+1
-
-
 #
 #  Program entry point - main 
 #

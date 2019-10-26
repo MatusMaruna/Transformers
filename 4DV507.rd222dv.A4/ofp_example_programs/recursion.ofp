@@ -1,4 +1,4 @@
-# recursion.ofp
+# recursion.txt
 
 # Assume a,b > 0, a*b = a + a*(b-1)
 int mult(int a,int b) {

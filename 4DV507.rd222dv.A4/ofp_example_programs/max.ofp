@@ -1,4 +1,4 @@
-# max.ofp
+# max.txt
 
 void main() {
 	int p = 3;
@@ -35,22 +35,3 @@ int maxOfThree(int a, int b, int c) {
    	     return c;
    } 
 }
-
-void selectionSort(float[] arr){  
-	int i = 0;
-    while (i < arr.length - 1)  {  
-        int smallest = i;  
-        int j = i+1;
-        while (j < arr.length){  
-            if (arr[j] < arr[smallest]){  
-                smallest = j;    # searching for lowest index  
-            } 
-            j = j+1; 
-        }  
-        # Swap
-        float smallestNumber = arr[smallest];   
-        arr[smallest] = arr[i];  
-        arr[i] = smallestNumber; 
-        i = i+1; 
-    }  
-}  
