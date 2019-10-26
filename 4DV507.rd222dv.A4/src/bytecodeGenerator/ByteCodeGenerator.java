@@ -244,6 +244,9 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
 
               Type t =  visit(ctx.getChild(0));
                 int cop = getCopSymbol(ctx.getChild(1).getText());
+                System.err.println("EXPR1: " + ctx.getChild(0).getText());
+                System.err.println("COP SYMBOL: " + ctx.getChild(1).getText());
+                System.err.println("EXPR2: " + ctx.getChild(2).getText());
                 visit(ctx.getChild(2));
                 if(cop != GeneratorAdapter.EQ && cop != GeneratorAdapter.GT && cop != GeneratorAdapter.LT){
                     System.out.println(t);
@@ -251,7 +254,7 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
                     mg.math(cop, t);
                 }else{
                     if(!labelStack.isEmpty()){
-                        mg.ifICmp(cop, labelStack.pop());
+                        mg.ifCmp(t, cop, labelStack.pop());
                     }
                 }
                return t;
@@ -308,7 +311,7 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
                 Method.getMethod(sb.toString()));
         //Store to calling variable;
 
-        return null;
+        return methodType;
     }
 
     @Override
@@ -438,13 +441,34 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
         return null;
     }
 
-    @Override
-    public Type visitIfStmt(OfpParser.IfStmtContext ctx) {
-        return null;
-    }
+
+  //  ifStmt : 'if' '(' condition ')' (stmt|block) elseStmt?;
 
     @Override
+    public Type visitIfStmt(OfpParser.IfStmtContext ctx) {
+        System.out.println("Visiting ifStmt");
+        Label enterIf = new Label();
+        Label exitIf = new Label();
+        Label endIf = new Label();
+        labelStack.push(enterIf);
+        visit(ctx.getChild(2)); // visit condition
+        mg.goTo(exitIf);
+        mg.mark(enterIf);
+        visit(ctx.getChild(4)); // visit body
+        mg.goTo(endIf);
+        mg.mark(exitIf);
+        if(ctx.getChildCount()==6){
+            visit(ctx.getChild(5));
+        }
+        mg.mark(endIf);
+        return null;
+    }
+    //elseStmt : ('else' (stmt|block)) ;
+    @Override
     public Type visitElseStmt(OfpParser.ElseStmtContext ctx) {
+        Label enterElse = new Label();
+        System.out.println("Visiting elseStmt");
+        visit(ctx.getChild(1));
         return null;
     }
 
@@ -596,6 +620,19 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
         return null;
     }
 
+
+
+    public int getNotSymbol(String s) {
+        switch (s) {
+            case "<":
+                return GeneratorAdapter.GE;
+            case ">":
+                return GeneratorAdapter.LE;
+            case "==":
+                return GeneratorAdapter.NE;
+        }
+        return -1;
+    }
 
     public int getCopSymbol(String s) {
         switch(s){
