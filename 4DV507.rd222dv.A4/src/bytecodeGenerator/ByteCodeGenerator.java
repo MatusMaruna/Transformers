@@ -89,7 +89,7 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
         if (ctx.getChild(3).getText() != ")") { // if the method doesnt have 0 params
             for (int i = 0; i < ctx.getChild(3).getChildCount(); i += 2) {
                 String param = ctx.getChild(3).getChild(i).getChild(1).getText();
-               String strType = currentScope.resolve(param).getType().toString();
+               String strType = searchSymbol(param).getType().toString();
                 Type t = getTypeFromString(strType);
                // Type t = searchSymbol(param);
                 sb.append(t.getClassName());
@@ -134,6 +134,8 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
                 return Type.getType(String.class);
             case "char":
                 return Type.CHAR_TYPE;
+            case "char[]":
+                return Type.getType("[C");
             case "int[]":
                 return Type.getType("[I");
             case "float[]":
@@ -188,7 +190,10 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
                 t = Type.CHAR_TYPE;
                 break;
             case "string":
-                t = Type.getType("java/lang/String");
+                if(ctx.getChildCount() > 1 && ctx.getChild(1).getText().equals("[]")){
+                    return Type.getType(String.class);
+                }
+                t = Type.getType(String.class);
                 break;
             case "void":
                 t = Type.VOID_TYPE;
@@ -328,7 +333,7 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
         Type declType = visit(ctx.getChild(0));
         System.out.println("Type: " + declType.getClassName());
         String id = ctx.getChild(1).getText();
-        int index = currentScope.getFunctionSymbol().indexOf(new Symbol(id, OfpType.Undef));
+        int index = searchSymbolIndex(id);
         System.out.println("Index: " + index);
 
         visit(ctx.getChild(3));
@@ -352,7 +357,6 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
 
         if(length == 5){
             //load array aload
-            System.out.println("*************************************************!" + index);
             if(isParam(id)){
                 mg.loadArg(index);
             }else {
@@ -409,7 +413,7 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
         }
         return null;
     }
-
+//arrType : ID? '[' expr ']' ;
     @Override
     public Type visitArrType(OfpParser.ArrTypeContext ctx) {
         Type t;
@@ -418,9 +422,17 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
             //System.out.println("ARRAY NAME: " + arrayName + currentScope.getEnclosingScope().resolve("arr"));
             Symbol s = searchSymbol(arrayName);
             t = arrayMap(s.getType().toString());
+            System.out.println("ARRAY TYPE : " +  s.getType().toString());
             arrayMap(visit(ctx.getChild(0)).getClassName()); //CHANGED!
+
             visit(ctx.getChild(2));
-            mg.arrayLoad(t);
+            if(s.getType().toString().equals("string")){
+                t = Type.CHAR_TYPE;
+                mg.invokeVirtual(Type.getType(String.class),
+                        Method.getMethod("char charAt(int)"));
+            }else {
+                mg.arrayLoad(t);
+            }
         }else {
            t =  visit(ctx.getChild(1));
         }
@@ -457,6 +469,7 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
 
     @Override
     public Type visitIfStmt(OfpParser.IfStmtContext ctx) {
+        currentScope = scopes.get(ctx);
         System.out.println("Visiting ifStmt");
         Label enterIf = new Label();
         Label exitIf = new Label();
@@ -472,6 +485,7 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
             visit(ctx.getChild(5));
         }
         mg.mark(endIf);
+        currentScope = currentScope.getEnclosingScope();
         return null;
     }
     //elseStmt : ('else' (stmt|block)) ;
@@ -532,11 +546,11 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
                 Symbol s = searchSymbol(terminalNode.getText());
 //                System.err.println(s.getType().toString());
                 Type t = getTypeFromString(s.getType().toString());
-                System.out.println(currentScope.getFunctionSymbol().paramIndecies.toString());
-                if(currentScope.getFunctionSymbol().paramIndecies.containsKey(s.getId())){
-                    mg.loadArg(currentScope.getFunctionSymbol().indexOf(s));
+                //System.out.println(currentScope.getFunctionSymbol().paramIndecies.toString());
+                if(isParam(s.getId())){
+                    mg.loadArg(searchSymbolIndex(s.getId()));
                 }else {
-                    mg.loadLocal(currentScope.getFunctionSymbol().indexOf(s), t);
+                    mg.loadLocal(searchSymbolIndex(s.getId()), t);
                 }
                 System.out.println("CLASS NAME: " + getTypeFromString(s.getType().toString()).getClassName());
                 return getTypeFromString(s.getType().toString());
@@ -590,7 +604,7 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
                 return Type.DOUBLE_TYPE;
             case "void":
                 return Type.VOID_TYPE;
-            case "java/lang/String":
+            case "Ljava/lang/String":
                 return Type.getType(String.class);
             case "string":
                 return Type.getType(String.class);
@@ -601,7 +615,7 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
             case "char[]":
                 return Type.getType(Object.class);
             case "string[]":
-                return Type.getType(Object.class);
+                return Type.CHAR_TYPE;
             case "char":
                 return Type.CHAR_TYPE;
             case "bool":
@@ -620,6 +634,8 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
             case "float":
                 return Type.DOUBLE_TYPE;
             case "string":
+                return Type.getType(String.class);
+            case "Ljava/lang/String":
                 return Type.getType(String.class);
             case "char":
                 return Type.CHAR_TYPE;
@@ -653,8 +669,14 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
                 return Type.CHAR_TYPE;
             case "java.lang.Object":
                 return Type.getType(Object.class);
+            case "java.lang.String":
+                return Type.CHAR_TYPE;
+            case "Ljava/lang/String":
+                return Type.CHAR_TYPE;
+            case "string":
+                return Type.CHAR_TYPE;
         }
-
+        System.err.println("Returned null");
         return null;
     }
 
@@ -691,7 +713,6 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
     public int searchSymbolIndex(String varName){
         Symbol sim = new Symbol(varName, OfpType.Undef);
         if(currentScope.getFunctionSymbol().indexOf(sim) !=  -1){
-            System.out.println("*************************************" + currentScope.getFunctionSymbol().indexOf(sim));
             return currentScope.getFunctionSymbol().indexOf(sim);
         }else{
             Scope s = currentScope;
