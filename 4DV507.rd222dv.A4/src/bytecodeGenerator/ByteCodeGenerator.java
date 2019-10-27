@@ -410,6 +410,36 @@ public class ByteCodeGenerator extends OfpBaseVisitor<Type> {
         System.out.println("MethodAccess type: " + methodType.toString());
         System.out.println("MethodAccess params: " + globalScope.getChild(ctx.getChild(0).getText()).getFunctionSymbol().paramIndecies.toString());
 
+        StringBuilder sb = new StringBuilder();
+        Scope s = globalScope.getChild(ctx.getChild(0).getText());
+        sb.append(methodType.getClassName() + " ");
+        sb.append(methodName + " ");
+        sb.append("(");
+
+        for (String key : s.getFunctionSymbol().paramIndecies.keySet()) {
+            sb.append(getTypeFromString(s.resolve(key).getType().toString()).getClassName());
+            sb.append(",");
+        }
+        if(sb.lastIndexOf(",") != -1) {
+            sb.deleteCharAt(sb.lastIndexOf(","));
+        }
+
+        sb.append(")");
+
+        System.out.println(sb.toString());
+
+        if (!ctx.getChild(2).getText().equals(")") && !ctx.getChild(2).getText().equals("")) {
+         //   System.out.println("METHOD ACCESS TEST: " + ctx.getChild(2).getText());
+            visit(ctx.getChild(2));
+        }
+
+
+        Type t = Type.getType(methodType + ctx.getChild(0).getText() + ";");
+        System.out.println("Type: " + methodType + ctx.getChild(0).getText() + ";");
+        Method m = Method.getMethod(sb.toString());
+        System.out.println("Method: " + sb.toString());
+        mg.invokeStatic(Type.getType("L" + progName + ";"),
+                Method.getMethod(sb.toString()));
 
         return null;
     }

@@ -1,43 +1,22 @@
 # while.txt
 
 void main() {
-
-    char[] charArr = {'a','b','c','d','e','f'};
-	printArray(c);
-
-
-
+	int n = 10;
+	int res = sumUpTo(n);
+	println(res);    # 55
 }
 
-# True if str contains both X and Y
-bool containsXandY(string str) {
-   if ( contains(str,'X') ) {
-      if ( contains(str,'Y') )
-         return true;
-   }
-   return false;
-}
-
-void printArray(char[] arr) {
-	print(arr[0]);   # First element
-	int i = 0;
-	while(i<arr.length) {
-		char c = arr[i];
-		print(" ");
-		print(c);
+int sumUpTo(int n) {
+	int i = 1;
+	int sum = 0;
+	while (i < n+1) {
+		sum = sum + i;
 		i = i + 1;
 	}
-	println("");
+	return sum;
 }
 
 
-bool contains(string str, char ch) {
-   int i=0;
-   while (i<str.length) {
-      char p = str[i];
-      if (p == ch)
-         return true;
-      i = i+1;
-   }
-   return false;
-}
+
+
+
