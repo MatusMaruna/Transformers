@@ -1,7 +1,3 @@
-/OfpMain.class
-/antlr4/
 /bytecodeGenerator/
-/pythonGenerator/
 /symbolTable/
-/testing/
-/typeCheck/
+/antlr4/

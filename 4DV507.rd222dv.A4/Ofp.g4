@@ -55,18 +55,18 @@ expr : 	| methodAccess
         | ID '.length'
         | varType
         | arrayList
-        | arrType        
+        | arrType
      ;
-     
+
 methodAccess : ID? '(' expr ')';
-			
+
 localDecl: type arrType? ID SC ;
 
 declaration : type arrType? ID '=' (expr | arrType | array) SC ;
 
 asgnStmt : ID arrType? '=' expr SC ;
 
-methodCall : ID '(' varType* ')' SC ;
+methodCall : ID '(' arrayList ')' SC ;
 
 arrayList : varType (',' varType)* ;
 

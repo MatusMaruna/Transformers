@@ -1,13 +1,32 @@
-# while.txt
+# strings.txt
 
+# True if str contains both X and Y
+bool containsXandY(string str) {
+   if ( contains(str,'X') ) {
+      if ( contains(str,'Y') )
+         return true;
+   }
+   return false;
+}
+
+bool contains(string str, char ch) {
+   int i=0;
+   char p = str[i];
+
+   return false;
+}
+
+# Program entry point
 void main() {
+	string s = "All students got the highest grade A!";
 
+	
+	char[] charArr = {'a','b','c','d','e','f'};
+	#charArr = replace(charArr,'b','B');
+	#printArray(charArr);     # a B c d e f
+	
+	string xy = "Xerxes said Yes!";
+	#bool ok = containsXandY(xy);
+	#println(ok);    # True
 }
-int max(int a, int b) {
-    int m;
-    if (a > b)
-        m = a;
-    else
-        m = b;
-    return m;
-}
+
