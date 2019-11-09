@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 
 import symbolTable.*;
-import typeCheck.*;
 
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ErrorNode;
@@ -13,31 +12,31 @@ import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.ParseTreeProperty;
 import org.antlr.v4.runtime.tree.TerminalNode;
 
-import antlr4.OfpBaseVisitor;
-import antlr4.OfpParser.ArrTypeContext;
-import antlr4.OfpParser.ArrayContext;
-import antlr4.OfpParser.ArrayListContext;
-import antlr4.OfpParser.AsgnStmtContext;
-import antlr4.OfpParser.BlockContext;
-import antlr4.OfpParser.ConditionContext;
-import antlr4.OfpParser.DeclarationContext;
-import antlr4.OfpParser.ElseStmtContext;
-import antlr4.OfpParser.ExprContext;
-import antlr4.OfpParser.IfStmtContext;
-import antlr4.OfpParser.LocalDeclContext;
-import antlr4.OfpParser.MainContext;
-import antlr4.OfpParser.MethodAccessContext;
-import antlr4.OfpParser.MethodCallContext;
-import antlr4.OfpParser.MethodContext;
-import antlr4.OfpParser.ParameterContext;
-import antlr4.OfpParser.ParameterListContext;
-import antlr4.OfpParser.PrintContext;
-import antlr4.OfpParser.ReturnStmtContext;
-import antlr4.OfpParser.StartContext;
-import antlr4.OfpParser.StmtContext;
-import antlr4.OfpParser.TypeContext;
-import antlr4.OfpParser.VarTypeContext;
-import antlr4.OfpParser.WhileStmtContext;
+import rd222dv.A4.antlr4.OfpBaseVisitor;
+import rd222dv.A4.antlr4.OfpParser.ArrTypeContext;
+import rd222dv.A4.antlr4.OfpParser.ArrayContext;
+import rd222dv.A4.antlr4.OfpParser.ArrayListContext;
+import rd222dv.A4.antlr4.OfpParser.AsgnStmtContext;
+import rd222dv.A4.antlr4.OfpParser.BlockContext;
+import rd222dv.A4.antlr4.OfpParser.ConditionContext;
+import rd222dv.A4.antlr4.OfpParser.DeclarationContext;
+import rd222dv.A4.antlr4.OfpParser.ElseStmtContext;
+import rd222dv.A4.antlr4.OfpParser.ExprContext;
+import rd222dv.A4.antlr4.OfpParser.IfStmtContext;
+import rd222dv.A4.antlr4.OfpParser.LocalDeclContext;
+import rd222dv.A4.antlr4.OfpParser.MainContext;
+import rd222dv.A4.antlr4.OfpParser.MethodAccessContext;
+import rd222dv.A4.antlr4.OfpParser.MethodCallContext;
+import rd222dv.A4.antlr4.OfpParser.MethodContext;
+import rd222dv.A4.antlr4.OfpParser.ParameterContext;
+import rd222dv.A4.antlr4.OfpParser.ParameterListContext;
+import rd222dv.A4.antlr4.OfpParser.PrintContext;
+import rd222dv.A4.antlr4.OfpParser.ReturnStmtContext;
+import rd222dv.A4.antlr4.OfpParser.StartContext;
+import rd222dv.A4.antlr4.OfpParser.StmtContext;
+import rd222dv.A4.antlr4.OfpParser.TypeContext;
+import rd222dv.A4.antlr4.OfpParser.VarTypeContext;
+import rd222dv.A4.antlr4.OfpParser.WhileStmtContext;
 
 public class PythonCodeGenerator extends OfpBaseVisitor<String> {
 	private static HashSet<String> reservedIds = new HashSet<String>(Arrays.asList("ArithmeticError", "AssertionError",

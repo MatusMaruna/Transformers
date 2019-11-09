@@ -1,20 +1,9 @@
 void main() {
-	bool b = true;
-	bool bb = flip(b);  
-	println(bb);  # false
-	
-	
-	bool bbb = select(b,bb,b);
-	println(bbb);   # true
-	
+float[] x = {10.0, 20.0};
+println(f(x));
 }
-
-bool flip(bool b) {
-   if (b) return false;
-   else return true;
+int f(float[] param){
+int temp; # Not used below
+int result = param.length;
+return result;
 }
-
-bool select(bool b,bool bb, bool bbb) {
-    return bbb;
-} 
-	

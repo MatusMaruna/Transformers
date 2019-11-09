@@ -1,6 +1,3 @@
-import java.io.IOException;
-import java.io.PrintWriter;
-
 import pythonGenerator.PythonCodeGenerator;
 import symbolTable.ErrorListener;
 import symbolTable.*;
@@ -14,6 +11,9 @@ import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import antlr4.OfpLexer;
 import antlr4.OfpParser;
 import symbolTable.Scope;
+
+import java.io.IOException;
+import java.io.PrintWriter;
 
 public class OfpMain {
 

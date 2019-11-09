@@ -1,6 +1,6 @@
 package symbolTable;
 
-import bytecodeGenerator.FunctionSymbol;
+import rd222dv.A4.bytecodeGenerator.FunctionSymbol;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;

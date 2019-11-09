@@ -1,0 +1,23 @@
+# while.txt
+
+void main() {
+	int n = 10;
+	int res = sumUpTo(n);
+	println(res);    # 55
+}
+
+# Computes 1+2+3+...+n) 
+int sumUpTo(int n) {
+	int i = 1;
+	int sum = 0;
+	while (i < n+1) {
+		sum = sum + i;
+		i = i + 1;
+	} 
+	return sum;
+}
+
+	
+	
+
+

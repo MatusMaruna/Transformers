@@ -1,0 +1,21 @@
+void main() {
+	float f = 2.34;
+	float ff = 2.0;
+	float fff = mult(f,5,ff);
+	println(fff);  # 4.68
+	
+	fff  = max(f,ff);  
+	println(fff);  # false
+
+}
+
+float mult(float a, int n, float b) {
+   return a * b;
+}
+
+float max(float a, float b) {
+   if (a>b) return a;
+   else return b;
+}	
+
+

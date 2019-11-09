@@ -1,8 +1,7 @@
 package symbolTable;
 
 import java.util.ArrayList;
-import symbolTable.*;
-import typeCheck.*;
+
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ErrorNode;
 import org.antlr.v4.runtime.tree.ParseTreeListener;

@@ -1,0 +1,22 @@
+void main() {
+	bool b = true;
+	bool bb = flip(b);  
+	println(bb);  # false
+	
+	
+	bool bbb = select(b,bb,b);
+	println(bbb);   # true
+	
+}
+
+bool flip(bool b) {
+   if (b) return false;
+   else return true;
+}
+
+bool select(bool b,bool bb, bool bbb) {
+    return bbb;
+} 
+	
+
+

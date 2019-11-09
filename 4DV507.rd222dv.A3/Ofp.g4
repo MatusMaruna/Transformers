@@ -6,7 +6,7 @@ grammar Ofp;
 
 start : method* main method* ; 
 	  
-main: 'void' 'main' '(' ')' block ; 
+main: 'void' 'main' '(' ')' block ;
 
 method :  'void' ID '(' parameterList? ')' block | type ('['']')? ID '(' parameterList? ')' block ;
 
@@ -55,18 +55,18 @@ expr : 	| methodAccess
         | ID '.length'
         | varType
         | arrayList
-        | arrType        
+        | arrType
      ;
-     
-methodAccess : ID? '(' (expr|'') ')';
-			
+
+methodAccess : ID? '(' expr ')';
+
 localDecl: type arrType? ID SC ;
 
-declaration : type arrType? ID '=' (expr | arrType | array) SC ;
+declaration : type arrType? ID '=' ( condition | expr | arrType | array) SC ;
 
 asgnStmt : ID arrType? '=' expr SC ;
 
-methodCall : ID '(' varType* ')' SC ;
+methodCall : ID '(' arrayList ')' SC ;
 
 arrayList : varType (',' varType)* ;
 
@@ -108,4 +108,5 @@ COMMENT :  '#' ~[\r\n]* -> skip ;
 SC: ';' ;
 
 WS : [ \t\r\n]+ -> skip ;
+
 

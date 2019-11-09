@@ -2,17 +2,15 @@ package symbolTable;
 
 import java.util.ArrayList;
 
-import bytecodeGenerator.FunctionSymbol;
-import bytecodeGenerator.ParamSymbol;
-import symbolTable.*;
-import typeCheck.*;
+import rd222dv.A4.bytecodeGenerator.FunctionSymbol;
+import rd222dv.A4.bytecodeGenerator.ParamSymbol;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ErrorNode;
 import org.antlr.v4.runtime.tree.ParseTreeListener;
 import org.antlr.v4.runtime.tree.ParseTreeProperty;
 import org.antlr.v4.runtime.tree.TerminalNode;
 
-import antlr4.OfpParser;
+import rd222dv.A4.antlr4.OfpParser;
 
 
 public class Mylistener implements ParseTreeListener {

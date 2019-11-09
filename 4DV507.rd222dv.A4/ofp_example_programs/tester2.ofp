@@ -1,32 +1,12 @@
-# strings.txt
-
-# True if str contains both X and Y
-bool containsXandY(string str) {
-   if ( contains(str,'X') ) {
-      if ( contains(str,'Y') )
-         return true;
-   }
-   return false;
-}
-
-bool contains(string str, char ch) {
-   int i=0;
-   char p = str[i];
-
-   return false;
-}
-
-# Program entry point
 void main() {
-	string s = "All students got the highest grade A!";
-
-	
-	char[] charArr = {'a','b','c','d','e','f'};
-	#charArr = replace(charArr,'b','B');
-	#printArray(charArr);     # a B c d e f
-	
-	string xy = "Xerxes said Yes!";
-	#bool ok = containsXandY(xy);
-	#println(ok);    # True
+	float[] x = {10.0, 20.0};
+	println(f(x));
 }
 
+int f(float[] param){
+int temp; #not used below
+int result = param.length;
+return result;
+}
+
+	
